@@ -40,3 +40,6 @@
 # System files
 /Frontend/MusicMarketBulgaria/.DS_Store
 /Frontend/MusicMarketBulgaria/Thumbs.db
+
+# Ignore environment configuration files
+Frontend/MusicMarketBulgaria/src/environments/

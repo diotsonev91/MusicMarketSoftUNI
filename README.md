@@ -7,8 +7,8 @@ This is a marketplace web application for musicians to buy and sell second-hand 
 ## Folder Structure
 The project is organized into two main folders:
 
-- **frontend/**: Contains the Angular application code for the user interface and client-side logic.
-- **backend/**: Contains Firebase configurations and setup files needed to run Firebase services (authentication, Firestore, storage, etc.) when presenting on the exam.
+- **Frontend/**: Contains the Angular application code for the user interface and client-side logic.
+- **Backend/**: Contains Firebase configurations and setup files needed to run Firebase services (authentication, Firestore, storage, etc.) when presenting on the exam.
 
 ## Features (Planned)
 - **Public Part**: Browse ads without login

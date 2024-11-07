@@ -1,0 +1,9 @@
+<h2>Register</h2>
+<form (ngSubmit)="onRegister()">
+  <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
+  <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
+  <button type="submit">Register</button>
+</form>
+@if (message) {
+  <p>{{ message }}</p>
+}
