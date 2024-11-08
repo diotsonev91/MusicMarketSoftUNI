@@ -1,36 +1,52 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, UserCredential } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { UserService } from './../user/user.service';
+import { User } from './../user/user.model';
+import { UserCredentials } from './user-credentials.model';
 
 @Injectable({
   providedIn: 'root'
 })
-//SIMPLE IMPLEMENTATION FOR BASIC FUNCTIONALITY TEST ONLY
 export class AuthService {
-  private auth: Auth = inject(Auth);  // Injects the Auth service
+  private auth: Auth = inject(Auth); 
+  private userService = inject(UserService); 
 
-  // Sign up a new user, returning an observable
-  //TODO: User credentials should be inside a UserInterface
-  signUp(email: string, password: string): Observable<void> {
-    return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
-      map((result) => {
+  // Register new user with email, password, and additional profile data
+  signUp(credentials: UserCredentials, userData: Omit<User, 'uid' | 'email'>): Observable<void> {
+    return from(createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)).pipe(
+      switchMap((result) => {
         console.log('User registered successfully:', result.user);
+
+        // Combine Firebase user ID and email with the profile data
+        const newUser: User = {
+          uid: result.user.uid,
+          email: result.user.email || '', 
+          ...userData
+        };
+
+        // Create Firestore user profile document with the additional data
+        return from(this.userService.createUserProfile(newUser.uid, newUser));
+      }),
+      map(() => {
+        console.log('User profile created in Firestore');
         return;
       }),
       catchError((error) => {
-        console.error('Error during sign up:', error);
+        console.error('Error during sign up or Firestore profile creation:', error);
         throw error;
       })
     );
   }
 
-  // Sign in an existing user, returning an observable
-  signIn(email: string, password: string): Observable<void> {
-    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-      map(() => {
-        console.log('User signed in successfully');
-        return;
+  // Sign in existing user
+  signIn(credentials: UserCredentials): Observable<UserCredential | null> {
+    return from(signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)).pipe(
+      map((userCredential: UserCredential) => {
+        console.log('User signed in successfully:', userCredential);
+        // Return the entire UserCredential object
+        return userCredential;
       }),
       catchError((error) => {
         console.error('Error during sign in:', error);
@@ -39,4 +55,17 @@ export class AuthService {
     );
   }
 
+  // Logout method
+  logout(): Observable<void> {
+    return from(signOut(this.auth)).pipe(
+      map(() => {
+        console.log('User logged out');
+        return;
+      }),
+      catchError((error) => {
+        console.error('Error during logout:', error);
+        throw error;
+      })
+    );
+  }
 }

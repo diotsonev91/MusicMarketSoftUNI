@@ -1,9 +1,32 @@
-<h2>Register</h2>
-<form (ngSubmit)="onRegister()">
-  <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
-  <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
-  <button type="submit">Register</button>
-</form>
-@if (message) {
-  <p>{{ message }}</p>
-}
+
+<main>
+  <section class="form-section">
+      <h2>Регистрация</h2>
+      <form (ngSubmit)="onRegister()">
+          <label for="username">Потребителско име:</label>
+          <input type="text" id="username" name="username" [(ngModel)]="username" required>
+
+          <label for="firstname">Име:</label>
+          <input type="text" id="firstname" name="firstname" [(ngModel)]="firstname" required>
+
+          <label for="lastname">Фамилия:</label>
+          <input type="text" id="lastname" name="lastname" [(ngModel)]="lastname" required>
+
+          <label for="email">Имейл:</label>
+          <input type="email" id="email" name="email" [(ngModel)]="email" required>
+
+          <label for="password">Парола:</label>
+          <input type="password" id="password" name="password" [(ngModel)]="password" required>
+
+          <label for="confirm-password">Потвърдете паролата:</label>
+          <input type="password" id="confirm-password" name="confirm-password" [(ngModel)]="confirmPassword" required>
+
+          <label for="location">Локация:</label>
+          <input type="text" id="location" name="location" [(ngModel)]="location" required>
+
+          <button type="submit" class="form-button">Регистрация</button>
+      </form>
+      <p>{{ message }}</p>
+      <p>Вече имате профил? <a routerLink="/login">Вход</a>.</p>
+  </section>
+</main>
