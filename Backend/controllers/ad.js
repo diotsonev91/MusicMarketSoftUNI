@@ -6,8 +6,8 @@ exports.createAd = async (req, res) => {
     const { title, description, price, deliveryType, condition, category, instrument, technique, subCategory } = req.body;
 
     // Assume `images` is an array of URLs uploaded to an external service
-    const images = req.body.images || []; // Array of image URLs
-    console.log("Images URLSs",images)
+    const images = req.body.images || []; // Array of image BASE 64s
+    console.log("Images Base64s",images)
     // Log the user ID from the request
     //console.log("User ID from request (JWT):", req.user.id);
 
@@ -149,3 +149,102 @@ exports.getAdByCategoryThenSubcategory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get Ads by Price Range
+exports.getAdByPriceRange = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+
+    // Validate price range inputs
+    if (!minPrice || !maxPrice) {
+      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    }
+
+    // Fetch ads within the price range
+    const ads = await Ad.find({
+      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
+    });
+
+    res.json(ads);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get Ads by Category, Subcategory, and Price Range
+exports.getAdByCategoryThenSubcategoryThenPriceRange = async (req, res) => {
+  try {
+    const { category, subCategory } = req.params;
+    const { minPrice, maxPrice } = req.query;
+
+    console.log("min price",minPrice);
+    console.log("max price", maxPrice);
+    // Validate price range inputs
+    if (!minPrice || !maxPrice) {
+      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    }
+
+    // Build the query based on category, subcategory, and price range
+    const query = {
+      category,
+      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
+    };
+    if (subCategory) {
+      query.subCategory = subCategory;
+    }
+
+    const ads = await Ad.find(query);
+    res.json(ads);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get Ads by Price Range
+exports.getAdByPriceRange = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+
+    // Validate price range inputs
+    if (!minPrice || !maxPrice) {
+      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    }
+
+    // Fetch ads within the price range
+    const ads = await Ad.find({
+      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
+    });
+
+    res.json(ads);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get Ads by Category, Subcategory, and Price Range
+exports.getAdByCategoryThenSubcategoryThenPriceRange = async (req, res) => {
+  try {
+    const { category, subCategory } = req.params;
+    const { minPrice, maxPrice } = req.query;
+
+    // Validate price range inputs
+    if (!minPrice || !maxPrice) {
+      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    }
+
+    // Build the query based on category, subcategory, and price range
+    const query = {
+      category,
+      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
+    };
+    if (subCategory) {
+      query.subCategory = subCategory;
+    }
+
+    const ads = await Ad.find(query);
+    res.json(ads);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+

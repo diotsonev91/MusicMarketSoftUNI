@@ -3,6 +3,7 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const admin = require('firebase-admin');
 
 const DEFAULT_USER_ROLE = process.env.DEFAULT_USER_ROLE // switch if wants to create admin inside .env
 
@@ -112,6 +113,47 @@ exports.logout = async (req, res) => {
     await user.save();
 
     res.json({ message: "User logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Check if the requesting user is the same as the target user or if they are an admin
+    if (req.user.id !== userId && req.user.role !== "admin") {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Find the user to delete
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Delete the user's ads
+    await Ad.deleteMany({ user: userId });
+
+    // Delete the user profile
+    await User.findByIdAndDelete(userId);
+
+    res.json({ message: "User and associated ads deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getChatToken = async (req, res) => {
+  try {
+    const userId = req.user.id; // Extract the authenticated user ID
+
+    // Generate Firebase token for the user
+    const firebaseToken = await admin.auth().createCustomToken(userId);
+
+    res.json({ firebaseToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

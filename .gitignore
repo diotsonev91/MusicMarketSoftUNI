@@ -45,3 +45,4 @@
 Frontend/MusicMarketBulgaria/src/environments/
 Backend/.env
 Backend/node_modules
+Backend/serviceAccountKey.json

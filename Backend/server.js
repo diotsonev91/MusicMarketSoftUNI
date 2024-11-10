@@ -26,6 +26,15 @@ app.get("/", (req, res) => {
   res.send("API is running!");
 });
 
+//Set Up Firebase Admin SDK
+
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json'); 
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 // Import routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
