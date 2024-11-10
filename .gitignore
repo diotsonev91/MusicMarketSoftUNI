@@ -1,0 +1,47 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/Frontend/MusicMarketBulgaria/dist
+/Frontend/MusicMarketBulgaria/tmp
+/Frontend/MusicMarketBulgaria/out-tsc
+/Frontend/MusicMarketBulgaria/bazel-out
+
+# Node
+/Frontend/MusicMarketBulgaria/node_modules
+/Frontend/MusicMarketBulgaria/npm-debug.log
+/Frontend/MusicMarketBulgaria/yarn-error.log
+
+# IDEs and editors
+/Frontend/MusicMarketBulgaria/.idea/
+/Frontend/MusicMarketBulgaria/.project
+/Frontend/MusicMarketBulgaria/.classpath
+/Frontend/MusicMarketBulgaria/.c9/
+/Frontend/MusicMarketBulgaria/*.launch
+/Frontend/MusicMarketBulgaria/.settings/
+/Frontend/MusicMarketBulgaria/*.sublime-workspace
+
+# Visual Studio Code
+/Frontend/MusicMarketBulgaria/.vscode/*
+!/Frontend/MusicMarketBulgaria/.vscode/settings.json
+!/Frontend/MusicMarketBulgaria/.vscode/tasks.json
+!/Frontend/MusicMarketBulgaria/.vscode/launch.json
+!/Frontend/MusicMarketBulgaria/.vscode/extensions.json
+/Frontend/MusicMarketBulgaria/.history/*
+
+# Miscellaneous
+/Frontend/MusicMarketBulgaria/.angular/cache
+/Frontend/MusicMarketBulgaria/.sass-cache/
+/Frontend/MusicMarketBulgaria/connect.lock
+/Frontend/MusicMarketBulgaria/coverage
+/Frontend/MusicMarketBulgaria/libpeerconnection.log
+/Frontend/MusicMarketBulgaria/testem.log
+/Frontend/MusicMarketBulgaria/typings
+
+# System files
+/Frontend/MusicMarketBulgaria/.DS_Store
+/Frontend/MusicMarketBulgaria/Thumbs.db
+
+# Ignore environment configuration files
+Frontend/MusicMarketBulgaria/src/environments/
+Backend/.env
+Backend/node_modules
