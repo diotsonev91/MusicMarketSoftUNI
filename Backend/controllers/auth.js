@@ -4,27 +4,30 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const DEFAULT_USER_ROLE = process.env.DEFAULT_USER_ROLE
+const DEFAULT_USER_ROLE = process.env.DEFAULT_USER_ROLE // switch if wants to create admin inside .env
 
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
-  
   try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ error: "User already exists" });
+    // Check if the username or email already exists
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (existingUser) {
+      const duplicateField = existingUser.email === email ? 'email' : 'username';
+      return res.status(400).json({ error: `User with this ${duplicateField} already exists` });
+    }
 
     // Ensure the password is defined
     if (!password) return res.status(400).json({ error: "Password is required" });
- 
 
     // Create and save the new user
     const user = new User({ username, email, password: password, role: DEFAULT_USER_ROLE });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

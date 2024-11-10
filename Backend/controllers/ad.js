@@ -60,20 +60,28 @@ exports.createAd = async (req, res) => {
 // Delete Ad
 exports.deleteAd = async (req, res) => {
   try {
-     // Find and delete the ad, ensuring it belongs to the logged-in user
-    //  console.log("Deleting ad with ID:", req.params.id);
-    //  console.log("Authenticated user ID:", req.user.id);
-    // Find and delete the ad, ensuring it belongs to the logged-in user
-    const ad = await Ad.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    const isAdmin = req.user.role === "admin";
+
+    // If the user is an admin, find the ad by ID without user restriction
+    let ad;
+    if (isAdmin) {
+      ad = await Ad.findById(req.params.id);
+    } else {
+      // Otherwise, only allow the user to delete their own ad
+      ad = await Ad.findOne({ _id: req.params.id, user: req.user.id });
+    }
 
     if (!ad) {
       return res.status(404).json({ error: "Ad not found or unauthorized" });
     }
 
-    // Remove the ad ID from the user's adds array
-    await User.findByIdAndUpdate(req.user.id, { $pull: { adds: req.params.id } });
+    // Remove the ad ID from the owner's `adds` array
+    await User.findByIdAndUpdate(ad.user, { $pull: { adds: req.params.id } });
 
-    res.json({ message: "Ad deleted and removed from user's adds array" });
+    // Delete the ad from the ads collection
+    await Ad.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Ad deleted and removed from owner's adds array" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
