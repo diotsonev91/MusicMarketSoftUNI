@@ -100,4 +100,27 @@ export class AuthService {
     return throwError(customMessage); // Return the custom message for testing
   }
   
+   // Method to check if the user is logged in
+   isLoggedIn(): boolean {
+    const token = this.getAccessToken();
+    if (token) {
+      // Optional: Check token expiration if token is a JWT
+      const expiry = this.getTokenExpiration(token);
+      if (expiry) {
+        return Date.now() < expiry;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // Helper to get the access token's expiration time
+  private getTokenExpiration(token: string): number | null {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp ? payload.exp * 1000 : null; // Convert to milliseconds
+    } catch (error) {
+      return null;
+    }
+  }
 }

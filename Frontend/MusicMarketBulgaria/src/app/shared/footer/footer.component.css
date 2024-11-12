@@ -1,0 +1,15 @@
+/* Footer */
+footer {
+    display: flex;
+    justify-content: center;
+background: linear-gradient(#686e86,#2f323f); /* Shades in the same color range */
+color: #fff;
+padding: 10px 0;
+
+}
+
+footer p {
+    text-shadow: #2E163E;
+    
+    color: #fff;
+}
