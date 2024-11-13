@@ -1,0 +1,12 @@
+<nav>
+    <ul class="nav-list">
+      <!-- Updated @for loop with required track expression -->
+      @for (link of navLinks; track link.route) {
+        @if (shouldDisplayLink(link)) {
+          <li>
+            <a [routerLink]="link.route" routerLinkActive="active">{{ link.label }}</a>
+          </li>
+        }
+      }
+    </ul>
+  </nav>

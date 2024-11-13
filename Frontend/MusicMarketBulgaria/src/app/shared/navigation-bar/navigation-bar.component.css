@@ -1,0 +1,45 @@
+
+/* Navigation */
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    cursor: pointer;
+}
+
+.nav-list li {
+    margin-left: 20px;
+}
+
+.nav-list a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-list a:hover {
+    color: #0ebe92;
+}
+
+@media (max-width: 768px) {
+    .nav-list {
+        display: block;
+        text-align: center;
+    }
+
+    .nav-list li {
+        margin: 10px 0;
+    }
+
+    .nav-list a {
+        display: block;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .nav-list {
+        font-size: smaller;
+    }
+}

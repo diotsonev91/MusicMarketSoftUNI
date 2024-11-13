@@ -1,0 +1,66 @@
+/* Общи стилове за формуляри */
+.form-section {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-section h2 {
+    font-size: 2rem;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.form-section label {
+    display: block;
+    margin: 10px 0 5px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.form-section input[type="text"],
+.form-section input[type="email"],
+.form-section input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-button {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+    
+    background-color: #ffc107;
+}
+
+.form-section p {
+    margin-top: 15px;
+    color: #555;
+}
+
+.form-section a {
+    color: #343a40;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.form-section a:hover {
+    text-decoration: underline;
+}

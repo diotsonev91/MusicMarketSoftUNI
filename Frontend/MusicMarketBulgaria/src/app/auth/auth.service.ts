@@ -71,15 +71,15 @@ export class AuthService {
 
   // Method to check token and refresh if expired before making requests
   getAccessTokenWithRefresh(): Observable<string | null> {
-    return this.accessTokenSubject.pipe(
-      switchMap((token) => {
-        if (token) {
-          return this.accessTokenSubject;
-        } else {
-          return this.refreshAccessToken();
-        }
-      })
-    );
+    const token = this.accessTokenSubject.value;
+  
+    // If a token exists, return it as an observable
+    if (token) {
+      return this.accessTokenSubject.asObservable();
+    } else {
+      // If no token, attempt to refresh it
+      return this.refreshAccessToken();
+    }
   }
 
   // Error handling function
