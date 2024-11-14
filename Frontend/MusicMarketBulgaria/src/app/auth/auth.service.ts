@@ -87,7 +87,7 @@ export class AuthService {
     let customMessage = 'An error occurred';
   
     if (error.status === 400) {
-      customMessage = 'Bad request - please check your input';
+      customMessage = error.error;
     } else if (error.status === 401) {
       customMessage = 'Unauthorized - please log in again';
     } else if (error.status === 403) {

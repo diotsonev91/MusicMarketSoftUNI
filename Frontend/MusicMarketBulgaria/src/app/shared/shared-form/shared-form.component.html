@@ -1,27 +1,29 @@
-<!-- shared-form.component.html -->
 <section class="form-section">
-    <h2>{{ title }}</h2>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      @for (field of fields;track field.name) {
-        <div>
-          <label [for]="field.name">{{ field.label }}</label>
-          <input
-            [type]="field.type"
-            [id]="field.name"
-            [formControlName]="field.name"
-            [required]="field.required"
-            [attr.placeholder]="field.label"
-          />
-          @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-            <small>
-              @if (form.get(field.name)?.hasError('required')) {
-                {{ field.label }} е задължително.
-              }
-            </small>
-          }
-        </div>
-      }
-      <button type="submit" class="form-button" [disabled]="form.invalid">Submit</button>
-    </form>
-  </section>
-  
+  <h2>{{ title }}</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    @for (field of fields; track field.name) {
+      <div>
+        <label [for]="field.name">{{ field.label }}</label>
+        <input
+          #formField
+          [type]="field.type"
+          [id]="field.name"
+          [formControlName]="field.name"
+          [required]="field.required"
+          [attr.placeholder]="field.label"
+        />
+        @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
+          <small class="error-user-form">
+            @if (form.get(field.name)?.hasError('required')) {
+              {{ field.label }} е задължително.
+            }
+          </small>
+        }
+        @if (errorMessage) {
+          <p class="error-message">{{ errorMessage }}</p>
+        }
+      </div>
+    }
+    <button type="submit" class="form-button">Submit</button>
+  </form>
+</section>

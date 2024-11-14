@@ -1,10 +1,24 @@
 // server.js
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require('cors');
+
 require("dotenv").config(); // Load environment variables
 
 const app = express();
 app.use(express.json());
+
+// Use CORS middleware with specific configuration
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow any localhost origin
+    if (origin && origin.startsWith('http://localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 
 // Access MongoDB URI from environment variables

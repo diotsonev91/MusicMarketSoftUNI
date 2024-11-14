@@ -19,8 +19,7 @@ import { Router } from '@angular/router';
     @if (errorMessage) {
       <p class="error">{{ errorMessage }}</p>
     }
-  `,
-  styleUrls: ['./login.component.scss'],
+  `
 })
 export class LoginComponent {
   title = 'Вход';

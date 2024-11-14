@@ -45,6 +45,11 @@
     transition: background-color 0.3s ease;
 }
 
+
+.error-user-form {
+    color: red
+}
+
 .form-button:hover {
     
     background-color: #ffc107;

@@ -24,16 +24,19 @@ exports.register = async (req, res) => {
     // Ensure the password is defined
     if (!password) return res.status(400).json({ error: "Password is required" });
 
-    // Create and save the new user
-    const userData = {
+    // Create a new user instance with the provided data
+    const user = new User({
       username,
       email,
-      password,
+      password, // Hash the password before saving
       role: DEFAULT_USER_ROLE,
       ...(location && { location }),       
       ...(firstName && { firstName }),    
       ...(lastName && { lastName }),       
-    };    await user.save();
+    });
+
+    // Save the new user to the database
+    await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
