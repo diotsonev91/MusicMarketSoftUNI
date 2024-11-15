@@ -12,18 +12,11 @@ import { RegisterUserData } from '../register-user-data.model'; // Import Regist
    <app-shared-form 
       [title]="title" 
       [fields]="fields" 
-      (formSubmit)="onRegister($event)">
       [errorMessage]="errorMessage"
+      (formSubmit)="onRegister($event)">
     </app-shared-form>
     
-  `,
-  styles: [`.error {
-    color: red;
-    
-    display: flex;
-    justify-content: center;
-}`]
-  
+  `  
 })
 export class RegisterComponent {
   title = 'Регистрация';
@@ -64,7 +57,7 @@ export class RegisterComponent {
       (errorResponse) => {
        
           this.errorMessage = errorResponse.error; 
-  
+          //console.log(this.errorMessage)
       }
     );
   }

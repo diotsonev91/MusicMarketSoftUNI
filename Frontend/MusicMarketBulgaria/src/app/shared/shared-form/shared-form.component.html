@@ -1,5 +1,10 @@
 <section class="form-section">
   <h2>{{ title }}</h2>
+  <div>
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
+  </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @for (field of fields; track field.name) {
       <div>
@@ -18,9 +23,6 @@
               {{ field.label }} е задължително.
             }
           </small>
-        }
-        @if (errorMessage) {
-          <p class="error-message">{{ errorMessage }}</p>
         }
       </div>
     }

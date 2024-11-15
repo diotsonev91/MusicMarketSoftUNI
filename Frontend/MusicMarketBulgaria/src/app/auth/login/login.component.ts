@@ -14,11 +14,9 @@ import { Router } from '@angular/router';
     <app-shared-form
       [title]="title"
       [fields]="fields"
+      [errorMessage]="errorMessage"
       (formSubmit)="onLogin($event)"
     ></app-shared-form>
-    @if (errorMessage) {
-      <p class="error">{{ errorMessage }}</p>
-    }
   `
 })
 export class LoginComponent {
@@ -38,7 +36,7 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       (error) => {
-        this.errorMessage = error;
+        this.errorMessage = error.error;
       }
     );
   }

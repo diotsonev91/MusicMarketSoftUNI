@@ -45,7 +45,12 @@
     transition: background-color 0.3s ease;
 }
 
-
+.form-section p.error-message {
+    color: red; 
+    display: flex;
+    font-style: italic;
+    justify-content: center;
+}
 .error-user-form {
     color: red
 }
