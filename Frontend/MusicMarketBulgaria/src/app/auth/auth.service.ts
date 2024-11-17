@@ -55,6 +55,22 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/auth/chat-token`, { headers: this.getAuthHeaders() }).pipe(catchError(this.handleError));
   }
 
+  getCurrentUserId(): string | null {
+    const token = this.getAccessToken();
+    if (token) {
+      try {
+        // Decode the JWT payload
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.id || null; // Extract 'id' from the payload
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+  
+
   // Logout function
   logout(): void {
     localStorage.removeItem('accessToken');
