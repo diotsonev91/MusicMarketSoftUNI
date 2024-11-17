@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdService } from '../ad.service'; 
 import { AdData } from '../ad-data.model';
+import { Router } from '@angular/router'; 
+
 
 @Component({
   selector: 'app-user-ads',
@@ -13,7 +15,7 @@ export class UserAdsComponent implements OnInit {
   loadingAds = true;
   error: string | null = null;
 
-  constructor(private adService: AdService) {}
+  constructor(private adService: AdService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUserAds();
@@ -35,7 +37,7 @@ export class UserAdsComponent implements OnInit {
   }
 
   createAd(): void {
-    console.log('Redirect to create ad form.');
+    this.router.navigate(['/create-ad']);
   }
 
   editAd(adId: string): void {

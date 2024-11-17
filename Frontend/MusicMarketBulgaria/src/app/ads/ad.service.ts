@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
 import { AuthService } from '../auth/auth.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -27,20 +28,26 @@ export class AdService {
     );
   }
 
-  // Create a new ad for the logged-in user
-  createAd(adData: Partial<AdData>): Observable<AdData> {
-    const userId = this.authService.getCurrentUserId();
-    if (!userId) {
-      return throwError(() => new Error('No user is currently logged in.'));
-    }
-    return this.http.post<AdData>(`${this.baseUrl}/user/${userId}`, adData).pipe(
-      catchError((error) => {
-        console.error('Error creating ad:', error);
-        return throwError(() => error);
-      })
-    );
+   /**
+ * Create a new ad for the logged-in user
+ */
+createAd(adData: Partial<AdData>, base64Images: string[]): Observable<AdData> {
+  const userId = this.authService.getCurrentUserId();
+  if (!userId) {
+    return throwError(() => new Error('No user is currently logged in.'));
   }
 
+  // Prepare the payload with ad data and Base64 images
+  const payload = { ...adData, images: base64Images };
+
+  // Send the HTTP POST request with the payload
+  return this.http.post<AdData>(`${this.baseUrl}/user/${userId}`, payload).pipe(
+    catchError((error) => {
+      console.error('Error creating ad:', error);
+      return throwError(() => error);
+    })
+  );
+}
   // Edit an ad by ID
   editAd(adId: string, updates: Partial<AdData>): Observable<AdData> {
     return this.http.put<AdData>(`${this.baseUrl}/${adId}`, updates).pipe(

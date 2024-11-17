@@ -1,0 +1,123 @@
+<div class="form-container">
+    <form [formGroup]="adForm" (ngSubmit)="onSubmit()">
+      <!-- Section: What are you offering? -->
+      <div class="form-section">
+        <h3>Какво предлагаш?</h3>
+        <div class="form-group">
+          <label for="title">Заглавие *</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            placeholder="Например: Китара Fender Stratocaster"
+            required
+          />
+          @if (adForm.get('title')?.invalid && adForm.get('title')?.touched) {
+            <p class="error">Заглавието е задължително и трябва да има поне 5 символа.</p>
+          }
+        </div>
+        <div class="form-group">
+          <label for="category">Категория *</label>
+          <select id="category" formControlName="category" required>
+            <option value="" disabled>Избери категория</option>
+            @for (category of categories; track categories) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="subCategory">Подкатегория *</label>
+          <select id="subCategory" formControlName="subCategory" required>
+            <option value="" disabled>Избери подкатегория</option>
+            @for (subCategory of subCategories; track subCategories) {
+              <option [value]="subCategory">{{ subCategory }}</option>
+            }
+          </select>
+        </div>
+      </div>
+     
+     <!-- Section: Images -->
+    <div class="form-section">
+        <h3>Снимки</h3>
+        <p>Първата снимка ще бъде основната в обявата ти. Можеш да промениш реда на снимките чрез влачене.</p>
+        <div class="image-upload-container">
+          @for (file of files; track file) {
+            <div
+              class="image-slot"
+              draggable="true"
+              (dragstart)="onDragStart($event, files.indexOf(file))"
+              (dragover)="onDragOver($event)"
+              (drop)="onDrop($event, files.indexOf(file))"
+            >
+              <label class="image-upload-box">
+                <!-- If there's an image in the slot, show it -->
+                @if (getFileUrl(files.indexOf(file))) {
+                  <img [src]="getFileUrl(files.indexOf(file))" alt="Uploaded Image Preview" />
+                } @else {
+                  <!-- Otherwise, show a placeholder icon -->
+                  <i class="fas fa-camera"></i>
+                }
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileChange($event, files.indexOf(file))"
+                  style="display: none"
+                />
+              </label>
+            </div>
+          }
+        </div>
+      </div> 
+    
+      <!-- Section: Delivery Type -->
+      <div class="form-section">
+        <h3>Тип на доставката *</h3>
+        <div class="form-group">
+          <label for="deliveryType">Доставка *</label>
+          <select id="deliveryType" formControlName="deliveryType" required>
+            <option value="" disabled>Избери начин на доставка</option>
+            @for (deliveryType of deliveryTypes; track deliveryTypes) {
+              <option [value]="deliveryType">{{ deliveryType }}</option>
+            }
+          </select>
+        </div>
+      </div>
+  
+      <!-- Section: Condition -->
+      <div class="form-section">
+        <h3>Състояние *</h3>
+        <div class="form-group">
+          <label for="condition">Състояние *</label>
+          <select id="condition" formControlName="condition" required>
+            <option value="" disabled>Избери състояние</option>
+            @for (condition of conditions; track conditions) {
+              <option [value]="condition">{{ condition }}</option>
+            }
+          </select>
+        </div>
+      </div>
+  
+      <!-- Section: Description -->
+      <div class="form-section">
+        <h3>Описание *</h3>
+        <div class="form-group">
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="4"
+            placeholder="Напиши детайли за обявата"
+            required
+          ></textarea>
+          @if (adForm.get('description')?.invalid && adForm.get('description')?.touched) {
+            <p class="error">Описанието е задължително и трябва да има поне 10 символа.</p>
+          }
+        </div>
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn" [disabled]="adForm.invalid">
+        Добави обява
+      </button>
+    </form>
+  </div>
+  
