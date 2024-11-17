@@ -1,0 +1,87 @@
+/* Стилове за секцията с обяви на потребителя */
+.user-ads {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.user-ads >ul>li> a {
+    width: 65rem;
+}
+
+.user-ads h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.user-ads ul {
+    list-style: none;
+    padding: 0;
+}
+
+.user-ads li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.user-ads li:last-child {
+    border-bottom: none;
+}
+
+.ad-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.ad-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #1e90ff;
+    margin-right: auto;
+}
+
+.edit-button, .delete-button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(56, 116, 120);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button {
+    background-color: #dc3545; /* Червен бутон за изтриване */
+    color: #fff;
+}
+
+.edit-button:hover, .delete-button:hover {
+    opacity: 0.8;
+}
+
+.profile button, .add-ad-button {
+    width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: rgb(56, 116, 120);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.profile button:hover, .add-ad-button:hover {
+    opacity: 0.8;
+}

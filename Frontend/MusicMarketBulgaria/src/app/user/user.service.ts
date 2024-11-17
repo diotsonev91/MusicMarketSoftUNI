@@ -3,22 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { UserData } from './user-data.model'; // Import the UserData model
+import { UserData } from './user-data.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = 'http://localhost:5000/users'; // Replace with your backend's user endpoint
+  private baseUrl = 'http://localhost:5000/users';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   /**
    * Fetch the profile of the logged-in user.
-   * Returns an Observable of UserData.
    */
   getLoggedUserProfile(): Observable<UserData> {
-    const userId = this.authService.getCurrentUserId(); // AuthService provides the logged-in user ID
+    const userId = this.authService.getCurrentUserId();
     if (!userId) {
       return throwError(() => new Error('No user is currently logged in.'));
     }
@@ -32,7 +31,6 @@ export class UserService {
 
   /**
    * Fetch a user profile by ID.
-   * Returns an Observable of UserData.
    */
   getUserProfile(userId: string): Observable<UserData> {
     return this.http.get<UserData>(`${this.baseUrl}/${userId}`).pipe(
@@ -45,7 +43,6 @@ export class UserService {
 
   /**
    * Update the profile of the logged-in user.
-   * Accepts updates as a partial UserData and returns the updated UserData.
    */
   updateLoggedUserProfile(updates: Partial<UserData>): Observable<UserData> {
     const userId = this.authService.getCurrentUserId();
@@ -62,7 +59,6 @@ export class UserService {
 
   /**
    * Delete the logged-in user.
-   * Returns a success message or error.
    */
   deleteLoggedUser(): Observable<{ message: string }> {
     const userId = this.authService.getCurrentUserId();
@@ -76,37 +72,4 @@ export class UserService {
       })
     );
   }
-  /**
- * Fetch all ads for the logged-in user.
- */
-getLoggedUserAds(): Observable<any[]> {
-  const userId = this.authService.getCurrentUserId();
-  if (!userId) {
-    return throwError(() => new Error('No user is currently logged in.'));
-  }
-  return this.http.get<any[]>(`${this.baseUrl}/${userId}/ads`).pipe(
-    catchError((error) => {
-      console.error('Error fetching user ads:', error);
-      return throwError(() => error);
-    })
-  );
 }
-
-/**
- * Create a new ad for the logged-in user.
- */
-createAd(adData: any): Observable<any> {
-  const userId = this.authService.getCurrentUserId();
-  if (!userId) {
-    return throwError(() => new Error('No user is currently logged in.'));
-  }
-  return this.http.post<any>(`${this.baseUrl}/${userId}/ads`, adData).pipe(
-    catchError((error) => {
-      console.error('Error creating ad:', error);
-      return throwError(() => error);
-    })
-  );
-}
-}
-
-
