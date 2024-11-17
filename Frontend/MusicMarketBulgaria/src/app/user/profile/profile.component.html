@@ -1,0 +1,40 @@
+<main>
+    <section class="profile">
+      <h2>Моят профил</h2>
+      @if (user) {
+        <p><strong>Име:</strong> {{ user.username }}</p>
+        <p><strong>Първо име:</strong> {{ user.firstname }}</p>
+        <p><strong>Фамилия:</strong> {{ user.lastname }}</p>
+        <p><strong>Имейл:</strong> {{ user.email }}</p>
+      } @else {
+        <p>Профилът не може да бъде зареден.</p>
+      }
+      <button (click)="editProfile()">Редакция на профил</button>
+      <button class="add-ad-button" (click)="createAd()">Добави обява</button>
+    </section>
+  
+    <section class="user-ads">
+      <h3>Моите обяви</h3>
+      @if (!loadingAds) {
+        @if (ads.length > 0) {
+          <ul>
+            @for (ad of ads;track ad.id) {
+              <li>
+                <a href="product.html">
+                  <img [src]="ad.imageUrl" alt="{{ ad.title }}" class="ad-thumbnail" />
+                  <span class="ad-title">{{ ad.title }}</span>
+                </a>
+                <button class="edit-button" (click)="editAd(ad.id)">Редакция</button>
+                <button class="delete-button" (click)="deleteAd(ad.id)">Изтриване</button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p>Нямате публикувани обяви</p>
+        }
+      } @else {
+        <p>Зареждане на обяви...</p>
+      }
+    </section>
+  </main>
+  

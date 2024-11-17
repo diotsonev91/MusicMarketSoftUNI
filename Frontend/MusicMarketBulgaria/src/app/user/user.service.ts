@@ -9,7 +9,7 @@ import { UserData } from './user-data.model'; // Import the UserData model
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = 'http://your-backend-url/api/users'; // Replace with your backend's user endpoint
+  private baseUrl = 'http://localhost:5000/users'; // Replace with your backend's user endpoint
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -22,7 +22,7 @@ export class UserService {
     if (!userId) {
       return throwError(() => new Error('No user is currently logged in.'));
     }
-    return this.http.get<UserData>(`${this.baseUrl}/${userId}`).pipe(
+    return this.http.get<UserData>(`${this.baseUrl}/id/${userId}`).pipe(
       catchError((error) => {
         console.error('Error fetching logged user profile:', error);
         return throwError(() => error);
@@ -76,4 +76,37 @@ export class UserService {
       })
     );
   }
+  /**
+ * Fetch all ads for the logged-in user.
+ */
+getLoggedUserAds(): Observable<any[]> {
+  const userId = this.authService.getCurrentUserId();
+  if (!userId) {
+    return throwError(() => new Error('No user is currently logged in.'));
+  }
+  return this.http.get<any[]>(`${this.baseUrl}/${userId}/ads`).pipe(
+    catchError((error) => {
+      console.error('Error fetching user ads:', error);
+      return throwError(() => error);
+    })
+  );
 }
+
+/**
+ * Create a new ad for the logged-in user.
+ */
+createAd(adData: any): Observable<any> {
+  const userId = this.authService.getCurrentUserId();
+  if (!userId) {
+    return throwError(() => new Error('No user is currently logged in.'));
+  }
+  return this.http.post<any>(`${this.baseUrl}/${userId}/ads`, adData).pipe(
+    catchError((error) => {
+      console.error('Error creating ad:', error);
+      return throwError(() => error);
+    })
+  );
+}
+}
+
+

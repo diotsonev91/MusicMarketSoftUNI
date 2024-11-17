@@ -33,7 +33,7 @@ export class LoginComponent {
     this.authService.login(formData).subscribe(
       () => {
         this.errorMessage = null;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/profile']);
       },
       (error) => {
         this.errorMessage = error.error;
