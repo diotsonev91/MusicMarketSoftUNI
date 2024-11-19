@@ -19,4 +19,5 @@ export interface AdData {
     userId: string;
     userName: string; 
     rating: number;
+    createdAt: null;
   }

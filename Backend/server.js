@@ -23,6 +23,9 @@ app.use(cors({
   credentials: true, // Include cookies (if needed)
 }));
 
+//static folder
+app.use("/uploads", express.static("uploads"));
+
 
 // Access MongoDB URI from environment variables
 const mongoUri = process.env.MONGODB_URI;

@@ -4,6 +4,7 @@ import { from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
 import { AuthService } from '../auth/auth.service';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Injectable({
@@ -20,6 +21,7 @@ export class AdService {
     if (!userId) {
       return throwError(() => new Error('No user is currently logged in.'));
     }
+
     return this.http.get<AdData[]>(`${this.baseUrl}/user/${userId}/ads`).pipe(
       catchError((error) => {
         console.error('Error fetching user ads:', error);
@@ -32,28 +34,60 @@ export class AdService {
 
    /**
  * Create a new ad for the logged-in user
- */
-createAd(adData: Partial<AdData>, base64Images: string[]): Observable<AdData> {
+ */createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
   const userId = this.authService.getCurrentUserId();
-  //const userName = this.authService
-  if (!userId) {
-    return throwError(() => new Error('No user is currently logged in.'));
+  
+  const token = this.authService.getAccessToken(); // Assuming this method retrieves the token
+  if (!userId || !token) {
+    return throwError(() => new Error('No user is currently logged in or token is missing.'));
   }
 
-  // Prepare the payload with ad data and Base64 images
-  const payload = { ...adData, images: base64Images };
+  const formData = new FormData();
 
-  // Send the HTTP POST request with the payload
-  return this.http.post<AdData>(`${this.baseUrl}/user/${userId}`, payload).pipe(
+  // Append metadata
+  formData.append('title', adData.title || '');
+  formData.append('description', adData.description || '');
+  formData.append('price', adData.price?.toString() || '');
+  formData.append('deliveryType', adData.deliveryType || '');
+  formData.append('condition', adData.condition || '');
+  formData.append('category', adData.category || '');
+  formData.append('subCategory', adData.subCategory || 'други');
+
+  // Append images to 'images' field
+  images.forEach((image) => formData.append('images', image, image.name));
+
+  // Set headers with the token
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  // Send HTTP POST request with FormData and headers
+  return this.http.post<AdData>(`${this.baseUrl}`, formData, { headers }).pipe(
     catchError((error) => {
       console.error('Error creating ad:', error);
       return throwError(() => error);
     })
   );
 }
+  
   // Edit an ad by ID
-  editAd(adId: string, updates: Partial<AdData>): Observable<AdData> {
-    return this.http.put<AdData>(`${this.baseUrl}/${adId}`, updates).pipe(
+  editAd(adId: string, updates: Partial<AdData>, images: File[]): Observable<AdData> {
+    const formData = new FormData();
+  
+    // Append updated fields
+    if (updates.title) formData.append('title', updates.title);
+    if (updates.description) formData.append('description', updates.description);
+    if (updates.price) formData.append('price', updates.price.toString());
+    if (updates.deliveryType) formData.append('deliveryType', updates.deliveryType);
+    if (updates.condition) formData.append('condition', updates.condition);
+    if (updates.category) formData.append('category', updates.category);
+    if (updates.subCategory) formData.append('subCategory', updates.subCategory);
+  
+    // Append new images to 'images' field
+    images.forEach((image) => formData.append('images', image, image.name));
+  
+    // Send HTTP PUT request with FormData
+    return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData).pipe(
       catchError((error) => {
         console.error(`Error updating ad with ID ${adId}:`, error);
         return throwError(() => error);

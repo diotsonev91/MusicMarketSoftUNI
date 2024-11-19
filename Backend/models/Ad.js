@@ -1,4 +1,3 @@
-// models/Ad.js
 const mongoose = require("mongoose");
 
 const adSchema = new mongoose.Schema({
@@ -30,7 +29,7 @@ const adSchema = new mongoose.Schema({
 
   subCategory: {
     type: String,
-    enum: ["percussion", "woodwind", "string", "brass" , "keyboard", "studio", "PA", "others"],
+    enum: ["percussion", "woodwind", "string", "brass", "keyboard", "studio", "PA", "others"],
     default: "others" // Set default to "others"
   },
   
@@ -42,7 +41,17 @@ const adSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
     required: true 
-  }
+  },
+
+  userName: { 
+    type: String, 
+    required: true 
+  }, // Add userName for fast frontend display
+  
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  } // Add createdAt field
 });
 
 module.exports = mongoose.model("Ad", adSchema);

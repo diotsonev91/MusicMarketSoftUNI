@@ -1,5 +1,5 @@
   export enum Condition {
-    OLD = 'old',
-    NEW = 'new',
+    OLD = 'употребявано',
+    NEW = 'ново',
   }
   

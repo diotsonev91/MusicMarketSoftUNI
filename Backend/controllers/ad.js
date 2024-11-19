@@ -1,105 +1,152 @@
+const multer = require("multer");
 const Ad = require("../models/Ad");
 const User = require("../models/User");
+const fs = require("fs");
+const path = require("path");
 
-exports.createAd = async (req, res) => {
-  try {
-    const { title, description, price, deliveryType, condition, category, instrument, technique, subCategory } = req.body;
 
-    // Assume `images` is an array of URLs uploaded to an external service
-    const images = req.body.images || []; // Array of image BASE 64s
-    console.log("Images Base64s",images)
-    // Log the user ID from the request
-    //console.log("User ID from request (JWT):", req.user.id);
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directory for uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+  },
+});
 
-    // Create the ad object based on the category
-    const adData = {
-      title,
-      description,
-      adRate: null, // Set initial rating to null
-      price,
-      deliveryType,
-      condition,
-      images, // Store URLs of uploaded images
-      category,
-      subCategory: subCategory || "others",
-      user: req.user.id, // Associate the ad with the logged-in user's ID
-    };
+const upload = multer({ storage });
 
-    // Include only `instrument` or `technique` based on the category
-    if (category === "instrument") {
-      adData.instrument = instrument;
-    } else if (category === "music technique") {
-      adData.technique = technique;
+exports.createAd = [
+  upload.array("images", 5), // Handle up to 5 image files
+  async (req, res) => {
+    try {
+      const {
+        title,
+        description,
+        price,
+        deliveryType,
+        condition,
+        category,
+        subCategory,
+        instrument,
+        technique,
+      } = req.body;
+
+      // Get the logged-in user's name from the User model
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Collect file paths from uploaded files
+      const imagePaths = req.files.map((file) => `uploads/${file.filename}`); // Relative path
+
+
+      // Create the ad object
+      const adData = {
+        title,
+        description,
+        price,
+        deliveryType,
+        condition,
+        category,
+        subCategory: subCategory || "други", // Default to "други"
+        images: imagePaths, // Store file paths
+        instrument: category === "инструмент" ? instrument : undefined,
+        technique: category === "музикална техника" ? technique : undefined,
+        user: req.user.id,
+        userName: user.name, // Store the user's name for quick access
+        createdAt: new Date(),
+      };
+
+      const ad = new Ad(adData);
+      await ad.save();
+
+      // Add the ad ID to the user's "adds" array
+      await User.findByIdAndUpdate(req.user.id, { $push: { adds: ad._id } });
+
+      res.status(201).json(ad);
+    } catch (error) {
+      console.error("Error in createAd:", error.message);
+      res.status(500).json({ error: error.message });
     }
+  },
+];
 
-    // Save the new ad
-    const ad = new Ad(adData);
-    await ad.save();
 
-    // Log the ad ID after saving it
-    console.log("Created Ad ID:", ad._id);
-
-    // Add the ad ID to the user's Adds array
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { $push: { adds: ad._id } }, // Add the ad ID to the Adds array
-      { new: true } // Return the updated user document
-    );
-
-    // Log the updated user document to confirm the Adds array update
-    console.log("Updated User Document:", updatedUser);
-
-    // Return the created ad as the response
-    res.status(201).json(ad);
-  } catch (error) {
-    console.error("Error in createAd:", error.message);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Delete Ad
 exports.deleteAd = async (req, res) => {
   try {
-    const isAdmin = req.user.role === "admin";
-
-    // If the user is an admin, find the ad by ID without user restriction
-    let ad;
-    if (isAdmin) {
-      ad = await Ad.findById(req.params.id);
-    } else {
-      // Otherwise, only allow the user to delete their own ad
-      ad = await Ad.findOne({ _id: req.params.id, user: req.user.id });
-    }
-
-    if (!ad) {
+    const ad = await Ad.findById(req.params.id);
+    if (!ad || ad.user.toString() !== req.user.id) {
       return res.status(404).json({ error: "Ad not found or unauthorized" });
     }
 
-    // Remove the ad ID from the owner's `adds` array
-    await User.findByIdAndUpdate(ad.user, { $pull: { adds: req.params.id } });
+    // Remove associated files
+    ad.images.forEach((imagePath) => {
+      const fullPath = path.join(__dirname, "..", imagePath);
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath); // Delete file
+      }
+    });
 
-    // Delete the ad from the ads collection
+    // Delete ad
     await Ad.findByIdAndDelete(req.params.id);
 
-    res.json({ message: "Ad deleted and removed from owner's adds array" });
+    res.json({ message: "Ad deleted successfully" });
   } catch (error) {
+    console.error("Error in deleteAd:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
 
-// Edit Ad
-exports.editAd = async (req, res) => {
-  try {
-    const ad = await Ad.findById(req.params.id);
-    if (!ad || ad.user.toString() !== req.user.id) return res.status(404).json({ error: "Ad not found or unauthorized" });
+exports.editAd = [
+  upload.array("images", 5), // Handle up to 5 new image files
+  async (req, res) => {
+    try {
+      const ad = await Ad.findById(req.params.id);
 
-    Object.assign(ad, req.body);
-    await ad.save();
-    res.json(ad);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+      if (!ad || ad.user.toString() !== req.user.id) {
+        return res.status(404).json({ error: "Ad not found or unauthorized" });
+      }
+
+      const {
+        title,
+        description,
+        price,
+        deliveryType,
+        condition,
+        category,
+        subCategory,
+        instrument,
+        technique,
+      } = req.body;
+
+      // Process new image uploads
+      const newImagePaths = req.files.map((file) => file.path);
+
+      // Update the ad with new and existing data
+      ad.title = title || ad.title;
+      ad.description = description || ad.description;
+      ad.price = price || ad.price;
+      ad.deliveryType = deliveryType || ad.deliveryType;
+      ad.condition = condition || ad.condition;
+      ad.category = category || ad.category;
+      ad.subCategory = subCategory || ad.subCategory;
+      ad.instrument = category === "инструмент" ? instrument : ad.instrument;
+      ad.technique = category === "музикална техника" ? technique : ad.technique;
+
+      // Add new images to the existing ones
+      ad.images = [...ad.images, ...newImagePaths];
+
+      await ad.save();
+      res.json(ad);
+    } catch (error) {
+      console.error("Error in editAd:", error.message);
+      res.status(500).json({ error: error.message });
+    }
+  },
+];
 
 // Get Ad by ID
 exports.getAdById = async (req, res) => {

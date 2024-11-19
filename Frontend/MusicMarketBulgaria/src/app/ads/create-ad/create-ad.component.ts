@@ -5,7 +5,6 @@ import { SubCategories } from '../ad_enums/subCategories.enum';
 import { DeliveryType } from '../ad_enums/delivery-type.enum';
 import { Condition } from '../ad_enums/condition.enum';
 import { AdService } from '../ad.service';
-import { SharedUtilService } from '../../shared/util/shared-util.service';
 
 @Component({
   selector: 'app-create-ad',
@@ -13,7 +12,7 @@ import { SharedUtilService } from '../../shared/util/shared-util.service';
   imports: [ReactiveFormsModule],
   templateUrl: './create-ad.component.html',
   styleUrls: ['./create-ad.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush, // Optimize rendering
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateAdComponent {
   adForm: FormGroup;
@@ -24,13 +23,11 @@ export class CreateAdComponent {
   conditions = Object.values(Condition);
 
   files: (File | null)[] = Array(5).fill(null); // Initialize with 5 empty slots
-  compressedImages: string[] = Array(5).fill(''); // Store compressed Base64 images
 
   constructor(
     private fb: FormBuilder,
     private adService: AdService,
-    private sharedUtilService: SharedUtilService, // For handling compression
-    private cdr: ChangeDetectorRef // Needed for manual change detection with OnPush
+    private cdr: ChangeDetectorRef // For manual change detection
   ) {
     this.adForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
@@ -42,7 +39,6 @@ export class CreateAdComponent {
       price: [null, [Validators.required, Validators.min(0)]],
     });
   }
-
 
   formConfig = {
     title: {
@@ -77,8 +73,6 @@ export class CreateAdComponent {
       placeholder: 'Избери състояние',
     },
   };
-  
-
   /**
    * Handles form submission
    */
@@ -86,11 +80,11 @@ export class CreateAdComponent {
     if (this.adForm.valid) {
       const formData = this.adForm.value;
 
-      // Pass the form data and compressed images to the service
-      this.adService.createAd(formData, this.compressedImages.filter((img) => img)).subscribe({
+      // Pass the form data and selected files to the service
+      this.adService.createAd(formData, this.files.filter((file) => file !== null) as File[]).subscribe({
         next: (response) => {
           console.log('Ad created successfully:', response);
-          this.resetForm(); // Clear form and images after successful submission
+          this.resetForm();
         },
         error: (err) => console.error('Failed to create ad:', err),
       });
@@ -100,33 +94,22 @@ export class CreateAdComponent {
   }
 
   /**
-   * Resets the form and image slots
+   * Resets the form and file slots
    */
   private resetForm(): void {
     this.adForm.reset();
-    this.files = Array(5).fill(null);
-    this.compressedImages = Array(5).fill('');
+    this.files = Array(5).fill(null); // Clear file slots
     this.cdr.markForCheck(); // Ensure UI updates
   }
 
   /**
    * Handles file selection for a specific slot
    */
-  async onFileChange(event: Event, slotIndex: number): Promise<void> {
+  onFileChange(event: Event, slotIndex: number): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.files[slotIndex] = file;
-
-      try {
-        // Compress and store the image
-        const compressedBase64 = await this.sharedUtilService.compressImage(file, 50, 300);
-        this.compressedImages[slotIndex] = compressedBase64;
-      } catch (error) {
-        console.error('Error compressing image:', error);
-      }
-
-      this.cdr.markForCheck(); // Update view manually
+      this.files[slotIndex] = input.files[0]; // Store the selected file
+      this.cdr.markForCheck();
     }
   }
 
@@ -151,7 +134,7 @@ export class CreateAdComponent {
    * Handles drag over
    */
   onDragOver(event: DragEvent): void {
-    event.preventDefault(); // Prevent default to allow drop
+    event.preventDefault();
   }
 
   /**
@@ -160,21 +143,12 @@ export class CreateAdComponent {
   onDrop(event: DragEvent, targetIndex: number): void {
     event.preventDefault();
 
-    // Get the index of the dragged slot
     const draggedIndex = Number(event.dataTransfer?.getData('text/plain'));
 
     if (draggedIndex !== targetIndex) {
-      // Swap the files and compressed images between slots
-      [this.files[targetIndex], this.files[draggedIndex]] = [
-        this.files[draggedIndex],
-        this.files[targetIndex],
-      ];
-      [this.compressedImages[targetIndex], this.compressedImages[draggedIndex]] = [
-        this.compressedImages[draggedIndex],
-        this.compressedImages[targetIndex],
-      ];
-
-      this.cdr.markForCheck(); // Trigger UI update manually
+      // Swap the files between slots
+      [this.files[targetIndex], this.files[draggedIndex]] = [this.files[draggedIndex], this.files[targetIndex]];
+      this.cdr.markForCheck();
     }
   }
 }
