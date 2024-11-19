@@ -1,0 +1,31 @@
+<main class="main-container">
+    <!-- Filter Section -->
+    <app-filter (filtersChanged)="onFiltersChanged($event)"></app-filter>
+  
+  
+    <!-- Product List Section -->
+    <section class="product-list">
+          <!-- Search Section -->
+    <app-search (search)="onSearch($event)"></app-search>
+      <h2>Продукти</h2>
+      <ul class="product-grid">
+        @for (ad of filteredAds; track ad.id) {
+          <li>
+            <a [href]="'/product/' + ad.id">
+              <!-- Display the first image from `images` array -->
+              <img [src]="ad.images[0]" [alt]="ad.title" class="product-thumbnail" />
+              <span class="product-title">{{ ad.title }}</span>
+            </a>
+            <p class="product-price">Цена: {{ ad.price }} лв.</p>
+            <div class="product-details-sm">
+              <p class="product-condition">Състояние: {{ ad.condition }}</p>
+              <p class="product-description">{{ ad.description }}</p>
+              <p class="product-location">Инструмент: {{ ad.instrument }}</p>
+              <p class="product-author">Автор: {{ ad.userName }}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  </main>
+  

@@ -1,0 +1,157 @@
+.main-container {
+    display: flex;
+    flex: 1; /* Позволява на контейнера да расте и се свива според наличното пространство */
+}
+
+
+.main-container-main{
+    display: flex;
+    width: 80%;
+    max-width: 80%;
+    margin: 0px auto;
+    padding: 5px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    
+}
+
+
+
+/* Media query за по-тесни екрани */
+@media (max-width: 768px) {
+    .search-container {
+        flex-direction: column; /* Променя подредбата на колонна */
+        align-items: flex-start; /* Подравнява елементите вляво */
+    }
+
+    .search-container h2 {
+        padding-left: 8rem;
+        margin-bottom: 0.5rem; /* Добавя разстояние под заглавието */
+    }
+
+    .search-input {
+        margin-right: 0; /* Премахва десния марджин */
+        width: 100%; /* Задава пълна ширина */
+        margin-bottom: 1.5rem; 
+    }
+    .search-button {
+        display: none;
+    }
+}
+
+
+
+
+/* Стилове за продуктовата секция */
+/* Mobile-first styles for the product section */
+
+.product-list {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-list h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Hamburger button styles for mobile */
+.hamburger-menu {
+    display: block;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+}
+
+/* Base grid styles for mobile (1 column) */
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for mobile */
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.product-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for mobile */
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+/* Common styles for grid items */
+.product-grid li, .product-grid-2 li {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-thumbnail {
+    width: 100%; 
+    max-width: 300px; 
+    height: auto;
+    border: solid rgba(0, 0, 0, 0.849) 1px;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.product-title {
+    background-color: #f1f1f1;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgba(43, 7, 73, 0.849);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.product-author {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Media queries for larger screens */
+@media (min-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+    }
+
+    /* Hide hamburger menu on larger screens */
+    .hamburger-menu {
+        display: none;
+    }
+}
+
+@media (min-width: 1068px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on desktop */
+    }
+}
+
+@media (min-width: 1368px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
+    }
+}
+
+/* Toggle class for showing the filter panel on mobile */
+.show-filter-panel {
+    display: block !important; /* Show filter panel when this class is added */
+}

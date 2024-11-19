@@ -4,14 +4,14 @@
     @if (!loadingAds) {
       @if (ads.length > 0) {
         <ul>
-          @for (ad of ads; track ad._id) {
+          @for (ad of ads; track ad.id) {
             <li>
               <a href="product.html">
                 <img [src]="ad.images[0]" alt="{{ ad.title }}" class="ad-thumbnail" />
                 <span class="ad-title">{{ ad.title }}</span>
               </a>
-              <button class="edit-button" (click)="editAd(ad._id)">Редакция</button>
-              <button class="delete-button" (click)="deleteAd(ad._id)">Изтриване</button>
+              <button class="edit-button" (click)="editAd(ad.id)">Редакция</button>
+              <button class="delete-button" (click)="deleteAd(ad.id)">Изтриване</button>
             </li>
           }
         </ul>

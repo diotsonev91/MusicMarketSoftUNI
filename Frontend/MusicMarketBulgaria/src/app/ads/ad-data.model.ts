@@ -5,7 +5,7 @@ import { Condition } from './ad_enums/condition.enum';
 
 
 export interface AdData {
-    _id: string;
+    id: string;
     title: string;
     description: string;
     adRate: number | null;
@@ -16,5 +16,7 @@ export interface AdData {
     subCategory: SubCategories;
     images: string[];
     instrument: string;
-    user: string;
+    userId: string;
+    userName: string; 
+    rating: number;
   }

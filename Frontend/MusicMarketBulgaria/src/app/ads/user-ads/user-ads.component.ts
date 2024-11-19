@@ -49,7 +49,7 @@ export class UserAdsComponent implements OnInit {
     this.adService.deleteAd(adId).subscribe({
       next: () => {
         console.log(`Ad with ID ${adId} deleted.`);
-        this.ads = this.ads.filter((ad) => ad._id !== adId);
+        this.ads = this.ads.filter((ad) => ad.id !== adId);
       },
       error: (err) => {
         console.error('Failed to delete ad:', err);

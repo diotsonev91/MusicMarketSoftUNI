@@ -39,8 +39,45 @@ export class CreateAdComponent {
       deliveryType: ['', Validators.required],
       condition: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
+      price: [null, [Validators.required, Validators.min(0)]],
     });
   }
+
+
+  formConfig = {
+    title: {
+      label: 'Заглавие',
+      placeholder: 'Например: Китара Fender Stratocaster',
+      validationMessage: 'Заглавието е задължително и трябва да има поне 5 символа.',
+    },
+    price: {
+      label: 'Цена(в лева)',
+      placeholder: 'Въведете цена',
+      validationMessage: 'Цената е задължителна и трябва да е положителна.',
+    },
+    category: {
+      label: 'Категория',
+      placeholder: 'Избери категория',
+    },
+    subCategory: {
+      label: 'Подкатегория',
+      placeholder: 'Избери подкатегория',
+    },
+    description: {
+      label: 'Описание',
+      placeholder: 'Напиши детайли за обявата',
+      validationMessage: 'Описанието е задължително и трябва да има поне 10 символа.',
+    },
+    deliveryType: {
+      label: 'Тип на доставката',
+      placeholder: 'Избери начин на доставка',
+    },
+    condition: {
+      label: 'Състояние',
+      placeholder: 'Избери състояние',
+    },
+  };
+  
 
   /**
    * Handles form submission

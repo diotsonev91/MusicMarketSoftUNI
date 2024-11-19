@@ -28,11 +28,14 @@ export class AdService {
     );
   }
 
+  
+
    /**
  * Create a new ad for the logged-in user
  */
 createAd(adData: Partial<AdData>, base64Images: string[]): Observable<AdData> {
   const userId = this.authService.getCurrentUserId();
+  //const userName = this.authService
   if (!userId) {
     return throwError(() => new Error('No user is currently logged in.'));
   }

@@ -1,0 +1,28 @@
+/* panel za tursene */
+.search-container {
+    display: flex;
+    flex-direction: row; /* Елементите са подредени в ред по подразбиране */
+    align-items: center; /* Подравнява елементите вертикално */
+    justify-content: space-between;
+}
+
+.search-container h2 {
+    padding-left: 4.5rem;
+    padding-right: 4.5rem;
+    margin: 0;
+}
+
+.search-input {
+    flex: 1; /* Лентата за търсене заема възможно най-много пространство */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.search-button {
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}

@@ -157,3 +157,7 @@ h2 {
 #description {
 width: 90%;
 }
+
+.form-section .error {
+    color: red;
+}

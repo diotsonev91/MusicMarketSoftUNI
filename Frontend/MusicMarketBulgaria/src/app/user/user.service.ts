@@ -58,6 +58,28 @@ export class UserService {
   }
 
   /**
+ * Fetch the username of the logged-in user.
+ */
+getLoggedUserName(): Observable<string> {
+  return new Observable((observer) => {
+    this.getLoggedUserProfile().subscribe({
+      next: (userProfile) => {
+        if (userProfile && userProfile.username) {
+          observer.next(userProfile.username); // Emit the username
+          observer.complete(); // Mark the observable as completed
+        } else {
+          observer.error(new Error('Username not found in the user profile.'));
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching logged user profile:', err);
+        observer.error(err); // Forward the error
+      },
+    });
+  });
+}
+
+  /**
    * Delete the logged-in user.
    */
   deleteLoggedUser(): Observable<{ message: string }> {

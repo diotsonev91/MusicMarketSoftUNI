@@ -1,0 +1,83 @@
+
+/* Стилове за страничния панел за филтриране */
+.filter-panel {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    margin-right: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-panel h3, .filter-panel h4 {
+    color: #333;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.filter-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+
+/* Скриване на стандартния чекбокс */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Стил при отметнато състояние */
+input[type="checkbox"]:checked {
+    background-color: rgb(56, 116, 120); /* Тук можеш да зададеш цвета, който искаш */
+    border-color: rgb(56, 116, 120);
+}
+
+/* Добавяне на икона за отметка */
+input[type="checkbox"]:checked::after {
+    content: '✔'; /* Или използвай друга икона */
+    color: white;
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.price-filter {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.price-filter label {
+    display: block;
+    margin-top: 10px;
+}
+
+
+
+
+
+.filter-panel li {
+    margin-bottom: 8px;
+}
+
+.filter-panel button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: rgb(56, 116, 120);;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter-panel button:hover {
+    background-color: #a1d8b3;
+}
