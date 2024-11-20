@@ -9,9 +9,9 @@
     <app-search (search)="onSearch($event)"></app-search>
       <h2>Продукти</h2>
       <ul class="product-grid">
-        @for (ad of filteredAds; track ad.id) {
+        @for (ad of filteredAds; track ad._id) {
           <li>
-            <a [href]="'/product/' + ad.id">
+            <a [href]="'/product/' + ad._id">
               <!-- Display the first image from `images` array -->
               <img [src]="ad.images[0]" [alt]="ad.title" class="product-thumbnail" />
               <span class="product-title">{{ ad.title }}</span>

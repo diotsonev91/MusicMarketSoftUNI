@@ -53,9 +53,17 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Generate access and refresh tokens
-    const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "30d" });
+   // Generate access and refresh tokens
+   const accessToken = jwt.sign(
+    { id: user._id, role: user.role, username: user.username },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  const refreshToken = jwt.sign(
+    { id: user._id, username: user.username },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "30d" }
+  );
 
     // Set refresh token as HTTP-only cookie
     res.cookie('refreshToken', refreshToken, {
@@ -87,8 +95,12 @@ exports.refreshToken = async (req, res) => {
       return res.status(403).json({ error: "Invalid refresh token" });
     }
 
-    // Generate a new access token
-    const newAccessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
+ // Generate a new access token with the username and role
+ const newAccessToken = jwt.sign(
+  { id: user._id, role: user.role, username: user.username },
+  process.env.JWT_SECRET,
+  { expiresIn: "1h" }
+);
 
     res.json({ accessToken: newAccessToken });
   } catch (error) {

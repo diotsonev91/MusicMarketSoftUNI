@@ -15,13 +15,26 @@ export class AdService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  // Fetch all ads for the logged-in user
-  getLoggedUserAds(): Observable<AdData[]> {
+ 
+   // Private method to prepare headers and check user authentication
+   private getAuthorizedHeaders(): { headers: HttpHeaders, userId: string } {
     const userId = this.authService.getCurrentUserId();
-    if (!userId) {
-      return throwError(() => new Error('No user is currently logged in.'));
+    const token = this.authService.getAccessToken();
+
+    if (!userId || !token) {
+      throw new Error('No user is currently logged in or token is missing.');
     }
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return { headers, userId };
+  }
+
+   // Fetch all ads for the logged-in user
+   getLoggedUserAds(): Observable<AdData[]> {
+    const { userId } = this.getAuthorizedHeaders();
     return this.http.get<AdData[]>(`${this.baseUrl}/user/${userId}/ads`).pipe(
       catchError((error) => {
         console.error('Error fetching user ads:', error);
@@ -29,52 +42,35 @@ export class AdService {
       })
     );
   }
+  // Create a new ad for the logged-in user
+  createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
+    const { headers, userId } = this.getAuthorizedHeaders();
 
-  
+    const formData = new FormData();
+    formData.append('title', adData.title || '');
+    formData.append('description', adData.description || '');
+    formData.append('price', adData.price?.toString() || '');
+    formData.append('deliveryType', adData.deliveryType || '');
+    formData.append('condition', adData.condition || '');
+    formData.append('category', adData.category || '');
+    formData.append('subCategory', adData.subCategory || 'други');
+    formData.append('userId', userId);
 
-   /**
- * Create a new ad for the logged-in user
- */createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
-  const userId = this.authService.getCurrentUserId();
-  
-  const token = this.authService.getAccessToken(); // Assuming this method retrieves the token
-  if (!userId || !token) {
-    return throwError(() => new Error('No user is currently logged in or token is missing.'));
+    images.forEach((image) => formData.append('images', image, image.name));
+
+    return this.http.post<AdData>(`${this.baseUrl}`, formData, { headers }).pipe(
+      catchError((error) => {
+        console.error('Error creating ad:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
-  const formData = new FormData();
-
-  // Append metadata
-  formData.append('title', adData.title || '');
-  formData.append('description', adData.description || '');
-  formData.append('price', adData.price?.toString() || '');
-  formData.append('deliveryType', adData.deliveryType || '');
-  formData.append('condition', adData.condition || '');
-  formData.append('category', adData.category || '');
-  formData.append('subCategory', adData.subCategory || 'други');
-
-  // Append images to 'images' field
-  images.forEach((image) => formData.append('images', image, image.name));
-
-  // Set headers with the token
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-
-  // Send HTTP POST request with FormData and headers
-  return this.http.post<AdData>(`${this.baseUrl}`, formData, { headers }).pipe(
-    catchError((error) => {
-      console.error('Error creating ad:', error);
-      return throwError(() => error);
-    })
-  );
-}
-  
   // Edit an ad by ID
   editAd(adId: string, updates: Partial<AdData>, images: File[]): Observable<AdData> {
+    const { headers } = this.getAuthorizedHeaders();
+
     const formData = new FormData();
-  
-    // Append updated fields
     if (updates.title) formData.append('title', updates.title);
     if (updates.description) formData.append('description', updates.description);
     if (updates.price) formData.append('price', updates.price.toString());
@@ -82,12 +78,10 @@ export class AdService {
     if (updates.condition) formData.append('condition', updates.condition);
     if (updates.category) formData.append('category', updates.category);
     if (updates.subCategory) formData.append('subCategory', updates.subCategory);
-  
-    // Append new images to 'images' field
+
     images.forEach((image) => formData.append('images', image, image.name));
-  
-    // Send HTTP PUT request with FormData
-    return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData).pipe(
+
+    return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData, { headers }).pipe(
       catchError((error) => {
         console.error(`Error updating ad with ID ${adId}:`, error);
         return throwError(() => error);
@@ -97,7 +91,8 @@ export class AdService {
 
   // Delete an ad by ID
   deleteAd(adId: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/${adId}`).pipe(
+    const { headers } = this.getAuthorizedHeaders();
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${adId}`, { headers }).pipe(
       catchError((error) => {
         console.error(`Error deleting ad with ID ${adId}:`, error);
         return throwError(() => error);
@@ -105,15 +100,6 @@ export class AdService {
     );
   }
 
-  // Get ad by ID
-  getAdById(adId: string): Observable<AdData> {
-    return this.http.get<AdData>(`${this.baseUrl}/${adId}`).pipe(
-      catchError((error) => {
-        console.error(`Error fetching ad with ID ${adId}:`, error);
-        return throwError(() => error);
-      })
-    );
-  }
 
   // Get all ads (Public)
   getAllAds(): Observable<AdData[]> {

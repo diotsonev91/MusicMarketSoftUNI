@@ -8,19 +8,18 @@ require("dotenv").config(); // Load environment variables
 const app = express();
 app.use(express.json());
 
-// Use CORS middleware with specific configuration
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow any localhost origin
-    if (origin && origin.startsWith('http://localhost')) {
+    // Allow localhost origins or requests with no origin (e.g., Postman or preflight)
+    if (!origin || origin.startsWith('http://localhost')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow token headers
-  credentials: true, // Include cookies (if needed)
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
 
 //static folder

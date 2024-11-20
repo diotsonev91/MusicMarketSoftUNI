@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Categories } from '../ad_enums/categories.enum';
 import { SubCategories } from '../ad_enums/subCategories.enum';
@@ -22,23 +26,8 @@ export class CreateAdComponent {
   deliveryTypes = Object.values(DeliveryType);
   conditions = Object.values(Condition);
 
-  files: (File | null)[] = Array(5).fill(null); // Initialize with 5 empty slots
-
-  constructor(
-    private fb: FormBuilder,
-    private adService: AdService,
-    private cdr: ChangeDetectorRef // For manual change detection
-  ) {
-    this.adForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5)]],
-      category: ['', Validators.required],
-      subCategory: ['', Validators.required],
-      deliveryType: ['', Validators.required],
-      condition: ['', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      price: [null, [Validators.required, Validators.min(0)]],
-    });
-  }
+  files: (File | null)[] = Array(5).fill(null); // Array to store up to 5 files
+  private filePreviews: Map<number, string> = new Map(); // Cache for file previews
 
   formConfig = {
     title: {
@@ -73,6 +62,23 @@ export class CreateAdComponent {
       placeholder: 'Избери състояние',
     },
   };
+
+  constructor(
+    private fb: FormBuilder,
+    private adService: AdService,
+    private cdr: ChangeDetectorRef // Manual change detection
+  ) {
+    this.adForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5)]],
+      category: ['', Validators.required],
+      subCategory: ['', Validators.required],
+      deliveryType: ['', Validators.required],
+      condition: ['', Validators.required],
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      price: [null, [Validators.required, Validators.min(0)]],
+    });
+  }
+
   /**
    * Handles form submission
    */
@@ -97,9 +103,17 @@ export class CreateAdComponent {
    * Resets the form and file slots
    */
   private resetForm(): void {
+    // Clear form and file cache
+    this.files.forEach((_file, index) => {
+      if (this.filePreviews.has(index)) {
+        URL.revokeObjectURL(this.filePreviews.get(index)!);
+      }
+    });
+
+    this.filePreviews.clear();
+    this.files = Array(5).fill(null); // Reset files
     this.adForm.reset();
-    this.files = Array(5).fill(null); // Clear file slots
-    this.cdr.markForCheck(); // Ensure UI updates
+    this.cdr.markForCheck();
   }
 
   /**
@@ -108,8 +122,14 @@ export class CreateAdComponent {
   onFileChange(event: Event, slotIndex: number): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
+      // Revoke old URL and store new file
+      if (this.filePreviews.has(slotIndex)) {
+        URL.revokeObjectURL(this.filePreviews.get(slotIndex)!);
+        this.filePreviews.delete(slotIndex);
+      }
+
       this.files[slotIndex] = input.files[0]; // Store the selected file
-      this.cdr.markForCheck();
+      this.cdr.markForCheck(); // Update UI
     }
   }
 
@@ -118,7 +138,14 @@ export class CreateAdComponent {
    */
   getFileUrl(slotIndex: number): string | null {
     const file = this.files[slotIndex];
-    return file ? URL.createObjectURL(file) : null;
+    if (!file) return null;
+
+    if (!this.filePreviews.has(slotIndex)) {
+      const url = URL.createObjectURL(file);
+      this.filePreviews.set(slotIndex, url); // Cache the preview
+    }
+
+    return this.filePreviews.get(slotIndex) || null;
   }
 
   /**
@@ -134,7 +161,7 @@ export class CreateAdComponent {
    * Handles drag over
    */
   onDragOver(event: DragEvent): void {
-    event.preventDefault();
+    event.preventDefault(); // Allow drop
   }
 
   /**
@@ -144,11 +171,10 @@ export class CreateAdComponent {
     event.preventDefault();
 
     const draggedIndex = Number(event.dataTransfer?.getData('text/plain'));
-
     if (draggedIndex !== targetIndex) {
-      // Swap the files between slots
+      // Swap files between slots
       [this.files[targetIndex], this.files[draggedIndex]] = [this.files[draggedIndex], this.files[targetIndex]];
-      this.cdr.markForCheck();
+      this.cdr.markForCheck(); // Update UI
     }
   }
 }

@@ -37,6 +37,22 @@ export class AuthService {
     return localStorage.getItem('accessToken');
   }
 
+  getCurrentUsername(): string | null {
+    const token = this.getAccessToken();
+    if (token) {
+      try {
+        // Decode the JWT payload
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.username || null; // Extract 'username' from the payload
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+  
+
   // Refresh token function, which uses the refresh token from the HTTP-only cookie
   refreshAccessToken(): Observable<string | null> {
     return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/refresh-token`, {}, { withCredentials: true }).pipe(
