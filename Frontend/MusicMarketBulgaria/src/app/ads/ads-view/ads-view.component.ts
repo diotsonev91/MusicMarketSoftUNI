@@ -3,11 +3,13 @@ import { AdService } from '../ad.service';
 import { AdData } from '../ad-data.model';
 import { FilterComponent } from '../filter/filter.component';
 import { SearchComponent } from '../search/search.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-ads-view',
   standalone: true,
-  imports: [FilterComponent, SearchComponent],
+  imports: [FilterComponent, SearchComponent, CommonModule, RouterModule],
   templateUrl: './ads-view.component.html',
   styleUrls: ['./ads-view.component.css'],
 })

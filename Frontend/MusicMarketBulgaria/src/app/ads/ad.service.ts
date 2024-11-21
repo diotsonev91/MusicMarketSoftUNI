@@ -100,6 +100,15 @@ export class AdService {
     );
   }
 
+   // Get Ad by ID(public)
+   getAdById(id: string): Observable<AdData> {
+    return this.http.get<AdData>(`${this.baseUrl}/${id}`).pipe(
+      catchError((error) => {
+        console.error(`Error fetching ad by ID: ${id}`, error);
+        return throwError(() => error);
+      })
+    );
+  }
 
   // Get all ads (Public)
   getAllAds(): Observable<AdData[]> {

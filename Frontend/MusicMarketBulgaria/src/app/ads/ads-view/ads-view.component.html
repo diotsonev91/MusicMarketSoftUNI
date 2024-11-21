@@ -11,7 +11,7 @@
       <ul class="product-grid">
         @for (ad of filteredAds; track ad._id) {
           <li>
-            <a [href]="'/product/' + ad._id">
+            <a  [routerLink]="['/ad-details', ad._id]">
               <!-- Display the first image from `images` array -->
               <img [src]="ad.images[0]" [alt]="ad.title" class="product-thumbnail" />
               <span class="product-title">{{ ad.title }}</span>

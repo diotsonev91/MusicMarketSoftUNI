@@ -20,4 +20,6 @@ export interface AdData {
     userName: string; 
     rating: number;
     createdAt: null;
+    likes: null;
+    location?: string;
   }
