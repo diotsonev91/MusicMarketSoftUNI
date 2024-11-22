@@ -2,45 +2,6 @@
 /* Стилове за продуктовата секция */
 /* Mobile-first styles for the product section */
 
-.product-list {
-    flex-grow: 1;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.product-list h2 {
-    text-align: center;
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-/* Hamburger button styles for mobile */
-.hamburger-menu {
-    display: block;
-    font-size: 1.8rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    margin: 10px;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-}
-
-/* Base grid styles for mobile (1 column) */
-.product-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Single column for mobile */
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-    width: 100%;
-}
 
 .product-grid-2 {
     display: grid;
@@ -51,48 +12,12 @@
     width: 100%;
 }
 
-/* Common styles for grid items */
-.product-grid li, .product-grid-2 li {
-    background-color: #f1f1f1;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
 
-.product-thumbnail {
-    width: 100%; 
-    max-width: 300px; 
-    height: auto;
-    border: solid rgba(0, 0, 0, 0.849) 1px;
-    margin-bottom: 10px;
-    object-fit: cover;
-}
-
-.product-title {
-    background-color: #f1f1f1;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: rgba(43, 7, 73, 0.849);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: block;
-    margin-bottom: 8px;
-}
-
-.product-author {
-    font-size: 0.9rem;
-    color: #555;
-}
 
 /* Media queries for larger screens */
 @media (min-width: 768px) {
     .product-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
-    }
-
-    /* Hide hamburger menu on larger screens */
-    .hamburger-menu {
-        display: none;
     }
 }
 
@@ -108,115 +33,10 @@
     }
 }
 
-/* Toggle class for showing the filter panel on mobile */
-.show-filter-panel {
-    display: block !important; /* Show filter panel when this class is added */
-}
+
 /* Секция Продукт */
 
-.down-right, .down-left{
-    padding-top: 4%;
-    
-}
 
-.image-and-text {
-    display: flex;
-    gap: 20px; /* Разстояние между изображението и текста */
-    align-items: flex-start;
-}
-
-.product-details, .comments, .profile {
-    display:block;
-    max-width: 800px;
-    
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.comments{
-    margin-top: 4%;
-}
-
-.product-details {
-    padding-bottom: 4%;
-}
-
-.product-details-sm {
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.4);
-    text-align: left;
-    margin-top: 10px;
-}
-
-.price-image {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.product-image {
-    width: 100%; 
-    max-width: 400px; /* Максимална ширина за по-добра визуализация */
-    height: auto;
-    border-radius: 8px;
-    margin: 15px 0;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-.image-big {
-    position: relative;
-    left: 6%;
-    
-}
-
-.product-image-big {
-    
-    width: 100%;
-    max-width: 400px;
-    
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
-}
-
-.arrow {
-    position: absolute;
-    top: 90%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.7);
-    border: none;
-    border-left: solid black 3px;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 20%;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.arrow:hover {
-    background-color: rgb(196, 182, 201);
-}
-
-.left-arrow {
-    left: 50%; /* Позициониране вляво */
-}
-
-.right-arrow {
-    right: 40%; /* Позициониране вдясно */
-}
-
-.product-details h2 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.price-image .product-price {
-   
-    width: 250px;
-    max-width:400px;
-}
 .split-screen {
     margin-top: 1%;
 
@@ -231,10 +51,7 @@
     padding-bottom: 20px;
 }
 
-.up-right{
-    display: inline;
-   
-}
+
 
 .split-screen .left{
     background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(216, 214, 214, 0.4));
@@ -259,145 +76,3 @@
     }
 }
 
-.thumbnail-gallery {
-    padding-top: 2%;
-    padding-left: 6%;
-    display: flex;
-    gap: 10px; /* Разстояние между миниатюрите */
-}
-
-.thumbnail {
-    width: 150px; /* Размер на миниатюрите */
-    cursor: pointer; /* Показва, че е кликваема */
-    border: 2px solid #ddd; /* Лека рамка за визуален ефект */
-    transition: transform 0.2s; /* Ефект при движение */
-}
-
-.thumbnail:hover {
-    transform: scale(1.1); /* Уголемяване при задържане */
-}
-
-.product-price {
-    
-    font-size: 1.1rem;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.product-condition {
-    background-color: #2f5257;
-    box-shadow: 0 4px 8px rgba(83, 48, 48, 0.4);
-    font-size: 1rem;
-    color: #e8e7e9;
-    margin-bottom: 5px;
-}
-
-.product-description {
-    font-size: 0.96rem;
-    color: #555;
-    margin-bottom: 10px;
-}
-
-.product-location {
-    font-size: 1rem;
-    color: #927fbf;
-    margin-bottom: 5px;
-    font-style: italic;
-}
-
-.comments h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.comment {
-    padding: 10px;
-    border-top: 1px solid #ccc;
-    margin-top: 10px;
-}
-
-.comment p {
-    font-size: 1rem;
-    color: #555;
-}
-
-.comments form {
-    margin-top: 15px;
-}
-
-.comments label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.comments textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    resize: vertical;
-    margin-bottom: 10px;
-}
-
-.comments button {
-    padding: 10px 20px;
-    background-color: #0ebe92;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.comments button:hover {
-    border: solid ;
-    border-color:#9B7EBD ;
-    background-color: #ffc107;
-}
-
-/* Стилове за звездичките */
-
-
-.stars .fa-star, .stars .fa-star-half-alt, .stars .fa-star-o {
-    color: #ffd700; /* Златен цвят за активни звездички */
-}
-
-.stars .fa-star-o {
-    color: #ccc; /* Светлосив цвят за неактивни звездички */
-}
-
-/* Стилове за бутоните за харесване */
-.rating-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5%;
-}
-
-.rating-buttons button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    margin: 0 5px;
-}
-
-.thumbs-up {
-    color: #1e544b;
-}
-
-.thumbs-down {
-    color: #e480b7;
-}
-
-.rating-buttons span {
-    font-size: 1.2rem;
-    margin: 0 5px;
-    color: #333;
-}
-
-.rating-buttons button:hover {
-    opacity: 0.8;
-}

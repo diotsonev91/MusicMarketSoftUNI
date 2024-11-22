@@ -1,0 +1,20 @@
+<div class="down-right">
+<section class="product-list">
+    <h2>TOP Продукти на този продавач</h2>
+    <ul class="product-grid">
+      @for (product of relatedAds; track product._id) {
+        <li>
+          <a href="#">
+            <img
+              [src]="product.images[0]"
+              alt="{{ product.title }}"
+              class="product-thumbnail"
+            />
+            <span class="product-title">{{ product.title }}</span>
+          </a>
+          <p class="product-price">Цена: {{ product.price }} лв.</p>
+        </li>
+      }
+    </ul>
+  </section>
+</div>

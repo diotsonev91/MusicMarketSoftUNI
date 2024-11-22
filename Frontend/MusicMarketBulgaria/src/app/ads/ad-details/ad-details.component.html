@@ -2,82 +2,15 @@
     <div class="split-screen">
       <!-- Left Section -->
       <div class="left">
-        <section class="product-details">
-          <h2>
-            {{ ad?.title }}
-            <span class="stars" id="rating-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="far fa-star"></i>
-              <i class="far fa-star"></i>
-            </span>
-          </h2>
-          <div class="image-and-text">
-            <div class="price-image">
-              <img [src]="ad?.images?.[0]" alt="{{ ad?.title }}" class="product-image" />
-              <p class="product-price">Цена: {{ ad?.price }} лв.</p>
-              <div class="rating-buttons">
-                <button class="thumbs-up">
-                  <i class="fas fa-thumbs-up"></i>
-                </button>
-                <span id="likes-count">{{ ad?.likes }}</span>
-                <button class="thumbs-down">
-                  <i class="fas fa-thumbs-down"></i>
-                </button>
-              </div>
-            </div>
-            <div class="product-details-sm">
-              <p class="product-condition">Състояние: {{ ad?.condition }}</p>
-              <p class="product-description">{{ ad?.description }}</p>
-              <p class="product-location">Местоположение: {{ ad?.location }}</p>
-              <p class="product-author">Автор: {{ ad?.userName }}</p>
-            </div>
-          </div>
-        </section>
-        <section class="comments">
-            <h3>Контакт с продавача</h3>
-            <div class="comment">
-                <p><strong><i class="fas fa-user"></i> Потребител</strong></p>
-                    
-            </div>
-            <form>
-                <label for="comment">Изпрати съобщение:</label>
-                <textarea id="comment" rows="4"></textarea>
-                <button type="submit">Изпрати</button>
-            </form>
-        </section>
+      <app-ad-details-card [ad]="ad"></app-ad-details-card>
+       <app-contact-form [ad]="ad"></app-contact-form>
       </div>
       <!-- Right Section -->
       <div class="right">
-        <div class="up-right">
-          <div class="image-big">
-            <button class="arrow left-arrow" (click)="previousImage()">&#10094;</button>
-            <img [src]="ad?.images?.[currentImageIndex]" alt="{{ ad?.title }}" class="product-image-big" />
-            <button class="arrow right-arrow" (click)="nextImage()">&#10095;</button>
-          </div>
-        </div>
+        <app-ad-details-images [ad]="ad"></app-ad-details-images>
   
-        <div class="down-right">
-          <section class="product-list">
-            <h2>TOP Продукти на този продавач</h2>
-            <ul class="product-grid">
-              @for (product of relatedAds; track product._id) {
-                <li>
-                  <a href="#">
-                    <img
-                      [src]="product.images[0]"
-                      alt="{{ product.title }}"
-                      class="product-thumbnail"
-                    />
-                    <span class="product-title">{{ product.title }}</span>
-                  </a>
-                  <p class="product-price">Цена: {{ product.price }} лв.</p>
-                </li>
-              }
-            </ul>
-          </section>
-        </div>
+        
+        <app-ad-user-related-top-ads [relatedAds]="relatedAds"></app-ad-user-related-top-ads>
       </div>
     </div>
   </main>

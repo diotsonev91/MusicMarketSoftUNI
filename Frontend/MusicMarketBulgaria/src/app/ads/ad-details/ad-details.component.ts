@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdService } from '../ad.service';
-import { ChatService } from '../../chat/chat.service';
 import { AdData } from '../ad-data.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ContactFormComponent } from './contact-form/contact-form.component';
+import { AdDetailsCardComponent } from './ad-details-card/ad-details-card.component';
+import { AdDetailsImagesComponent } from './ad-details-images/ad-details-images.component';
+import { AdUserRelatedTopAdsComponent } from './ad-user-related-top-ads/ad-user-related-top-ads.component';
 
 @Component({
   selector: 'app-ad-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ContactFormComponent, AdDetailsCardComponent, AdDetailsImagesComponent,AdUserRelatedTopAdsComponent],
   templateUrl: './ad-details.component.html',
   styleUrls: ['./ad-details.component.css'],
 })
 export class AdDetailsComponent implements OnInit {
   ad: AdData | null = null;
   relatedAds: AdData[] = [];
-  messageContent: string = '';
-  currentImageIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
     private adService: AdService,
-    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -50,40 +50,4 @@ export class AdDetailsComponent implements OnInit {
     });
   }
 
-  nextImage(): void {
-    if (this.ad && this.ad.images) {
-      this.currentImageIndex =
-        (this.currentImageIndex + 1) % this.ad.images.length;
-    }
-  }
-
-  previousImage(): void {
-    if (this.ad && this.ad.images) {
-      this.currentImageIndex =
-        (this.currentImageIndex - 1 + this.ad.images.length) %
-        this.ad.images.length;
-    }
-  }
-
-  sendMessage(): void {
-    if (!this.messageContent.trim()) {
-      console.error('Message content is empty');
-      return;
-    }
-
-    if (!this.ad?.userId) {
-      console.error('Ad details are incomplete. Cannot send the message.');
-      return;
-    }
-
-    this.chatService.sendMessage(this.ad.userId, this.messageContent).subscribe({
-      next: (response) => {
-        console.log('Message sent successfully:', response);
-        this.messageContent = '';
-      },
-      error: (err) => {
-        console.error('Failed to send message:', err);
-      },
-    });
-  }
 }

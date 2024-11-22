@@ -1,0 +1,102 @@
+.image-and-text {
+    display: flex;
+    gap: 20px; /* Разстояние между изображението и текста */
+    align-items: flex-start;
+}
+
+
+.price-image {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.product-image {
+    width: 100%; 
+    max-width: 400px; /* Максимална ширина за по-добра визуализация */
+    height: auto;
+    border-radius: 8px;
+    margin: 15px 0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-condition {
+    background-color: #2f5257;
+    box-shadow: 0 4px 8px rgba(83, 48, 48, 0.4);
+    font-size: 1rem;
+    color: #e8e7e9;
+    margin-bottom: 5px;
+}
+
+.product-description {
+    font-size: 0.96rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.product-location {
+    font-size: 1rem;
+    color: #927fbf;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+
+/* Стилове за бутоните за харесване */
+.rating-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
+
+.rating-buttons button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.thumbs-up {
+    color: #1e544b;
+}
+
+.thumbs-down {
+    color: #e480b7;
+}
+
+.rating-buttons span {
+    font-size: 1.2rem;
+    margin: 0 5px;
+    color: #333;
+}
+
+.rating-buttons button:hover {
+    opacity: 0.8;
+}
+
+.product-details {
+    padding-bottom: 4%;
+}
+
+.product-details-sm {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.4);
+    text-align: left;
+    margin-top: 10px;
+}
+
+/* Стилове за звездичките */
+
+
+.stars .fa-star, .stars .fa-star-half-alt, .stars .fa-star-o {
+    color: #ffd700; /* Златен цвят за активни звездички */
+    
+}
+
+.stars .fa-star-o {
+    color: #ccc; /* Светлосив цвят за неактивни звездички */
+}

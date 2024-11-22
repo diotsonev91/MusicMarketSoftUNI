@@ -1,0 +1,33 @@
+<section class="product-details">
+    <h2>
+      {{ ad?.title }}
+      <span class="stars" id="rating-stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+      </span>
+    </h2>
+    <div class="image-and-text">
+      <div class="price-image">
+        <img [src]="ad?.images?.[0]" alt="{{ ad?.title }}" class="product-image" />
+        <p class="product-price">Цена: {{ ad?.price }} лв.</p>
+        <div class="rating-buttons">
+          <button class="thumbs-up">
+            <i class="fas fa-thumbs-up"></i> 
+          </button>
+          <span id="likes-count">{{ ad?.likes }}</span>
+          <button class="thumbs-down">
+            <i class="fas fa-thumbs-down"></i>
+          </button>
+        </div>
+      </div>
+      <div class="product-details-sm">
+        <p class="product-condition">Състояние: {{ ad?.condition }}</p>
+        <p class="product-description">{{ ad?.description }}</p>
+        <p class="product-location">Местоположение: {{ ad?.location }}</p>
+        <p class="product-author">Автор: {{ ad?.userName }}</p>
+      </div>
+    </div>
+  </section>
