@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { UserData } from '../user-data.model';
+import { Router } from '@angular/router';
 import { UserAdsComponent } from '../../ads/user-ads/user-ads.component';
 @Component({
   selector: 'app-profile',
@@ -15,7 +16,7 @@ export class ProfileComponent implements OnInit {
   ads: any[] = []; // Will later align with the Ad model
   error: string | null = null;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUserProfile();
@@ -38,5 +39,6 @@ export class ProfileComponent implements OnInit {
 
   editProfile(): void {
     console.log('Edit profile clicked');
+    this.router.navigate(['/edit-profile']);
   }
 }

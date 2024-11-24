@@ -5,6 +5,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
 import { AuthService } from '../auth/auth.service';
 import { HttpHeaders } from '@angular/common/http';
+import { UserService } from '../user/user.service';
 
 
 @Injectable({
@@ -13,12 +14,12 @@ import { HttpHeaders } from '@angular/common/http';
 export class AdService {
   private baseUrl = 'http://localhost:5000/ads';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, private userService: UserService) {}
 
  
    // Private method to prepare headers and check user authentication
    private getAuthorizedHeaders(): { headers: HttpHeaders, userId: string } {
-    const userId = this.authService.getCurrentUserId();
+    const userId = this.userService.getCurrentUserId();
     const token = this.authService.getAccessToken();
 
     if (!userId || !token) {

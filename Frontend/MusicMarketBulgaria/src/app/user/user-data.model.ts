@@ -1,8 +1,11 @@
 export interface UserData {
-    uid: string;               // Unique user ID from MongoDB
+    id: string;               // Unique user ID from MongoDB
     username: string;          
     firstname: string;         
-    lastname: string;         
+    lastname: string;       
+    location: string;  
     email: string;   
-    ads: null          
+    ads: null     
+    password: string;     
+    role: String;
 }

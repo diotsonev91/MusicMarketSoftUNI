@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { SharedFormComponent } from '../../shared/shared-form/shared-form.component';
-import { RegisterUserData } from '../register-user-data.model'; // Import RegisterUserData model
+import { UserData } from '../../user/user-data.model'; // Import RegisterUserData model
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -40,7 +41,7 @@ export class RegisterComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onRegister(formData: Partial<RegisterUserData & { confirmPassword?: string }>) {
+  onRegister(formData: Partial<UserData & { confirmPassword?: string }>) {
     // Simple check for password confirmation
     if (formData.password !== formData.confirmPassword) {
       this.errorMessage = 'Passwords do not match!';
@@ -49,15 +50,15 @@ export class RegisterComponent {
 
     // Call the AuthService's register method with the form data
     const { confirmPassword, ...userData } = formData; // Exclude confirmPassword
-    this.authService.register(userData as RegisterUserData).subscribe(
+    this.authService.register(userData as UserData).subscribe(
       () => {
         this.errorMessage = null;
         this.router.navigate(['/login']); // Redirect on successful registration
       },
-      (errorResponse) => {
-       
-          this.errorMessage = errorResponse.error; 
-          //console.log(this.errorMessage)
+      (error: HttpErrorResponse) => {
+        console.log('Full error response:', error);
+        console.log('Backend error message:', error.error?.error);
+        this.errorMessage = error.error?.error || 'An unexpected error occurred';
       }
     );
   }

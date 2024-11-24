@@ -1,0 +1,35 @@
+/* Style for the Dangerous ZONE heading */
+.dangerous-zone-heading {
+    color: rgb(194, 49, 49); /* Red text for the heading */
+    text-align: center; /* Center the text */
+    font-size: 1.5rem; /* Adjust the font size */
+    margin-bottom: 1rem; /* Add some space below the heading */
+  }
+  
+  /* Style for the delete button */
+  .delete-button {
+    background-color: rgb(194, 49, 49); /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 0.75rem 1.5rem; /* Padding for the button */
+    font-size: 1rem; /* Adjust font size */
+    font-weight: bold; /* Make text bold */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center text inside the button */
+    display: inline-block; /* Ensure it's treated as a block for centering */
+    margin: 1rem auto; /* Center the button horizontally */
+    display: block; /* Ensure it respects margin auto */
+  }
+  
+  /* Hover effect for the delete button */
+  .delete-button:hover {
+    background-color: darkred; /* Darker red on hover */
+    color: white; /* Keep text white */
+  }
+  
+  /* Center the container for the Dangerous Zone section */
+  .dangerous-zone-container {
+    text-align: center; /* Center all content inside this container */
+    margin-top: 2rem; /* Add some space above the section */
+  }

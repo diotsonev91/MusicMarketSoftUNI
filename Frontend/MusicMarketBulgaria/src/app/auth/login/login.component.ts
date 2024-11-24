@@ -36,7 +36,7 @@ export class LoginComponent {
         this.router.navigate(['/profile']);
       },
       (error) => {
-        this.errorMessage = error.error;
+        this.errorMessage = error.error?.error || 'An unexpected error occurred';;
       }
     );
   }

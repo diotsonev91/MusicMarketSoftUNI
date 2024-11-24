@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   location: String,
   favoriteAds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ad" }],
   chat: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }],
-  refreshToken: { type: String, default: null } 
+  refreshToken: { type: String, default: null }, 
 });
 
 // Hash password before saving

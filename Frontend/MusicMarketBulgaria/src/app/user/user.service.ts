@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
@@ -17,81 +17,81 @@ export class UserService {
    * Fetch the profile of the logged-in user.
    */
   getLoggedUserProfile(): Observable<UserData> {
-    const userId = this.authService.getCurrentUserId();
-    if (!userId) {
-      return throwError(() => new Error('No user is currently logged in.'));
-    }
-    return this.http.get<UserData>(`${this.baseUrl}/id/${userId}`).pipe(
-      catchError((error) => {
-        console.error('Error fetching logged user profile:', error);
-        return throwError(() => error);
+    return this.http
+      .get<UserData>(`${this.baseUrl}/id/${this.getCurrentUserId()}`, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Fetch a user profile by ID.
    */
   getUserProfile(userId: string): Observable<UserData> {
-    return this.http.get<UserData>(`${this.baseUrl}/${userId}`).pipe(
-      catchError((error) => {
-        console.error(`Error fetching user profile for ID: ${userId}`, error);
-        return throwError(() => error);
+    return this.http
+      .get<UserData>(`${this.baseUrl}/${userId}`, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Update the profile of the logged-in user.
    */
   updateLoggedUserProfile(updates: Partial<UserData>): Observable<UserData> {
-    const userId = this.authService.getCurrentUserId();
-    if (!userId) {
-      return throwError(() => new Error('No user is currently logged in.'));
-    }
-    return this.http.put<UserData>(`${this.baseUrl}/${userId}`, updates).pipe(
-      catchError((error) => {
-        console.error('Error updating logged user profile:', error);
-        return throwError(() => error);
+    return this.http
+      .put<UserData>(`${this.baseUrl}/edit-user/${this.getCurrentUserId()}`, updates, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(catchError(this.handleError));
   }
-
-  /**
- * Fetch the username of the logged-in user.
- */
-getLoggedUserName(): Observable<string> {
-  return new Observable((observer) => {
-    this.getLoggedUserProfile().subscribe({
-      next: (userProfile) => {
-        if (userProfile && userProfile.username) {
-          observer.next(userProfile.username); // Emit the username
-          observer.complete(); // Mark the observable as completed
-        } else {
-          observer.error(new Error('Username not found in the user profile.'));
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching logged user profile:', err);
-        observer.error(err); // Forward the error
-      },
-    });
-  });
-}
 
   /**
    * Delete the logged-in user.
    */
   deleteLoggedUser(): Observable<{ message: string }> {
-    const userId = this.authService.getCurrentUserId();
-    if (!userId) {
-      return throwError(() => new Error('No user is currently logged in.'));
-    }
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/${userId}`).pipe(
-      catchError((error) => {
-        console.error('Error deleting user account:', error);
-        return throwError(() => error);
+    return this.http
+      .delete<{ message: string }>(`${this.baseUrl}/edit-user/${this.getCurrentUserId()}`, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Helper: Get headers with the authorization token.
+   */
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getAccessToken();
+    if (!token) {
+      throw new Error('Authentication token is missing.');
+    }
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
+  /**
+   * Handle HTTP errors.
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('UserService error', error);
+    return throwError(() => error.error?.message || 'An error occurred');
+  }
+
+   /**
+   * Extract the user ID from the JWT.
+   */
+   getCurrentUserId(): string | null {
+    const token = this.authService.getAccessToken();
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.id || null; // Extract 'id' from the JWT payload
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
   }
 }
+
+

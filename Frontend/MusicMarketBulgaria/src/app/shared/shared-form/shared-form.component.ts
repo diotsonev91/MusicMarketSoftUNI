@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, QueryList, ElementRef, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, QueryList, ElementRef, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -17,7 +17,7 @@ export class SharedFormComponent implements OnInit {
   form!: FormGroup;
   @ViewChildren('formField') formFields!: QueryList<ElementRef>;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -34,6 +34,7 @@ export class SharedFormComponent implements OnInit {
 
   onSubmit() {
     console.log(this.errorMessage)
+    
     if (this.form.valid) {
       this.formSubmit.emit(this.form.value);
     } else {
@@ -47,6 +48,18 @@ export class SharedFormComponent implements OnInit {
       if (firstInvalidControl) {
         firstInvalidControl.nativeElement.focus();
       }
+
+      this.cdr.detectChanges();
     }
+  }
+
+  updateFormValues(values: { [key: string]: any }): void {
+    if (!this.form) return; // Ensure the form is initialized
+  
+    Object.keys(values).forEach((key) => {
+      if (this.form.controls[key]) {
+        this.form.controls[key].setValue(values[key]); // Update the form control value
+      }
+    });
   }
 }
