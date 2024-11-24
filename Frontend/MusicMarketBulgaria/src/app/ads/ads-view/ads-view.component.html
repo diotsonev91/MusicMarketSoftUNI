@@ -11,6 +11,7 @@
       <ul class="product-grid">
         @for (ad of filteredAds; track ad._id) {
           <li>
+            <div class="card-detail-md"> <!-- this to be exported in card-->
             <a  [routerLink]="['/ad-details', ad._id]">
               <!-- Display the first image from `images` array -->
               <img [src]="ad.images[0]" [alt]="ad.title" class="product-thumbnail" />
@@ -23,6 +24,7 @@
               <p class="product-location">Инструмент: {{ ad.instrument }}</p>
               <p class="product-author">Автор: {{ ad.userName }}</p>
             </div>
+          </div>
           </li>
         }
       </ul>

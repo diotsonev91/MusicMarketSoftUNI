@@ -2,6 +2,7 @@
     display: flex;
     gap: 20px; /* Разстояние между изображението и текста */
     align-items: flex-start;
+    padding-bottom: 15%;
 }
 
 
@@ -13,11 +14,21 @@
 
 .product-image {
     width: 100%; 
-    max-width: 400px; /* Максимална ширина за по-добра визуализация */
+    max-width: 250px; /* Максимална ширина за по-добра визуализация */
     height: auto;
     border-radius: 8px;
     margin: 15px 0;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    
+}
+
+.product-thumbnail {
+    width: 350px; 
+    max-width: 300px; 
+    height: auto;
+    border: solid rgba(0, 0, 0, 0.849) 1px;
+    margin-bottom: 10px;
+    object-fit: cover;
 }
 
 .product-condition {
@@ -78,6 +89,9 @@
 
 .product-details {
     padding-bottom: 4%;
+    width: 100%;
+    height: 45%;
+    max-height: 65%;
 }
 
 .product-details-sm {
@@ -87,6 +101,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.4);
     text-align: left;
     margin-top: 10px;
+    max-width: 65%;
+    
 }
 
 /* Стилове за звездичките */

@@ -42,6 +42,18 @@ export class AdService {
       })
     );
   }
+
+  //public get ads for user
+  getUserAds(userId: string): Observable<AdData[]> {
+    
+    return this.http.get<AdData[]>(`${this.baseUrl}/user/${userId}/ads`).pipe(
+      catchError((error) => {
+        console.error('Error fetching user ads:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   // Create a new ad for the logged-in user
   createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
     const { headers, userId } = this.getAuthorizedHeaders();
@@ -110,15 +122,31 @@ export class AdService {
     );
   }
 
-  // Get all ads (Public)
-  getAllAds(): Observable<AdData[]> {
-    return this.http.get<AdData[]>(`${this.baseUrl}`).pipe(
+  searchAds(query: string): Observable<AdData[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<AdData[]>(`${this.baseUrl}/search`, { params }).pipe(
       catchError((error) => {
-        console.error('Error fetching all ads:', error);
+        console.error('Error searching ads:', error);
         return throwError(() => error);
       })
     );
   }
+  
+
+  // Get all ads (Public) with Pagination
+getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }> {
+  const params = new HttpParams()
+    .set('page', page.toString())
+    .set('pageSize', pageSize.toString());
+
+  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(`${this.baseUrl}`, { params }).pipe(
+    catchError((error) => {
+      console.error('Error fetching all ads with pagination:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
 
   // Get ads by category and subcategory
   getAdsByCategoryAndSubcategory(category: string, subCategory?: string): Observable<AdData[]> {
@@ -164,4 +192,23 @@ export class AdService {
       })
     );
   }
+  // Get ads by category and price range
+getAdsByCategoryAndPriceRange(
+  category: string,
+  minPrice: number,
+  maxPrice: number
+): Observable<AdData[]> {
+  const params = new HttpParams()
+    .set('minPrice', minPrice.toString())
+    .set('maxPrice', maxPrice.toString());
+  const url = `${this.baseUrl}/category/${category}/price-range`;
+  return this.http.get<AdData[]>(url, { params }).pipe(
+    catchError((error) => {
+      console.error(`Error fetching ads by category and price range:`, error);
+      return throwError(() => error);
+    })
+  );
 }
+}
+
+

@@ -1,0 +1,24 @@
+<div class="card-detail-md">
+    <a [routerLink]="['/ad-details', ad?._id]">
+        @if (ad?.images ) {
+            <img [src]="ad?.images?.[0]" [alt]="ad?.title || 'No Title'" class="product-thumbnail" />
+
+        }
+        <div class="product-title">
+        <span>{{ ad?.title }}
+        </span>
+        <span class="stars" id="rating-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+          </span>
+          <p class="product-price">Цена: {{ ad?.price }} лв.</p>
+          <p class="product-condition">{{ ad?.condition }}</p>
+        </div>
+      </a>
+    
+      
+  </div>
+  

@@ -1,13 +1,30 @@
 <div class="up-right">
-    <div class="image-big">
-      <button class="arrow left-arrow" (click)="previousImage()">&#10094;</button>
-      <img [src]="ad?.images?.[currentImageIndex]" alt="{{ ad?.title }}" class="product-image-big" />
-      <button class="arrow right-arrow" (click)="nextImage()">&#10095;</button>
-    </div>
-    <div class="thumbnail-gallery">
-      <img src="images/piano-thumbnail.jpg" alt="Image 1" class="thumbnail">
-      <img src="images/piano-thumbnail.jpg" alt="Image 2" class="thumbnail">
-      <img src="images/piano-thumbnail.jpg" alt="Image 3" class="thumbnail">
-      <img src="images/piano-thumbnail.jpg" alt="Image 4" class="thumbnail">
+  <div class="image-big">
+    <button class="arrow left-arrow" (click)="previousImage()">&#10094;</button>
+    <img
+      [src]="ad?.images?.[currentImageIndex]"
+      alt="{{ ad?.title }}"
+      class="product-image-big"
+    />
+    <button class="arrow right-arrow" (click)="nextImage()">&#10095;</button>
   </div>
+
+  <div class="thumbnail-gallery">
+    <ul>
+      @for (image of ad?.images; track image; let index = $index) {
+        <li
+          [class.active]="index === currentImageIndex"
+          (click)="currentImageIndex = index"
+        >
+          <img
+            [src]="image"
+            [alt]="'Thumbnail ' + (index + 1)"
+            class="thumbnail"
+          />
+        </li>
+      } @empty {
+        <span>No images available</span>
+      }
+    </ul>
   </div>
+</div>

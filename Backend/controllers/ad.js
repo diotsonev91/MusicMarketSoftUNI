@@ -171,14 +171,34 @@ exports.getAllAdsOfUser = async (req, res) => {
 };
 
 // Get All Ads (Public)
+// Get All Ads (Public) with Pagination
 exports.getAllAds = async (req, res) => {
   try {
-    const ads = await Ad.find({});
-    res.json(ads);
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 20; // Default to 20 ads per page
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * pageSize;
+
+    // Fetch the ads with pagination
+    const ads = await Ad.find({})
+      .skip(skip)
+      .limit(pageSize);
+
+    // Get total count for pagination metadata
+    const totalAds = await Ad.countDocuments();
+
+    res.json({
+      data: ads, // Paginated ads
+      currentPage: page,
+      totalPages: Math.ceil(totalAds / pageSize), // Total number of pages
+      totalAds, // Total number of ads in the database
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Get Ads by Category and Subcategory (Public)
 exports.getAdByCategoryThenSubcategory = async (req, res) => {
@@ -247,6 +267,34 @@ exports.getAdByCategoryThenSubcategoryThenPriceRange = async (req, res) => {
   }
 };
 
+// Get Ads by Category and Price Range
+exports.getAdByCategoryAndPriceRange = async (req, res) => {
+  try {
+    const { category } = req.params; // Extract category from route params
+    const { minPrice, maxPrice } = req.query; // Extract price range from query params
+
+    // Validate inputs
+    if (!minPrice || !maxPrice) {
+      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    }
+
+    // Build the query for category and price range
+    const query = {
+      category,
+      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) },
+    };
+
+    // Fetch ads from the database
+    const ads = await Ad.find(query);
+
+    // Return the filtered ads
+    res.json(ads);
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Get Ads by Price Range
 exports.getAdByPriceRange = async (req, res) => {
   try {
@@ -268,30 +316,25 @@ exports.getAdByPriceRange = async (req, res) => {
   }
 };
 
-// Get Ads by Category, Subcategory, and Price Range
-exports.getAdByCategoryThenSubcategoryThenPriceRange = async (req, res) => {
+// Search ads by title
+exports.searchAds = async (req, res) => {
   try {
-    const { category, subCategory } = req.params;
-    const { minPrice, maxPrice } = req.query;
+    const { query } = req.query;
 
-    // Validate price range inputs
-    if (!minPrice || !maxPrice) {
-      return res.status(400).json({ error: "Please provide both minPrice and maxPrice" });
+    if (!query) {
+      return res.status(400).json({ error: 'Query parameter is required' });
     }
 
-    // Build the query based on category, subcategory, and price range
-    const query = {
-      category,
-      price: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
-    };
-    if (subCategory) {
-      query.subCategory = subCategory;
-    }
+    // Find ads with titles that match the search query (case-insensitive)
+    const ads = await Ad.find({
+      title: { $regex: query, $options: 'i' },
+    });
 
-    const ads = await Ad.find(query);
     res.json(ads);
   } catch (error) {
+    console.error('Error searching ads:', error);
     res.status(500).json({ error: error.message });
   }
 };
+
 

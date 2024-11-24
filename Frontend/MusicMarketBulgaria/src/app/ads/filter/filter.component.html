@@ -1,74 +1,83 @@
-<!-- Страничен панел за филтриране -->
 <aside class="filter-panel">
-    <h3>Филтрирай продукти</h3>
-  
-    <!-- Categories Filter -->
-    <div class="filter-category">
-      <h4>Категории</h4>
-      <ul>
-        @for (category of categories; track category) {
-          <li>
-            <input
-              type="checkbox"
-              [id]="category.id"
-              [(ngModel)]="category.selected"
-            />
-            <label [for]="category.id">{{ category.name }}</label>
-          </li>
-        }
-      </ul>
-    </div>
-  
-    <!-- Sort Options -->
-    <div class="filter-sort">
-      <h4>Подреди по</h4>
-      <button
-        [class.active]="sortOption === 'price-asc'"
-        (click)="sortOption = 'price-asc'; applyFilters()"
-      >
-        Цена (Възходящо)
-      </button>
-      <button
-        [class.active]="sortOption === 'price-desc'"
-        (click)="sortOption = 'price-desc'; applyFilters()"
-      >
-        Цена (Низходящо)
-      </button>
-      <button
-        [class.active]="sortOption === 'rating'"
-        (click)="sortOption = 'rating'; applyFilters()"
-      >
-        Оценка (Звезди)
-      </button>
-    </div>
-  
-    <!-- Price Range Filter -->
-    <div class="price-filter">
-      <h3>Филтър по цена</h3>
-      <label for="min-price">От:</label>
-      <input
-        type="number"
-        id="min-price"
-        [(ngModel)]="minPrice"
-        placeholder="Минимална"
-        min="0"
-      />
-  
-      <label for="max-price">До:</label>
-      <input
-        type="number"
-        id="max-price"
-        [(ngModel)]="maxPrice"
-        placeholder="Максимална"
-        min="0"
-      />
-  
-      <button (click)="applyFilters()">Филтрирай</button>
-    </div>
-  </aside>
-  
-  <!-- Filter Toggle Button -->
-  <button id="filter-toggle" class="hamburger-menu" aria-label="Toggle Filter Panel">
-    ☰
-  </button>
-  
+  <h3>Филтрирай продукти</h3>
+
+  <!-- Categories Filter -->
+  <div class="filter-category">
+    <h4>Категории</h4>
+    <ul>
+      @for (category of categories; track category) {
+        <li>
+          <input
+            type="checkbox"
+            [id]="category.id"
+            [(ngModel)]="category.selected"
+            (click)="toggleSubcategories(category.id)"
+          />
+          <label [for]="category.id">{{ category.name }}</label>
+
+          <!-- Subcategories -->
+          @if (activeCategory === category.id) {
+            <ul class="subcategories">
+              @for (subcategory of subcategories[category.name];track subcategory) {
+                <li>
+                  <input
+                    type="checkbox"
+                    [id]="subcategory"
+                  />
+                  <label [for]="subcategory">{{ subcategory }}</label>
+                </li>
+              }
+            </ul>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Sort Options -->
+  <div class="filter-sort">
+    <h4>Подреди по</h4>
+    <button
+      [class.active]="sortOption === 'price-asc'"
+      (click)="sortOption = 'price-asc'; applyFilters()"
+    >
+      Цена (Възходящо)
+    </button>
+    <button
+      [class.active]="sortOption === 'price-desc'"
+      (click)="sortOption = 'price-desc'; applyFilters()"
+    >
+      Цена (Низходящо)
+    </button>
+    <button
+      [class.active]="sortOption === 'rating'"
+      (click)="sortOption = 'rating'; applyFilters()"
+    >
+      Оценка (Звезди)
+    </button>
+  </div>
+
+  <!-- Price Range Filter -->
+  <div class="price-filter">
+    <h3>Филтър по цена</h3>
+    <label for="min-price">От:</label>
+    <input
+      type="number"
+      id="min-price"
+      [(ngModel)]="minPrice"
+      placeholder="Минимална"
+      min="0"
+    />
+
+    <label for="max-price">До:</label>
+    <input
+      type="number"
+      id="max-price"
+      [(ngModel)]="maxPrice"
+      placeholder="Максимална"
+      min="0"
+    />
+
+    <button (click)="applyFilters()">Филтрирай</button>
+  </div>
+</aside>

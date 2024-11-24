@@ -26,25 +26,31 @@ export class AdDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.fetchAdDetails(id);
-      this.loadRelatedAds(id);
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id'); // Get the 'id' parameter
+      if (id) {
+        this.fetchAdDetails(id);  // Load the details of the current ad
+      }
+    });
   }
 
-  fetchAdDetails(id: string): void {
-    this.adService.getAdById(id).subscribe({
-      next: (ad) => (this.ad = ad),
+  fetchAdDetails(adId: string): void {
+    this.adService.getAdById(adId).subscribe({
+      next: (ad) => {
+        this.ad = ad; // Populate the ad
+        if (ad.userId) {
+          this.loadRelatedAds(ad._id, ad.userId); // Load related ads only after ad is populated
+        }
+      },
       error: (err) => console.error('Failed to fetch ad details:', err),
     });
   }
 
-  loadRelatedAds(currentAdId: string): void {
-    this.adService.getAllAds().subscribe({
-      next: (ads) => {
-        // Filter out the current ad
-        this.relatedAds = ads.filter((ad) => ad._id !== currentAdId).slice(0, 4);
+
+  loadRelatedAds(currentAdId: string, currentAdUserId: string): void {
+    this.adService.getUserAds(currentAdUserId).subscribe({
+      next: (userAds) => {
+        this.relatedAds = userAds.filter((ad) => ad._id !== currentAdId);
       },
       error: (err) => console.error('Failed to fetch related ads:', err),
     });

@@ -1,5 +1,5 @@
 .product-list {
-
+    width: 100%;
     flex-grow: 1;
     background-color: #fff;
     padding: 20px;
@@ -9,17 +9,20 @@
 
 .product-list h2 {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     color: #333;
     margin-bottom: 20px;
 }
 
 /* Base grid styles for mobile (1 column) */
 .product-grid {
+   
     display: grid;
-    grid-template-columns: 1fr; /* Single column for mobile */
+    grid-template-columns:  repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     list-style: none;
     padding: 0;
     width: 100%;
+    min-width: 50%;
 }
+

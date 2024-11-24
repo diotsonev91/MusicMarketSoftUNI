@@ -6,7 +6,7 @@
         <ul>
           @for (ad of ads; track ad._id) {
             <li>
-              <a href="product.html">
+              <a [routerLink]="['/ad-details', ad._id]">
                 <img [src]="ad.images[0]" alt="{{ ad.title }}" class="ad-thumbnail" />
                 <span class="ad-title">{{ ad.title }}</span>
               </a>

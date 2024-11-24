@@ -18,44 +18,107 @@ export class AdsViewComponent implements OnInit {
   filteredAds: AdData[] = []; // Ads after filtering
   searchQuery: string = ''; // Search query from SearchComponent
 
+  sortOption = ''
+  currentPage: number = 1; // Current page number
+  pageSize: number = 20; // Ads per page
+
   constructor(private adService: AdService) {}
 
   ngOnInit(): void {
-    // Fetch all ads initially
-    this.adService.getAllAds().subscribe({
-      next: (ads) => {
-        this.ads = ads;
-        this.filteredAds = ads; // Initially, no filters applied
+    this.fetchAds(this.currentPage, this.pageSize);
+  }
+
+  onNextPage(): void {
+    this.currentPage++;
+    this.fetchAds(this.currentPage, this.pageSize);
+  }
+  
+  onPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.fetchAds(this.currentPage, this.pageSize);
+    }
+  }
+
+  fetchAds(page: number, pageSize: number): void {
+    this.adService.getAllAds(page, pageSize).subscribe({
+      next: (response) => {
+        this.ads = response.data; // The ads for the current page
+        this.filteredAds = response.data; // Initially, no filters applied
+        console.log('Current Page:', response.currentPage);
+        console.log('Total Pages:', response.totalPages);
       },
       error: (err) => console.error('Error fetching ads:', err),
     });
   }
 
-  onFiltersChanged(filters: any) {
-    const { categories, sortOption, minPrice, maxPrice } = filters;
+  onFiltersChanged(filters: any): void {
 
-    this.filteredAds = this.ads.filter((ad) => {
-      const matchesCategory =
-        categories.length === 0 || categories.includes(ad.category.toLowerCase());
-      const matchesPrice =
-        (!minPrice || ad.price >= minPrice) && (!maxPrice || ad.price <= maxPrice);
-      return matchesCategory && matchesPrice;
-    });
+    this.currentPage = 1
 
-    if (sortOption === 'price-asc') {
-      this.filteredAds.sort((a, b) => a.price - b.price);
-    } else if (sortOption === 'price-desc') {
-      this.filteredAds.sort((a, b) => b.price - a.price);
-    } else if (sortOption === 'rating') {
+    const { categories, subcategories, sortOption, minPrice, maxPrice } = filters;
+    this.sortOption = filters.sortOption;
+    // Determine which AdService method to call
+    if (categories.length > 0 && minPrice != null && maxPrice != null) {
+      // Fetch ads by category, subcategory, and price range
+      if(subcategories){
+      this.adService
+        .getAdsByCategorySubcategoryPriceRange(categories, subcategories, minPrice, maxPrice)
+        .subscribe((ads) => this.handleFilterResponse(ads));
+      } else{
+        this.adService.getAdsByCategoryAndPriceRange(categories, minPrice, maxPrice)
+        .subscribe((ads) => this.handleFilterResponse(ads));
+      }
+    } else if (categories.length > 0) {
+      // Fetch ads by category and subcategory
+      this.adService
+        .getAdsByCategoryAndSubcategory(categories, subcategories)
+        .subscribe((ads) => this.handleFilterResponse(ads));
+    } else if (minPrice != null && maxPrice != null) {
+      // Fetch ads by price range
+      this.adService
+        .getAdsByPriceRange(minPrice, maxPrice)
+        .subscribe((ads) => this.handleFilterResponse(ads));
+    } else {
+      // No filters, fetch all ads
+      this.fetchAds(this.currentPage, 20);
+    }
+  }
+  
+  private handleFilterResponse(ads: AdData[]): void {
+    this.filteredAds = ads;
+  
+    // Apply sorting if needed
+    this.applySorting(this.filteredAds);
+  }
+
+
+  private applySorting(ads: AdData[]): void {
+    
+  
+    if (this.sortOption === 'price-asc') {
+      ads.sort((a, b) => a.price - b.price);
+    } else if (this.sortOption === 'price-desc') {
+      ads.sort((a, b) => b.price - a.price);
+    } else if (this.sortOption === 'rating') {
       // Assuming each ad has a `rating` property
-      this.filteredAds.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      ads.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
   }
 
-  onSearch(query: string) {
+  onSearch(query: string): void {
     this.searchQuery = query.toLowerCase();
-    this.filteredAds = this.filteredAds.filter((ad) =>
-      ad.title.toLowerCase().includes(this.searchQuery)
-    );
+  
+    this.adService.searchAds(this.searchQuery).subscribe({
+      next: (ads) => {
+        this.filteredAds = ads; // Use the backend search result
+      },
+      error: (err) => console.error('Error searching ads:', err),
+    });
   }
+  
 }
+function getAdsByCategoryAndPriceRange(categories: any, subcategories: any, minPrice: any, maxPrice: any) {
+  throw new Error('Function not implemented.');
+}
+

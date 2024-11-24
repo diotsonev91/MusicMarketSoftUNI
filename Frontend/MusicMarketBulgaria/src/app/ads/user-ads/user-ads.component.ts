@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AdService } from '../ad.service'; 
 import { AdData } from '../ad-data.model';
-import { Router } from '@angular/router'; 
+import { Router, RouterModule } from '@angular/router'; 
 
 
 @Component({
   selector: 'app-user-ads',
   standalone: true,
+  imports: [RouterModule],
   templateUrl: './user-ads.component.html',
   styleUrls: ['./user-ads.component.css'],
 })

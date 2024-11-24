@@ -81,3 +81,11 @@ input[type="checkbox"]:checked::after {
 .filter-panel button:hover {
     background-color: #a1d8b3;
 }
+
+.subcategories{
+    margin-top: 12px;
+    text-indent: 22px;
+}
+.subcategories input[type="checkbox"]{
+    margin-left: 15px;
+}
