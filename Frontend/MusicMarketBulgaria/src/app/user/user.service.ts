@@ -51,7 +51,7 @@ export class UserService {
    */
   deleteLoggedUser(): Observable<{ message: string }> {
     return this.http
-      .delete<{ message: string }>(`${this.baseUrl}/edit-user/${this.getCurrentUserId()}`, {
+      .delete<{ message: string }>(`${this.baseUrl}/delete-user/${this.getCurrentUserId()}`, {
         headers: this.getAuthHeaders(),
       })
       .pipe(catchError(this.handleError));

@@ -161,3 +161,28 @@ width: 90%;
 .form-section .error {
     color: red;
 }
+
+.remove-image-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: rgba(255, 0, 0, 0.8); /* Red background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 50%; /* Circle shape */
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background-color 0.3s;
+  }
+  
+  /* Hover effect for the remove button */
+  .remove-image-btn:hover {
+    background-color: rgba(255, 0, 0, 1); /* Darker red on hover */
+  }

@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Ad = require("../models/Ad");
 
 // Get User by ID
 exports.getUserById = async (req, res) => {
@@ -24,7 +25,7 @@ exports.getUserByUsername = async (req, res) => {
 
 exports.editUser = async (req, res) => {
   const { id } = req.params; // Assuming the user ID is provided as a URL parameter
-  const { username, email, location, firstname, lastname, role } = req.body;
+  const { username, email, location, firstname, lastname, role, password } = req.body;
   console.log(firstname + " " + lastname);
   try {
     // Ensure the user ID is provided
@@ -59,6 +60,7 @@ exports.editUser = async (req, res) => {
     if (location) user.location = location;
     if (firstname) user.firstname = firstname;
     if (lastname) user.lastname = lastname;
+    if(password) user.password = password;
 
     // If role is being updated, ensure it adheres to your application's logic
     if (role) {
@@ -77,5 +79,27 @@ exports.editUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+  
+    // Find the user to delete
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Delete the user's ads
+    await Ad.deleteMany({ user: userId });
+
+    // Delete the user profile
+    await User.findByIdAndDelete(userId);
+
+    res.json({ message: "User and associated ads deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 

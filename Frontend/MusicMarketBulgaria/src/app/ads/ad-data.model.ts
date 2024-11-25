@@ -22,4 +22,5 @@ export interface AdData {
     createdAt: null;
     likes: null;
     location?: string;
+    remainingImages: string[];
   }

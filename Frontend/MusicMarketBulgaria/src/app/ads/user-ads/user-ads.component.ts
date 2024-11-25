@@ -27,7 +27,6 @@ export class UserAdsComponent implements OnInit {
       next: (data: AdData[]) => {
         this.ads = data;
         this.loadingAds = false;
-        console.log(data)
       },
       error: (err) => {
         this.error = 'Failed to load user ads.';
@@ -42,8 +41,13 @@ export class UserAdsComponent implements OnInit {
   }
 
   editAd(adId: string): void {
-    console.log(`Edit ad: ${adId}`);
-    // Add navigation or modal logic for editing the ad
+    const selectedAd = this.ads.find((ad) => ad._id === adId); // Find the ad by ID
+    if (selectedAd) {
+      console.log({ adId, selectedAd });
+      this.router.navigate(['/edit-ad', adId], { state: { adData: selectedAd } }); // Pass the ad data in state
+    } else {
+      console.error('Ad not found');
+    }
   }
 
   deleteAd(adId: string): void {

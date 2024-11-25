@@ -93,7 +93,7 @@ export class AdService {
     if (updates.subCategory) formData.append('subCategory', updates.subCategory);
 
     images.forEach((image) => formData.append('images', image, image.name));
-
+    console.log(images)
     return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData, { headers }).pipe(
       catchError((error) => {
         console.error(`Error updating ad with ID ${adId}:`, error);

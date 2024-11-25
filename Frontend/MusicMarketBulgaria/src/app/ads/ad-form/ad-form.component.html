@@ -1,0 +1,164 @@
+<div class="form-container">
+    <form [formGroup]="adForm" (ngSubmit)="onSubmit()">
+      <!-- Section: What are you offering? -->
+      <div class="form-section">
+        <h3>Какво предлагаш?</h3>
+  
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">{{ formConfig.title.label }} *</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            [placeholder]="formConfig.title.placeholder"
+            required
+          />
+          @if (adForm.get('title')?.invalid && adForm.get('title')?.touched) {
+          <p class="error">{{ formConfig.title.validationMessage }}</p>
+          }
+        </div>
+  
+        <!-- Price -->
+        <div class="form-group">
+          <label for="price">{{ formConfig.price.label }} *</label>
+          <input
+            id="price"
+            type="number"
+            formControlName="price"
+            [placeholder]="formConfig.price.placeholder"
+            required
+            class="form-control"
+          />
+          @if (adForm.get('price')?.invalid && adForm.get('price')?.touched) {
+          <p class="error">{{ formConfig.price.validationMessage }}</p>
+          }
+        </div>
+  
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category">{{ formConfig.category.label }} *</label>
+          <select id="category" formControlName="category" required>
+            <option value="" disabled>
+              {{ formConfig.category.placeholder }}
+            </option>
+            @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+  
+        <!-- SubCategory -->
+        <div class="form-group">
+          <label for="subCategory">{{ formConfig.subCategory.label }} *</label>
+          <select id="subCategory" formControlName="subCategory" required>
+            <option value="" disabled>
+              {{ formConfig.subCategory.placeholder }}
+            </option>
+            @for (subCategory of subCategories; track subCategory) {
+            <option [value]="subCategory">{{ subCategory }}</option>
+            }
+          </select>
+        </div>
+      </div>
+  
+      <div class="form-section">
+        <form [formGroup]="adForm" (ngSubmit)="onSubmit()">
+          <!-- Other form fields -->
+  
+          <!-- Section: Images -->
+          <div class="form-section">
+            <h3>Снимки</h3>
+            <p>
+              Първата снимка ще бъде основната в обявата ти. Можеш да промениш
+              реда на снимките чрез влачене.
+            </p>
+            <div class="image-upload-container">
+                @for (slot of [0, 1, 2, 3, 4]; track $index) {
+                <div
+                  class="image-slot"
+                  draggable="true"
+                  (dragstart)="onDragStart($event, $index)"
+                  (dragover)="onDragOver($event)"
+                  (drop)="onDrop($event, $index)"
+                >
+                  <label class="image-upload-box">
+                    @if (displayImages[$index]) {
+                    <img [src]="displayImages[$index]" alt="Uploaded Image Preview" />
+                    <button class="remove-image-btn" (click)="removeImage($index)">×</button>
+                    } @else {
+                    <i class="fas fa-camera"></i>
+                    }
+                    <input
+                      type="file"
+                      accept="image/*"
+                      (change)="onFileChange($event, $index)"
+                      style="display: none"
+                    />
+                  </label>
+                </div>
+                }
+              </div>
+          </div>
+  
+          <!-- Section: Delivery Type -->
+          <div class="form-section">
+            <h3>{{ formConfig.deliveryType.label }} *</h3>
+            <div class="form-group">
+              <label for="deliveryType"
+                >{{ formConfig.deliveryType.label }} *</label
+              >
+              <select id="deliveryType" formControlName="deliveryType" required>
+                <option value="" disabled>
+                  {{ formConfig.deliveryType.placeholder }}
+                </option>
+                @for (deliveryType of deliveryTypes; track deliveryType) {
+                <option [value]="deliveryType">{{ deliveryType }}</option>
+                }
+              </select>
+            </div>
+          </div>
+  
+          <!-- Section: Condition -->
+          <div class="form-section">
+            <h3>{{ formConfig.condition.label }} *</h3>
+            <div class="form-group">
+              <label for="condition">{{ formConfig.condition.label }} *</label>
+              <select id="condition" formControlName="condition" required>
+                <option value="" disabled>
+                  {{ formConfig.condition.placeholder }}
+                </option>
+                @for (condition of conditions; track condition) {
+                <option [value]="condition">{{ condition }}</option>
+                }
+              </select>
+            </div>
+          </div>
+  
+          <!-- Section: Description -->
+          <div class="form-section">
+            <h3>{{ formConfig.description.label }} *</h3>
+            <div class="form-group">
+              <textarea
+                id="description"
+                formControlName="description"
+                rows="4"
+                [placeholder]="formConfig.description.placeholder"
+                required
+              ></textarea>
+              @if (adForm.get('description')?.invalid &&
+              adForm.get('description')?.touched) {
+              <p class="error">{{ formConfig.description.validationMessage }}</p>
+              }
+            </div>
+          </div>
+  
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn" [disabled]="adForm.invalid">
+            Добави обява
+          </button>
+        </form>
+      </div>
+    </form>
+  </div>
+  
