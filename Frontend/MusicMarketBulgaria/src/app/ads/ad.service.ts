@@ -79,28 +79,40 @@ export class AdService {
     );
   }
 
-  // Edit an ad by ID
-  editAd(adId: string, updates: Partial<AdData>, images: File[]): Observable<AdData> {
-    const { headers } = this.getAuthorizedHeaders();
+// Edit an ad by ID
+editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: string[]): Observable<AdData> {
+  const { headers } = this.getAuthorizedHeaders();
 
-    const formData = new FormData();
-    if (updates.title) formData.append('title', updates.title);
-    if (updates.description) formData.append('description', updates.description);
-    if (updates.price) formData.append('price', updates.price.toString());
-    if (updates.deliveryType) formData.append('deliveryType', updates.deliveryType);
-    if (updates.condition) formData.append('condition', updates.condition);
-    if (updates.category) formData.append('category', updates.category);
-    if (updates.subCategory) formData.append('subCategory', updates.subCategory);
+  const formData = new FormData();
 
-    images.forEach((image) => formData.append('images', image, image.name));
-    console.log(images)
-    return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData, { headers }).pipe(
-      catchError((error) => {
-        console.error(`Error updating ad with ID ${adId}:`, error);
-        return throwError(() => error);
-      })
-    );
-  }
+  // Add text fields if provided
+  if (updates.title) formData.append('title', updates.title);
+  if (updates.description) formData.append('description', updates.description);
+  if (updates.price) formData.append('price', updates.price.toString());
+  if (updates.deliveryType) formData.append('deliveryType', updates.deliveryType);
+  if (updates.condition) formData.append('condition', updates.condition);
+  if (updates.category) formData.append('category', updates.category);
+  if (updates.subCategory) formData.append('subCategory', updates.subCategory);
+
+  // Add new images to the FormData
+  images.forEach((image) => formData.append('images', image, image.name));
+
+  // Add remaining images (JSON string)
+  formData.append('remainingImages', JSON.stringify(remainingImages));
+
+  console.log('FormData contents:', {
+    updates,
+    images,
+    remainingImages,
+  });
+
+  return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData, { headers }).pipe(
+    catchError((error) => {
+      console.error(`Error updating ad with ID ${adId}:`, error);
+      return throwError(() => error);
+    })
+  );
+}
 
   // Delete an ad by ID
   deleteAd(adId: string): Observable<{ message: string }> {

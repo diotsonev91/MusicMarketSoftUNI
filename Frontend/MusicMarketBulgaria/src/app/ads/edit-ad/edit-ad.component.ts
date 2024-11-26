@@ -11,7 +11,7 @@ import { AdFormComponent } from '../ad-form/ad-form.component';
   template: `
     <app-ad-form
       [initialData]="adData"
-      [submitButtonText]="'Update Ad'"
+      [submitButtonText]="'Редактирай обява'" 
       (formSubmit)="onEditAd($event)">
     </app-ad-form>
   `,
@@ -54,7 +54,7 @@ export class EditAdComponent implements OnInit {
     }
   }
   onEditAd({ adData, images }: { adData: Partial<AdData>; images: File[] }): void {
-    this.adService.editAd(this.adData._id!, adData, images).subscribe({
+    this.adService.editAd(this.adData._id!, adData, images, adData.remainingImages || []).subscribe({
       next: () => this.router.navigate(['/ads']),
       error: (err) => console.error('Failed to update ad:', err),
     });

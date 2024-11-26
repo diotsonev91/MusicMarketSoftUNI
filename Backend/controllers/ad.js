@@ -100,12 +100,14 @@ exports.deleteAd = async (req, res) => {
   }
 };
 
+
 exports.editAd = [
   upload.array("images", 5), // Handle up to 5 new image files
   async (req, res) => {
     try {
       const ad = await Ad.findById(req.params.id);
 
+      // Validate the existence of the ad and the user's permission
       if (!ad || ad.user.toString() !== req.user.id) {
         return res.status(404).json({ error: "Ad not found or unauthorized" });
       }
@@ -120,13 +122,23 @@ exports.editAd = [
         subCategory,
         instrument,
         technique,
-        remainingImages, // Pass the remaining images from the frontend
+        remainingImages, // Sent as a JSON array from the frontend
       } = req.body;
+
+      // Parse remainingImages safely
+      const parsedRemainingImages = Array.isArray(remainingImages)
+        ? remainingImages
+        : JSON.parse(remainingImages || '[]');
+
+      // Validate that remainingImages is a valid array
+      if (!Array.isArray(parsedRemainingImages)) {
+        return res.status(400).json({ error: "Invalid remainingImages format" });
+      }
 
       // Process new image uploads
       const newImagePaths = req.files.map((file) => file.path);
 
-      // Update the ad fields
+      // Update ad fields if provided
       ad.title = title || ad.title;
       ad.description = description || ad.description;
       ad.price = price || ad.price;
@@ -137,18 +149,20 @@ exports.editAd = [
       ad.instrument = category === "инструмент" ? instrument : ad.instrument;
       ad.technique = category === "музикална техника" ? technique : ad.technique;
 
-      // Update the ad images
-      ad.images = [...(remainingImages || []), ...newImagePaths];
+      // Merge remaining images with new uploads to update the ad's images
+      const updatedImages = [...parsedRemainingImages, ...newImagePaths];
+      const removedImages = ad.images.filter((imagePath) => !updatedImages.includes(imagePath));
 
+      ad.images = updatedImages;
+
+      // Save the updated ad
       await ad.save();
-      console.log(newImagePaths)
-      console.log(remainingImages)
-      // Optionally delete files that are no longer part of the ad
-      const removedImages = ad.images.filter((path) => !remainingImages.includes(path));
-      removedImages.forEach((path) => {
-        fs.unlink(path, (err) => {
+
+      // Optionally delete images that are no longer part of the ad
+      removedImages.forEach((imagePath) => {
+        fs.unlink(imagePath, (err) => {
           if (err) {
-            console.error(`Failed to delete image at ${path}:`, err);
+            console.error(`Failed to delete image at ${imagePath}:`, err);
           }
         });
       });
@@ -160,6 +174,7 @@ exports.editAd = [
     }
   },
 ];
+
 // Get Ad by ID
 exports.getAdById = async (req, res) => {
   try {

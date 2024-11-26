@@ -9,7 +9,7 @@ import { AdFormComponent } from '../ad-form/ad-form.component';
   imports: [AdFormComponent],
   template: `
     <app-ad-form
-      [submitButtonText]="'Create Ad'"
+      [submitButtonText]="'Добави обява'" 
       (formSubmit)="onCreateAd($event)">
     </app-ad-form>
   `,

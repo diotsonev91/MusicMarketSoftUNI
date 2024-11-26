@@ -28,6 +28,8 @@ export class AdFormComponent implements OnInit {
   @Input() initialData: Partial<AdData> = {}; // Data to pre-fill the form for editing
   @Input() submitButtonText: string = 'Submit'; // Button text, e.g., "Create" or "Update"
   @Output() formSubmit = new EventEmitter<{ adData: Partial<AdData>; images: File[] }>(); // Emits both form data and images
+  
+
 
   adForm: FormGroup;
   categories = Object.values(Categories);
@@ -99,8 +101,15 @@ export class AdFormComponent implements OnInit {
   }
   
   private updateDisplayImages(): void {
-    // Merge existingImages and previews for display purposes
-    this.displayImages = [...this.existingImages, ...this.fileService.getFiles().map((_, index) => this.getFileUrl(index))];
+    // Ensure unique display images
+    const newPreviews = this.fileService.getFiles()
+      .map((_, index) => this.getFileUrl(index))
+      .filter((preview) => preview !== null); // Ensure no null previews
+  
+    // Merge existing and new images while avoiding duplicates
+    this.displayImages = Array.from(new Set([...this.existingImages, ...newPreviews]));
+  
+    this.cdr.markForCheck(); // Trigger change detection
   }
 
   onSubmit(): void {
@@ -108,17 +117,10 @@ export class AdFormComponent implements OnInit {
       const adData: Partial<AdData> = this.adForm.value;
       const newImages: File[] = this.fileService.getFiles();
   
-      console.log('Submitting data:', {
-        adData,
-        newImages,
-        remainingImages: this.existingImages,
-      });
-  
-      // Emit adData, existing images, and new images
       this.formSubmit.emit({
         adData: {
           ...adData,
-          remainingImages: this.existingImages, // Send remaining existing images
+          remainingImages: this.existingImages, // Send only valid existing images
         },
         images: newImages, // Send newly added images
       });
@@ -181,13 +183,24 @@ export class AdFormComponent implements OnInit {
 
   private syncImagesWithDisplay(): void {
     const numExisting = this.existingImages.length;
-    this.existingImages = this.displayImages.slice(0, numExisting).filter(Boolean) as string[]; // Update existingImages
+  
+    // Extract existing images from displayImages
+    this.existingImages = this.displayImages.slice(0, numExisting).filter(Boolean) as string[];
+  
+    // Extract new images from displayImages
+    const newImagePreviews = this.displayImages.slice(numExisting).filter(Boolean);
+  
+    // Reset fileService and add valid new image files back
     this.fileService.clearFiles();
-    this.displayImages.slice(numExisting).forEach((preview, index) => {
-      if (preview) {
-        this.fileService.addFile(new File([], preview), index);
+    newImagePreviews.forEach((preview, index) => {
+      const file = this.fileService.getFiles()[index];
+      if (file) {
+        this.fileService.addFile(file, index);
       }
     });
+  
+    // Refresh displayImages to match updated state
+    this.updateDisplayImages();
   }
 
   removeExistingImage(index: number): void {
