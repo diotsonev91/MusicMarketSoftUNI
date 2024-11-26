@@ -16,6 +16,7 @@ import { AdFormComponent } from '../ad-form/ad-form.component';
     </app-ad-form>
   `,
 })
+
 export class EditAdComponent implements OnInit {
   adData: Partial<AdData> = {};
 

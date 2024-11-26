@@ -1,13 +1,11 @@
 <section class="product-details">
     <h2>
       {{ ad?.title }}
-      <span class="stars" id="rating-stars">
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="far fa-star"></i>
-        <i class="far fa-star"></i>
-      </span>
+      <app-rating-view 
+      [rating]="currentAdRating" 
+      [totalStars]="5"
+      [starSize]="24">
+    </app-rating-view>
     </h2>
     <div class="image-and-text">
       <div class="price-image">

@@ -108,14 +108,3 @@
     
 }
 
-/* Стилове за звездичките */
-
-
-.stars .fa-star, .stars .fa-star-half-alt, .stars .fa-star-o {
-    color: #ffd700; /* Златен цвят за активни звездички */
-    
-}
-
-.stars .fa-star-o {
-    color: #ccc; /* Светлосив цвят за неактивни звездички */
-}

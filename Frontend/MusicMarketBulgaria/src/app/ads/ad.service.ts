@@ -160,6 +160,10 @@ getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[],
   );
 }
 
+addRating(adId: string, userVote: number): Observable<number> {
+  const payload = { userVote }; // Send user vote as -1, 0, or 1
+  return this.http.post<number>(`${this.baseUrl}/${adId}/rating`, payload);
+}
 
   // Get ads by category and subcategory
   getAdsByCategoryAndSubcategory(category: string, subCategory?: string): Observable<AdData[]> {
