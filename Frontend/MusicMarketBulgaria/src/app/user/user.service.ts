@@ -1,27 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
 import { UserData } from './user-data.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private baseUrl = 'http://localhost:5000/users';
+ 
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  private user$$ = new BehaviorSubject<UserData| null>(null);
+  private user$ = this.user$$.asObservable();
+
+
+  constructor(private http: HttpClient) {}
 
   /**
    * Fetch the profile of the logged-in user.
    */
   getLoggedUserProfile(): Observable<UserData> {
     return this.http
-      .get<UserData>(`${this.baseUrl}/id/${this.getCurrentUserId()}`, {
-        headers: this.getAuthHeaders(),
-      })
+      .get<UserData>(`/users/me`)
       .pipe(catchError(this.handleError));
+  }
+
+  register(userData: UserData): Observable<any> {
+    return this.http.post(`/auth/register`, userData).pipe(
+      catchError(this.handleError)
+    );
   }
 
   /**
@@ -29,9 +36,7 @@ export class UserService {
    */
   getUserProfile(userId: string): Observable<UserData> {
     return this.http
-      .get<UserData>(`${this.baseUrl}/${userId}`, {
-        headers: this.getAuthHeaders(),
-      })
+      .get<UserData>(`/users/${userId}`)
       .pipe(catchError(this.handleError));
   }
 
@@ -40,9 +45,7 @@ export class UserService {
    */
   updateLoggedUserProfile(updates: Partial<UserData>): Observable<UserData> {
     return this.http
-      .put<UserData>(`${this.baseUrl}/edit-user/${this.getCurrentUserId()}`, updates, {
-        headers: this.getAuthHeaders(),
-      })
+      .put<UserData>(`/users/edit-user/${this.getCurrentUserId()}`, updates)
       .pipe(catchError(this.handleError));
   }
 
@@ -51,22 +54,10 @@ export class UserService {
    */
   deleteLoggedUser(): Observable<{ message: string }> {
     return this.http
-      .delete<{ message: string }>(`${this.baseUrl}/delete-user/${this.getCurrentUserId()}`, {
-        headers: this.getAuthHeaders(),
-      })
+      .delete<{ message: string }>(`/users/delete-user/${this.getCurrentUserId()}`)
       .pipe(catchError(this.handleError));
   }
 
-  /**
-   * Helper: Get headers with the authorization token.
-   */
-  private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getAccessToken();
-    if (!token) {
-      throw new Error('Authentication token is missing.');
-    }
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
 
   /**
    * Handle HTTP errors.
@@ -80,17 +71,12 @@ export class UserService {
    * Extract the user ID from the JWT.
    */
    getCurrentUserId(): string | null {
-    const token = this.authService.getAccessToken();
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.id || null; // Extract 'id' from the JWT payload
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        return null;
-      }
-    }
-    return null;
+    const currentUser = this.user$$.value; // Access the latest value of the BehaviorSubject
+    console.log(currentUser)
+    return currentUser ? currentUser.id : null; // Return the ID if the user exists, otherwise null
+  }
+  setUser(user: UserData | null): void {
+    this.user$$.next(user); // Push the new user data into the BehaviorSubject
   }
 }
 

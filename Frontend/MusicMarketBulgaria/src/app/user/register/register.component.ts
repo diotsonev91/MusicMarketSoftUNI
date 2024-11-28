@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { SharedFormComponent } from '../../shared/shared-form/shared-form.component';
-import { UserData } from '../../user/user-data.model'; // Import RegisterUserData model
+import { SharedFormComponent } from '../shared-form/shared-form.component';
+import { UserData } from '../user-data.model'; // Import RegisterUserData model
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-register',
@@ -39,7 +39,7 @@ export class RegisterComponent {
 
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   onRegister(formData: Partial<UserData & { confirmPassword?: string }>) {
     // Simple check for password confirmation
@@ -48,9 +48,9 @@ export class RegisterComponent {
       return;
     }
 
-    // Call the AuthService's register method with the form data
+    // Call the userService's register method with the form data
     const { confirmPassword, ...userData } = formData; // Exclude confirmPassword
-    this.authService.register(userData as UserData).subscribe(
+    this.userService.register(userData as UserData).subscribe(
       () => {
         this.errorMessage = null;
         this.router.navigate(['/login']); // Redirect on successful registration

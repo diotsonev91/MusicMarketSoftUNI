@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
-import { UserCredentials } from './user-credentials.model';
+import { UserCredentials } from '../user/user-credentials.model';
 import { RegisterUserData } from './register-user-data.model';
 import { HttpErrorResponse } from '@angular/common/http';
 

@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
-import { AuthService } from '../auth/auth.service';
 import { HttpHeaders } from '@angular/common/http';
 import { UserService } from '../user/user.service';
 
@@ -12,31 +11,17 @@ import { UserService } from '../user/user.service';
   providedIn: 'root',
 })
 export class AdService {
-  private baseUrl = 'http://localhost:5000/ads';
-
-  constructor(private http: HttpClient, private authService: AuthService, private userService: UserService) {}
+  
+  private loggedUserId: string | null = ""
+  constructor(private http: HttpClient, private userService: UserService) {}
 
  
-   // Private method to prepare headers and check user authentication
-   private getAuthorizedHeaders(): { headers: HttpHeaders, userId: string } {
-    const userId = this.userService.getCurrentUserId();
-    const token = this.authService.getAccessToken();
 
-    if (!userId || !token) {
-      throw new Error('No user is currently logged in or token is missing.');
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    return { headers, userId };
-  }
 
    // Fetch all ads for the logged-in user
    getLoggedUserAds(): Observable<AdData[]> {
-    const { userId } = this.getAuthorizedHeaders();
-    return this.http.get<AdData[]>(`${this.baseUrl}/user/${userId}/ads`).pipe(
+    this.loggedUserId = this.userService.getCurrentUserId();
+    return this.http.get<AdData[]>(`/ads/user/${this.loggedUserId}/ads`).pipe(
       catchError((error) => {
         console.error('Error fetching user ads:', error);
         return throwError(() => error);
@@ -47,7 +32,7 @@ export class AdService {
   //public get ads for user
   getUserAds(userId: string): Observable<AdData[]> {
     
-    return this.http.get<AdData[]>(`${this.baseUrl}/user/${userId}/ads`).pipe(
+    return this.http.get<AdData[]>(`/ads/user/${userId}/ads`).pipe(
       catchError((error) => {
         console.error('Error fetching user ads:', error);
         return throwError(() => error);
@@ -57,8 +42,7 @@ export class AdService {
 
   // Create a new ad for the logged-in user
   createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
-    const { headers, userId } = this.getAuthorizedHeaders();
-
+   
     const formData = new FormData();
     formData.append('title', adData.title || '');
     formData.append('description', adData.description || '');
@@ -67,11 +51,11 @@ export class AdService {
     formData.append('condition', adData.condition || '');
     formData.append('category', adData.category || '');
     formData.append('subCategory', adData.subCategory || 'други');
-    formData.append('userId', userId);
+    formData.append('userId', this.loggedUserId || "");
 
     images.forEach((image) => formData.append('images', image, image.name));
 
-    return this.http.post<AdData>(`${this.baseUrl}`, formData, { headers }).pipe(
+    return this.http.post<AdData>(`/ads/`, formData).pipe(
       catchError((error) => {
         console.error('Error creating ad:', error);
         return throwError(() => error);
@@ -81,7 +65,7 @@ export class AdService {
 
 // Edit an ad by ID
 editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: string[]): Observable<AdData> {
-  const { headers } = this.getAuthorizedHeaders();
+  
 
   const formData = new FormData();
 
@@ -106,7 +90,7 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
     remainingImages,
   });
 
-  return this.http.put<AdData>(`${this.baseUrl}/${adId}`, formData, { headers }).pipe(
+  return this.http.put<AdData>(`/ads/${adId}`, formData).pipe(
     catchError((error) => {
       console.error(`Error updating ad with ID ${adId}:`, error);
       return throwError(() => error);
@@ -116,8 +100,8 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
 
   // Delete an ad by ID
   deleteAd(adId: string): Observable<{ message: string }> {
-    const { headers } = this.getAuthorizedHeaders();
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/${adId}`, { headers }).pipe(
+   
+    return this.http.delete<{ message: string }>(`/ads/${adId}`).pipe(
       catchError((error) => {
         console.error(`Error deleting ad with ID ${adId}:`, error);
         return throwError(() => error);
@@ -127,7 +111,7 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
 
    // Get Ad by ID(public)
    getAdById(id: string): Observable<AdData> {
-    return this.http.get<AdData>(`${this.baseUrl}/${id}`).pipe(
+    return this.http.get<AdData>(`/ads/${id}`).pipe(
       catchError((error) => {
         console.error(`Error fetching ad by ID: ${id}`, error);
         return throwError(() => error);
@@ -137,7 +121,7 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
 
   searchAds(query: string): Observable<AdData[]> {
     const params = new HttpParams().set('query', query);
-    return this.http.get<AdData[]>(`${this.baseUrl}/search`, { params }).pipe(
+    return this.http.get<AdData[]>(`/ads/search`, { params }).pipe(
       catchError((error) => {
         console.error('Error searching ads:', error);
         return throwError(() => error);
@@ -152,7 +136,7 @@ getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[],
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
 
-  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(`${this.baseUrl}`, { params }).pipe(
+  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(``, { params }).pipe(
     catchError((error) => {
       console.error('Error fetching all ads with pagination:', error);
       return throwError(() => error);
@@ -162,14 +146,14 @@ getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[],
 
 addRating(adId: string, userVote: number): Observable<number> {
   const payload = { userVote }; // Send user vote as -1, 0, or 1
-  return this.http.post<number>(`${this.baseUrl}/${adId}/rating`, payload);
+  return this.http.post<number>(`/ads/${adId}/rating`, payload);
 }
 
   // Get ads by category and subcategory
   getAdsByCategoryAndSubcategory(category: string, subCategory?: string): Observable<AdData[]> {
     const url = subCategory
-      ? `${this.baseUrl}/category/${category}/${subCategory}`
-      : `${this.baseUrl}/category/${category}`;
+      ? `/ads/category/${category}/${subCategory}`
+      : `/ads/category/${category}`;
     return this.http.get<AdData[]>(url).pipe(
       catchError((error) => {
         console.error(`Error fetching ads by category: ${category}`, error);
@@ -183,7 +167,7 @@ addRating(adId: string, userVote: number): Observable<number> {
     const params = new HttpParams()
       .set('minPrice', minPrice.toString())
       .set('maxPrice', maxPrice.toString());
-    return this.http.get<AdData[]>(`${this.baseUrl}/price-range`, { params }).pipe(
+    return this.http.get<AdData[]>(`/ads/price-range`, { params }).pipe(
       catchError((error) => {
         console.error('Error fetching ads by price range:', error);
         return throwError(() => error);
@@ -201,7 +185,7 @@ addRating(adId: string, userVote: number): Observable<number> {
     const params = new HttpParams()
       .set('minPrice', minPrice.toString())
       .set('maxPrice', maxPrice.toString());
-    const url = `${this.baseUrl}/category/${category}/${subCategory}`;
+    const url = `/ads/category/${category}/${subCategory}`;
     return this.http.get<AdData[]>(url, { params }).pipe(
       catchError((error) => {
         console.error(`Error fetching ads by category, subcategory, and price range`, error);
@@ -218,7 +202,7 @@ getAdsByCategoryAndPriceRange(
   const params = new HttpParams()
     .set('minPrice', minPrice.toString())
     .set('maxPrice', maxPrice.toString());
-  const url = `${this.baseUrl}/category/${category}/price-range`;
+  const url = `/ads/category/${category}/price-range`;
   return this.http.get<AdData[]>(url, { params }).pipe(
     catchError((error) => {
       console.error(`Error fetching ads by category and price range:`, error);

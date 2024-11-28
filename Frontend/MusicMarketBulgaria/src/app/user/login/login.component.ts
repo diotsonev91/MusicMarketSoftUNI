@@ -1,7 +1,7 @@
 // login.component.ts
 import { Component } from '@angular/core';
-import { SharedFormComponent } from '../../shared/shared-form/shared-form.component';
-import { AuthService } from '../auth.service';
+import { SharedFormComponent } from '../shared-form/shared-form.component';
+import { AuthService } from '../../auth/auth.service';
 import { UserCredentials } from '../user-credentials.model';
 import { Router } from '@angular/router';
 

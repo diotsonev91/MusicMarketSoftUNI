@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './shared/header/header.component';
-import { FooterComponent } from './shared/footer/footer.component';
-import { NavigationBarComponent } from './shared/navigation-bar/navigation-bar.component';
-import { HomeComponent } from './shared/home/home.component';
+import { HeaderComponent } from './core/header/header.component';
+import { FooterComponent } from './core/footer/footer.component';
+import { NavigationBarComponent } from './core/navigation-bar/navigation-bar.component';
+import { HomeComponent } from './core/home/home.component';
 
 @Component({
   selector: 'app-root',

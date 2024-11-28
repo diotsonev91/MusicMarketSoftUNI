@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { UserData } from '../user-data.model';
-import { SharedFormComponent } from '../../shared/shared-form/shared-form.component';
+import { SharedFormComponent } from '../shared-form/shared-form.component';
 
 @Component({
   selector: 'app-edit-user',

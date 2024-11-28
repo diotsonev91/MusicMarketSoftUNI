@@ -28,14 +28,16 @@ export class ProfileComponent implements OnInit {
    */
   loadUserProfile(): void {
     this.userService.getLoggedUserProfile().subscribe({
-      next: (data: UserData) => (this.user = data),
+      next: (data: UserData) => {
+        this.user = data; // Set the user data
+        this.userService.setUser(data); // Update BehaviorSubject with fetched data
+      },
       error: (err) => {
         this.error = 'Failed to load user profile.';
         console.error(err);
       },
     });
   }
-
 
   editProfile(): void {
     console.log('Edit profile clicked');

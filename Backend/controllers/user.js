@@ -100,6 +100,28 @@ exports.deleteUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+  
 }
+
+// Get Logged-in User Profile
+exports.getLoggedUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Extracted by auth middleware
+    const user = await User.findById(userId).select("-password"); // Exclude sensitive data
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      // Add any additional fields you want to return
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
