@@ -50,6 +50,10 @@ export class AdFormComponent implements OnInit {
       placeholder: 'Въведете цена',
       validationMessage: 'Цената е задължителна и трябва да е положителна.',
     },
+    location: {
+      label: 'локация на артикула',
+      placeholder: 'Въведете локация',
+    },
     category: {
       label: 'Категория',
       placeholder: 'Избери категория',
@@ -86,6 +90,7 @@ export class AdFormComponent implements OnInit {
       condition: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
       price: [null, [Validators.required, Validators.min(0)]],
+      location: ['']
     });
     console.log(this.initialData)
   }
@@ -93,6 +98,13 @@ export class AdFormComponent implements OnInit {
   displayImages: (string | null)[] = []; // Unified array for display, combining existingImages and previews
 
   ngOnInit(): void {
+    
+    // Clear FileService state to ensure no lingering images
+  this.fileService.clearFiles();
+
+  // Reset component state
+  this.existingImages = [];
+  this.displayImages = [];
     if (this.initialData) {
       this.adForm.patchValue(this.initialData); // Pre-fill form with initial data
       this.existingImages = this.initialData.images || [];
@@ -101,7 +113,6 @@ export class AdFormComponent implements OnInit {
   }
   
   private updateDisplayImages(): void {
-    // Ensure unique display images
     const newPreviews = this.fileService.getFiles()
       .map((_, index) => this.getFileUrl(index))
       .filter((preview) => preview !== null); // Ensure no null previews
@@ -109,10 +120,15 @@ export class AdFormComponent implements OnInit {
     // Merge existing and new images while avoiding duplicates
     this.displayImages = Array.from(new Set([...this.existingImages, ...newPreviews]));
   
-    this.cdr.markForCheck(); // Trigger change detection
+    console.log('Updated displayImages:', this.displayImages);
+    console.log('Existing images:', this.existingImages);
+    console.log('FileService files:', this.fileService.getFiles());
+  
+    this.cdr.markForCheck(); // Trigger UI update
   }
 
   onSubmit(): void {
+    console.log("Call to submit")
     if (this.adForm.valid) {
       const adData: Partial<AdData> = this.adForm.value;
       const newImages: File[] = this.fileService.getFiles();
@@ -130,6 +146,7 @@ export class AdFormComponent implements OnInit {
   }
 
   onFileChange(event: Event, slotIndex: number): void {
+    event.preventDefault(); //
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.fileService.addFile(input.files[0], slotIndex - this.existingImages.length);
@@ -138,7 +155,18 @@ export class AdFormComponent implements OnInit {
     }
   }
   
-  removeImage(index: number): void {
+  removeImage(index: number,  event: MouseEvent): void {
+    console.log('removeImage triggered by:', event.target);
+    console.log('removeImage event classList:', (event.target as HTMLElement).classList);
+    event.stopPropagation(); 
+
+    // Ensure the click is only from the button
+  if (!(event.target as HTMLElement).classList.contains('remove-image-btn')) {
+    console.log("Click ignored as it wasn't on the remove button");
+    return;
+  }
+
+    console.log("remove image triggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     const isExistingImage = index < this.existingImages.length;
     if (isExistingImage) {
       this.removeExistingImage(index);
@@ -154,54 +182,7 @@ export class AdFormComponent implements OnInit {
     return this.fileService.getFilePreview(slotIndex);
   }
 
-  onDragStart(event: DragEvent, slotIndex: number): void {
-    if (event?.dataTransfer) {
-      event.dataTransfer.setData('text/plain', slotIndex.toString());
-    }
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-  }
-
-  onDrop(event: DragEvent, targetIndex: number): void {
-    event.preventDefault();
-    const draggedIndex = Number(event.dataTransfer?.getData('text/plain'));
   
-    if (draggedIndex !== targetIndex) {
-      // Swap logic for unified array
-      [this.displayImages[draggedIndex], this.displayImages[targetIndex]] = [
-        this.displayImages[targetIndex],
-        this.displayImages[draggedIndex],
-      ];
-  
-      // Sync back to `existingImages` and `fileService`
-      this.syncImagesWithDisplay();
-      this.cdr.markForCheck();
-    }
-  }
-
-  private syncImagesWithDisplay(): void {
-    const numExisting = this.existingImages.length;
-  
-    // Extract existing images from displayImages
-    this.existingImages = this.displayImages.slice(0, numExisting).filter(Boolean) as string[];
-  
-    // Extract new images from displayImages
-    const newImagePreviews = this.displayImages.slice(numExisting).filter(Boolean);
-  
-    // Reset fileService and add valid new image files back
-    this.fileService.clearFiles();
-    newImagePreviews.forEach((preview, index) => {
-      const file = this.fileService.getFiles()[index];
-      if (file) {
-        this.fileService.addFile(file, index);
-      }
-    });
-  
-    // Refresh displayImages to match updated state
-    this.updateDisplayImages();
-  }
 
   removeExistingImage(index: number): void {
     const removedImage = this.existingImages.splice(index, 1)[0]; // Remove the image

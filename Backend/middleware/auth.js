@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+
 const auth = (roles = []) => (req, res, next) => {
   // Extract token from authorization header
   const token = req.headers.authorization?.split(" ")[1];

@@ -2,7 +2,10 @@
     <div class="split-screen">
       <!-- Left Section -->
       <div class="left">
-      <app-ad-details-card [ad]="ad"></app-ad-details-card>
+        <app-ad-details-card
+        [ad]="ad"
+        (userClicked)="goToUser($event)">
+      </app-ad-details-card>
        <app-contact-form [ad]="ad"></app-contact-form>
       </div>
       <!-- Right Section -->

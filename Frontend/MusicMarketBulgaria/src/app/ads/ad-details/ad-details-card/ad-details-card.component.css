@@ -108,3 +108,21 @@
     
 }
 
+.createdAt {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.4);
+    text-align: left;
+    margin-top: 10px;
+    max-width: 65%;
+}
+
+.product-author{
+    background-color: #6a917c;
+    box-shadow: 0 4px 8px rgba(83, 48, 48, 0.4);
+    font-size: 1rem;
+    color: #e8e7e9;
+    margin-bottom: 5px;
+    cursor: pointer;
+}

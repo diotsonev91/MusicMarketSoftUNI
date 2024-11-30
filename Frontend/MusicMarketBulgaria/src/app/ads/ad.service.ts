@@ -1,35 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
-import { HttpHeaders } from '@angular/common/http';
-import { UserService } from '../user/user.service';
-
+import { Router } from '@angular/router';
+import { UserData } from '../user/user-data.model';
+import { UserStoreService } from '../core/user-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdService {
   
-  private loggedUserId: string | null = ""
-  constructor(private http: HttpClient, private userService: UserService) {}
-
- 
-
-
-   // Fetch all ads for the logged-in user
-   getLoggedUserAds(): Observable<AdData[]> {
-    this.loggedUserId = this.userService.getCurrentUserId();
-    return this.http.get<AdData[]>(`/ads/user/${this.loggedUserId}/ads`).pipe(
-      catchError((error) => {
-        console.error('Error fetching user ads:', error);
-        return throwError(() => error);
-      })
-    );
+  private userId: string | null = ""
+  constructor(private http: HttpClient, private router: Router,private userStore: UserStoreService) {
+     // Subscribe to the userStore to get the user ID reactively
+     userStore.currentUser$.subscribe((user) => {
+    this.userId = user?.id || null;
+    });
   }
+    
+  
+ 
+    /**
+   * Fetch a user profile by ID.
+   */
+    getUserProfile(user: string): Observable<UserData> {
+      return this.http
+        .get<UserData>(`/users/username/${user}`)
+       // .pipe(catchError(this.handleError));
+    }
+  
 
-  //public get ads for user
+ //get ads for user
   getUserAds(userId: string): Observable<AdData[]> {
     
     return this.http.get<AdData[]>(`/ads/user/${userId}/ads`).pipe(
@@ -40,9 +43,25 @@ export class AdService {
     );
   }
 
+// Get ads for the logged-in user (reactively wait for userId)
+getLoggedUserAds(): Observable<AdData[]> {
+  return this.userStore.currentUser$.pipe(
+    filter((user) => !!user?.id), // Wait until a valid user with ID is available
+    switchMap((user) => {
+      const userId = user?.id!;
+      console.log("user id inside ad service: ",userId)
+      return this.http.get<AdData[]>(`/ads/user/${userId}/ads`);
+    }),
+    catchError((error) => {
+      console.error('Error fetching user ads:', error);
+      return throwError(() => error);
+    })
+  );
+}
   // Create a new ad for the logged-in user
   createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
    
+    console.log(this.userId)
     const formData = new FormData();
     formData.append('title', adData.title || '');
     formData.append('description', adData.description || '');
@@ -51,7 +70,8 @@ export class AdService {
     formData.append('condition', adData.condition || '');
     formData.append('category', adData.category || '');
     formData.append('subCategory', adData.subCategory || 'други');
-    formData.append('userId', this.loggedUserId || "");
+    formData.append('location', adData.location || "");
+   
 
     images.forEach((image) => formData.append('images', image, image.name));
 
@@ -136,7 +156,7 @@ getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[],
     .set('page', page.toString())
     .set('pageSize', pageSize.toString());
 
-  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(``, { params }).pipe(
+  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(`/ads`, { params }).pipe(
     catchError((error) => {
       console.error('Error fetching all ads with pagination:', error);
       return throwError(() => error);
@@ -210,6 +230,11 @@ getAdsByCategoryAndPriceRange(
     })
   );
 }
+// Centralized method to navigate to the user's page
+goToUser(userId: string): void {
+  this.router.navigate([`/user`, userId]);
+}
+
 }
 
 

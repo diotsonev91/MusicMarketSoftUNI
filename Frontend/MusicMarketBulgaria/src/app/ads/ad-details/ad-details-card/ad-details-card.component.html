@@ -25,7 +25,8 @@
         <p class="product-condition">Състояние: {{ ad?.condition }}</p>
         <p class="product-description">{{ ad?.description }}</p>
         <p class="product-location">Местоположение: {{ ad?.location }}</p>
-        <p class="product-author">Автор: {{ ad?.userName }}</p>
+        <p (click)="onAuthorClick()">Автор: <span class="product-author">{{ ad?.userName }}</span></p>
+        <p class="created-time">от: {{ ad?.createdAt | customDate }}</p>
       </div>
     </div>
   </section>

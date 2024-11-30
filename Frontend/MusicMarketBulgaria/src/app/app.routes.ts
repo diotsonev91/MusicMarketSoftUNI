@@ -15,7 +15,8 @@ export const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "register", component: RegisterComponent},
     {path: "edit-profile", component: EditUserComponent},
-    {path: "profile", component: ProfileComponent},
+    { path: 'profile', component: ProfileComponent }, // Current user's profile
+    { path: 'user/:userId', component: ProfileComponent }, // Public profile
     {path: 'create-ad', component: CreateAdComponent },
     {path: 'ads-view', component: AdsViewComponent},
     {path: 'ad-details/:id', component: AdDetailsComponent },

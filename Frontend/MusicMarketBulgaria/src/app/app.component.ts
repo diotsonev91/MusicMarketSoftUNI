@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './core/header/header.component';
 import { FooterComponent } from './core/footer/footer.component';
@@ -14,4 +14,8 @@ import { HomeComponent } from './core/home/home.component';
 })
 export class AppComponent {
   title = 'MusicMarketBulgaria';
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    $event.returnValue = 'Are you sure you want to leave? Unsaved changes may be lost.';
+  }
 }

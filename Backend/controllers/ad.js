@@ -57,6 +57,7 @@ exports.createAd = [
         technique: category === "музикална техника" ? technique : undefined,
         user: req.user.id,
         userName: user.username, // Store the user's name for quick access
+        userId: req.user.id,
         createdAt: new Date(),
       };
 

@@ -22,12 +22,12 @@ export class ContactFormComponent {
       return;
     }
 
-    if (!this.ad?.userId) {
+    if (!this.ad?.user) {
       console.error('Ad details are incomplete. Cannot send the message.');
       return;
     }
 
-    this.chatService.sendMessage(this.ad.userId, this.messageContent).subscribe({
+    this.chatService.sendMessage(this.ad.user, this.messageContent).subscribe({
       next: (response) => {
         console.log('Message sent successfully:', response);
         this.messageContent = '';

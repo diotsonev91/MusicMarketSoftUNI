@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { UserCredentials } from '../user/user-credentials.model';
 import { UserService } from '../user/user.service';
 @Injectable({
@@ -26,16 +26,21 @@ export class AuthService {
       tap(() => {
         // Clear the token and user state upon successful API response
         this.clearAccessToken();
-        this.userService.setUser(null);
+        this.userService.clearUser();
       })
     );
   }
 
-  // Refresh Access Token
-  refreshAccessToken(): Observable<{ accessToken: string }> {
-    return this.http.post<{ accessToken: string }>(`/auth/refresh-token`, {}, { withCredentials: true }).pipe(
-      tap((response) => this.setAccessToken(response.accessToken)),
-      catchError(this.handleError)
+  refreshAccessToken(): Observable<string> {
+    return this.http.post<{ accessToken: string }>(`/auth/refresh-token`, {}).pipe(
+      map((response) => response.accessToken), // Extract accessToken from the response
+      catchError((error) => {
+        const errorMessage =
+          error.status === 403
+            ? 'Invalid or expired refresh token'
+            : 'Error refreshing token';
+        return throwError(() => errorMessage);
+      })
     );
   }
 

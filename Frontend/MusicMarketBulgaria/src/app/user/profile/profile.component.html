@@ -1,16 +1,18 @@
 <main>
-    <section class="profile">
-      <h2>Моят профил</h2>
-      @if (user) {
-        <p><strong>Име:</strong> {{ user.username }}</p>
-        <p><strong>Първо име:</strong> {{ user.firstname }}</p>
-        <p><strong>Фамилия:</strong> {{ user.lastname }}</p>
-        <p><strong>Имейл:</strong> {{ user.email }}</p>
-      } @else {
-        <p>Профилът не може да бъде зареден.</p>
+  <section class="profile">
+    <h2>{{ isCurrentUser ? 'Моят профил' : 'Публичен профил' }}</h2>
+    @if (user) {
+      <p><strong>Име:</strong> {{ user.username }}</p>
+      <p><strong>Първо име:</strong> {{ user.firstname || 'N/A' }}</p>
+      <p><strong>Фамилия:</strong> {{ user.lastname || 'N/A' }}</p>
+      <p><strong>Имейл:</strong> {{ user.email }}</p>
+      <p><strong>Местоположение:</strong> {{ user.location || 'N/A' }}</p>
+      @if (isCurrentUser) {
+        <button (click)="editProfile()">Редакция на профил</button>
       }
-      <button (click)="editProfile()">Редакция на профил</button>
-    </section>
-    <app-user-ads></app-user-ads>
-  </main>
-  
+    } @else {
+      <p>{{ error }}</p>
+    }
+  </section>
+  <app-user-ads></app-user-ads>
+</main>

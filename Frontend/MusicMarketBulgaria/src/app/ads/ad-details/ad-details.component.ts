@@ -34,11 +34,16 @@ export class AdDetailsComponent implements OnInit {
     });
   }
 
+// Use AdService to navigate
+goToUser(userId: string): void {
+  this.adService.goToUser(userId);
+}
+
   fetchAdDetails(adId: string): void {
     this.adService.getAdById(adId).subscribe({
       next: (ad) => {
         this.ad = ad; // Populate the ad
-        if (ad.userId) {
+        if (ad.user) {
           this.loadRelatedAds(ad._id, ad.userId); // Load related ads only after ad is populated
         }
       },

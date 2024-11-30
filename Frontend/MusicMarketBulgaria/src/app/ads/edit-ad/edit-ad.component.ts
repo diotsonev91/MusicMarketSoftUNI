@@ -56,7 +56,7 @@ export class EditAdComponent implements OnInit {
   }
   onEditAd({ adData, images }: { adData: Partial<AdData>; images: File[] }): void {
     this.adService.editAd(this.adData._id!, adData, images, adData.remainingImages || []).subscribe({
-      next: () => this.router.navigate(['/ads']),
+      next: () => this.router.navigate(['/ads-view']),
       error: (err) => console.error('Failed to update ad:', err),
     });
   }

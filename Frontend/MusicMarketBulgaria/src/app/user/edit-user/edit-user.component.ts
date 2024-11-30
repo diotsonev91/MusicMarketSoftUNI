@@ -53,9 +53,13 @@ export class EditUserComponent implements OnInit {
     this.loadUserProfile();
   }
 
-  loadUserProfile(): void {
-    this.userService.getLoggedUserProfile().subscribe(
-      (user: UserData) => {
+ /**
+   * Fetch the logged-in user's profile using `user$` observable.
+   */
+ loadUserProfile(): void {
+  this.userService.getCurrentUser$().subscribe(
+    (user) => {
+      if (user) {
         const formValues = Object.keys(user).reduce((values, key) => {
           values[key] = user[key as keyof UserData] || '';
           return values;
@@ -64,13 +68,14 @@ export class EditUserComponent implements OnInit {
         if (this.sharedForm) {
           this.sharedForm.updateFormValues(formValues); // Populate the form with user data
         }
-      },
-      (error) => {
-        this.errorMessage = 'Failed to load user data.';
-        console.error(error);
       }
-    );
-  }
+    },
+    (error) => {
+      this.errorMessage = 'Failed to load user data.';
+      console.error(error);
+    }
+  );
+}
 
   onEditUser(updatedData: Partial<UserData & { password?: string; confirmPassword?: string }>): void {
     if (updatedData.password !== updatedData.confirmPassword) {

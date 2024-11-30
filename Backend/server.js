@@ -2,12 +2,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
-
+const cookieParser = require('cookie-parser');
 require("dotenv").config(); // Load environment variables
 
 const app = express();
 app.use(express.json());
 
+app.use(cookieParser());
 app.use(cors({
   origin: (origin, callback) => {
     // Allow localhost origins or requests with no origin (e.g., Postman or preflight)

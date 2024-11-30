@@ -16,7 +16,8 @@ export interface AdData {
     subCategory: SubCategories;
     images: string[];
     instrument: string;
-    userId: string;
+    user: string;
+    userId:string;
     userName: string; 
     rating: number;
     createdAt: null;

@@ -48,6 +48,8 @@ const adSchema = new mongoose.Schema({
     required: true 
   }, // Add userName for fast frontend display
   
+  userId: { type: String, required: true },
+
   createdAt: { 
     type: Date, 
     default: Date.now 
