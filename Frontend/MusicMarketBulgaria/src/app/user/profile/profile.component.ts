@@ -9,12 +9,13 @@ import { UserAdsComponent } from '../../ads/user-ads/user-ads.component';
   standalone: true,
   imports: [UserAdsComponent],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'], // Correct property name: styleUrls
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   user: UserData | null = null; // Profile data to display
   isCurrentUser = false; // Determines if the profile is for the logged-in user
   error: string | null = null;
+  publicUserId: string | null = null;
 
   constructor(
     private userService: UserService,
@@ -23,38 +24,42 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get userId from route parameters (if provided)
+    // Determine if this is the current user's profile or a public profile
+    const routeSegment = this.route.snapshot.url[0]?.path;
     const userId = this.route.snapshot.paramMap.get('userId');
 
-    if (userId) {
-      // If userId exists, fetch the profile for that user
-      this.loadProfile(userId);
+    if (routeSegment === 'profile') {
+      this.loadCurrentUserProfile();
+    } else if (routeSegment === 'user' && userId) {
+      this.loadPublicProfile(userId);
     } else {
-      // Otherwise, display the logged-in user's profile
-      this.user = this.userService.getCurrentUserData();
-      this.isCurrentUser = true;
-
-      // Ensure user is loaded if not already
-      if (!this.user) {
-        this.userService.loadCurrentUser();
-        this.userService.getCurrentUser$().subscribe(
-          (user) => {
-            this.user = user;
-          },
-          (error) => {
-            this.error = 'Failed to load profile.';
-          }
-        );
-      }
+      this.error = 'Invalid route or missing userId.';
     }
   }
 
+  private loadCurrentUserProfile(): void {
+    // Load the current user's profile
+    this.userService.setCurrentUserInUserStore();
+    this.userService.getCurrentUser$().subscribe(
+      (user) => {
+        this.user = user;
+        this.isCurrentUser = true; // Indicates it's the logged-in user's profile
+      },
+      (error) => {
+        this.error = 'Failed to load profile.';
+        console.error(error);
+      }
+    );
+  }
 
-  private loadProfile(userId: string): void {
+  private loadPublicProfile(userId: string): void {
+    // Load a public profile by user ID
     this.userService.getUserProfile(userId).subscribe(
       (user) => {
         this.user = user;
-        this.isCurrentUser = this.userService.getCurrentUserId() === userId;
+        console.log("userId inside the loadPublic profile",this.user._id)
+        this.isCurrentUser = false; // Indicates it's a public profile
+        this.publicUserId = this.user._id;
       },
       (error) => {
         this.error = 'Failed to load profile.';
@@ -64,6 +69,7 @@ export class ProfileComponent implements OnInit {
   }
 
   editProfile(): void {
+    // Navigate to the profile editing page for the current user
     if (this.isCurrentUser) {
       this.router.navigate(['/edit-profile']);
     }

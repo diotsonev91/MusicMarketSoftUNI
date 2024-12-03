@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { AdData } from './ad-data.model';
 import { Router } from '@angular/router';
 import { UserData } from '../user/user-data.model';
@@ -16,11 +16,13 @@ export class AdService {
   constructor(private http: HttpClient, private router: Router,private userStore: UserStoreService) {
      // Subscribe to the userStore to get the user ID reactively
      userStore.currentUser$.subscribe((user) => {
-    this.userId = user?.id || null;
+    this.userId = user?._id || null;
     });
   }
     
-  
+  private getUserId(): string | null{
+    return this.userId; 
+  }
  
     /**
    * Fetch a user profile by ID.
@@ -43,21 +45,28 @@ export class AdService {
     );
   }
 
-// Get ads for the logged-in user (reactively wait for userId)
-getLoggedUserAds(): Observable<AdData[]> {
-  return this.userStore.currentUser$.pipe(
-    filter((user) => !!user?.id), // Wait until a valid user with ID is available
-    switchMap((user) => {
-      const userId = user?.id!;
-      console.log("user id inside ad service: ",userId)
-      return this.http.get<AdData[]>(`/ads/user/${userId}/ads`);
-    }),
-    catchError((error) => {
-      console.error('Error fetching user ads:', error);
-      return throwError(() => error);
-    })
-  );
-}
+  getLoggedUserAds(): Observable<AdData[]> {
+    return this.userStore.currentUser$.pipe(
+      tap((user) => console.log('Emitted user from userStore:', user)), // Debugging
+      switchMap((user) => {
+        if (!user?._id) {
+          console.warn('User does not have a valid _id. Skipping API call.');
+          return throwError(() => new Error('User does not have a valid ID.'));
+        }
+  
+        const userId = user._id;
+        console.log('User ID for fetching ads:', userId);
+  
+        return this.http.get<AdData[]>(`/ads/user/${userId}/ads`).pipe(
+          tap((ads) => console.log('Fetched ads:', ads))
+        );
+      }),
+      catchError((error) => {
+        console.error('Error fetching logged-in user ads:', error);
+        return throwError(() => error);
+      })
+    );
+  }
   // Create a new ad for the logged-in user
   createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
    
@@ -150,24 +159,42 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
   }
   
 
-  // Get all ads (Public) with Pagination
-getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }> {
-  const params = new HttpParams()
-    .set('page', page.toString())
-    .set('pageSize', pageSize.toString());
+  getAllAds(page: number = 1, pageSize: number = 20): Observable<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+  
+    return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(`/ads`, { params }).pipe(
+      tap((response) => {
+        console.log('Received response from backend:', response); // Log the full response
+      }),
+      catchError((error) => {
+        console.error('Error fetching all ads with pagination:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 
-  return this.http.get<{ data: AdData[], currentPage: number, totalPages: number, totalAds: number }>(`/ads`, { params }).pipe(
-    catchError((error) => {
-      console.error('Error fetching all ads with pagination:', error);
-      return throwError(() => error);
-    })
-  );
+ // Fetch like and dislike counts for an ad
+ getAdLikeDislikeCounts(adId: string): Observable<{ likes: number; dislikes: number }> {
+  return this.http.get<{ likes: number; dislikes: number }>(`/like-dislike/counts/${adId}`);
 }
 
-addRating(adId: string, userVote: number): Observable<number> {
-  const payload = { userVote }; // Send user vote as -1, 0, or 1
-  return this.http.post<number>(`/ads/${adId}/rating`, payload);
+// Fetch user's current vote state for an ad
+getUserAdState(adId: string): Observable<{ status: string }> {
+  return this.http.get<{ status: string }>(`/like-dislike/state/${adId}/${this.getUserId()}`);
 }
+
+// Update user's like/dislike vote
+addLikeDislike(adId: string, userVote: number): Observable<any> {
+  const action = userVote === 1 ? 'like' : userVote === -1 ? 'dislike' : 'neutral';
+  console.log("action in ad.service",action)
+  const payload = { userId: this.getUserId(), adId, action };
+  return this.http.post(`/like-dislike`, payload);
+}
+
+
+
 
   // Get ads by category and subcategory
   getAdsByCategoryAndSubcategory(category: string, subCategory?: string): Observable<AdData[]> {

@@ -61,6 +61,7 @@ const userRoutes = require("./routes/users");
 const adRoutes = require("./routes/ads");
 const ratingRoutes = require("./routes/ratings");
 const chatRoutes = require("./routes/chats"); // Assuming this is created for chat functionalities
+const likeDislike = require("./routes/like-dislike")
 
 // Use routes
 app.use("/auth", authRoutes);       // For authentication (register, login, logout)
@@ -68,7 +69,7 @@ app.use("/users", userRoutes);       // For user info retrieval and other user-r
 app.use("/ads", adRoutes);           // For ad-related operations (create, delete, edit, etc.)
 app.use("/ratings", ratingRoutes);   // For user and ad ratings
 app.use("/chats", chatRoutes);       // For chat-related operations
-
+app.use("/like-dislike",likeDislike)
 // Define the PORT and start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

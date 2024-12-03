@@ -5,11 +5,12 @@ import { FilterComponent } from '../filter/filter.component';
 import { SearchComponent } from '../search/search.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AdDetailsCardSmComponent } from '../ad-details/ad-details-card-sm/ad-details-card-sm.component';
 
 @Component({
   selector: 'app-ads-view',
   standalone: true,
-  imports: [FilterComponent, SearchComponent, CommonModule, RouterModule],
+  imports: [FilterComponent, SearchComponent, AdDetailsCardSmComponent, CommonModule, RouterModule],
   templateUrl: './ads-view.component.html',
   styleUrls: ['./ads-view.component.css'],
 })
@@ -26,6 +27,7 @@ export class AdsViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAds(this.currentPage, this.pageSize);
+    console.log("ads inside view ads",this.ads)
   }
 
   onNextPage(): void {

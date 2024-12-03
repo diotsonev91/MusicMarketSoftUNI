@@ -14,19 +14,24 @@ export class UserService {
   /**
    * Load the current user from the API and update the userStore.
    */
-  loadCurrentUser(): void {
+  setCurrentUserInUserStore(): void {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      this.http.get<UserData>('/users/me').subscribe(
-        (user) => {
-          this.userStore.setCurrentUser(user); // Update userStore
-          console.log("after setting user in userStore/userService: ", this.userStore.getCurrentUser())
-        },
-        (error) => {
-          console.error('Failed to load current user:', error);
-          this.userStore.clearCurrentUser(); // Clear userStore on error
+      const storedUser = localStorage.getItem("currentUser");
+      console.log("STored user in local store: ", storedUser)
+      if (storedUser) {
+        try {
+          // Parse the JSON string into an object
+          const currentUser: UserData = JSON.parse(storedUser);
+          // Optionally validate the object here
+          this.userStore.setCurrentUser(currentUser);
+        } catch (error) {
+          console.error("Failed to parse currentUser from localStorage:", error);
+          this.userStore.setCurrentUser(null); // Fallback to null in case of error
         }
-      );
+      } else {
+        this.userStore.setCurrentUser(null); // No user found in localStorage
+      }
     }
   }
 
@@ -49,7 +54,7 @@ export class UserService {
    */
   getCurrentUserId(): string | null {
     const currentUser = this.userStore.getCurrentUser();
-    return currentUser ? currentUser.id : null;
+    return currentUser ? currentUser._id : null;
   }
 
   /**

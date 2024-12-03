@@ -4,22 +4,16 @@
       <app-rating-view 
       [rating]="currentAdRating" 
       [totalStars]="5"
-      [starSize]="24">
+      [starSize]="24"
+      (formToggled)="toggleRatingForm($event)">
     </app-rating-view>
     </h2>
-    <div class="image-and-text">
+    <div class="image-and-text" [class.hidden]="isRatingFormOpen">
       <div class="price-image">
         <img [src]="ad?.images?.[0]" alt="{{ ad?.title }}" class="product-image" />
         <p class="product-price">Цена: {{ ad?.price }} лв.</p>
-        <div class="rating-buttons">
-          <button class="thumbs-up">
-            <i class="fas fa-thumbs-up"></i> 
-          </button>
-          <span id="likes-count">{{ ad?.likes }}</span>
-          <button class="thumbs-down">
-            <i class="fas fa-thumbs-down"></i>
-          </button>
-        </div>
+        <app-like-dislike-buttons
+        [adId]="adId"></app-like-dislike-buttons>
       </div>
       <div class="product-details-sm">
         <p class="product-condition">Състояние: {{ ad?.condition }}</p>

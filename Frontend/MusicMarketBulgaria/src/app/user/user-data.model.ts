@@ -1,5 +1,5 @@
 export interface UserData {
-    id: string;               // Unique user ID from MongoDB
+    _id: string;               // Unique user ID from MongoDB
     username: string;          
     firstname: string;         
     lastname: string;       

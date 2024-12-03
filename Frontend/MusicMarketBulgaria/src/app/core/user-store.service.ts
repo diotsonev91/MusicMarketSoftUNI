@@ -32,15 +32,11 @@ export class UserStoreService {
     return storedUser;
   }
 
-  // Set the current user and store in localStorage
-  setCurrentUser(user: UserData | null): void {
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user)); // Store in localStorage
-    } else {
-      localStorage.removeItem('currentUser'); // Clear from localStorage
-    }
-    this.currentUser$$.next(user);
-  }
+// Set the current user in the BehaviorSubject without storing in localStorage
+setCurrentUser(user: UserData | null): void {
+  this.currentUser$$.next(user);
+  console.log("USER stored in subject: ", user)
+}
 
   // Clear the user state (e.g., on logout)
   clearCurrentUser(): void {

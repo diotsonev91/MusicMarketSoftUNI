@@ -5,7 +5,13 @@
     padding-bottom: 15%;
     
 }
-
+.image-and-text.hidden {
+    opacity: 0; /* Make it invisible */
+    transform: scale(0.95); /* Slightly shrink it */
+    pointer-events: none; /* Prevent interaction */
+    height: 20rem; /* Collapse the height */
+    overflow: hidden; /* Prevent content overflow */
+  }
 
 .price-image {
     display: flex;

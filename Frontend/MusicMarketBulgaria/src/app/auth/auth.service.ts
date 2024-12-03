@@ -4,32 +4,41 @@ import { environment } from '../../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
 import { UserCredentials } from '../user/user-credentials.model';
-import { UserService } from '../user/user.service';
+import { UserData } from '../user/user-data.model';
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor(private http: HttpClient) {}
 
-  // Login
-   // Login
-   login(credentials: UserCredentials): Observable<{ accessToken: string; user: any }> {
-    return this.http.post<{ accessToken: string; user: any }>(`/auth/login`, credentials).pipe(
+  login(credentials: UserCredentials): Observable<{ accessToken: string; currentUser: UserData }> {
+    return this.http.post<{ accessToken: string; currentUser: UserData }>(`/auth/login`, credentials).pipe(
       tap((response) => {
-        localStorage.setItem('accessToken', response.accessToken); // Store the token
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('currentUser', JSON.stringify(response.currentUser));
+        //console.log("Once user is set: ", response.currentUser )
       })
     );
   }
+
 
   logout(): Observable<void> {
     return this.http.post<void>('/auth/logout', {}).pipe(
       tap(() => {
         // Clear the token and user state upon successful API response
         this.clearAccessToken();
-        this.userService.clearUser();
+
       })
     );
   }
+
+
+  private clearAccessToken(): void {
+    localStorage.removeItem('accessToken');
+  }
+
 
   refreshAccessToken(): Observable<string> {
     return this.http.post<{ accessToken: string }>(`/auth/refresh-token`, {}).pipe(
@@ -47,10 +56,6 @@ export class AuthService {
   // Token Management
   public setAccessToken(token: string): void {
     localStorage.setItem('accessToken', token);
-  }
-
-  private clearAccessToken(): void {
-    localStorage.removeItem('accessToken');
   }
 
   public getAccessToken(): string | null {

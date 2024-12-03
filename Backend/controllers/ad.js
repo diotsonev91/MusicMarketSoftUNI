@@ -201,7 +201,9 @@ exports.getAllAdsOfUser = async (req, res) => {
 // Get All Ads (Public)
 // Get All Ads (Public) with Pagination
 exports.getAllAds = async (req, res) => {
+  
   try {
+    console.log('Received request for ads:', req.query);
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const pageSize = parseInt(req.query.pageSize) || 20; // Default to 20 ads per page
 

@@ -15,10 +15,11 @@ export const routes: Routes = [
     {path: "login", component: LoginComponent},
     {path: "register", component: RegisterComponent},
     {path: "edit-profile", component: EditUserComponent},
-    { path: 'profile', component: ProfileComponent }, // Current user's profile
+    { path: 'profile/:userId', component: ProfileComponent }, // Current user's profile
     { path: 'user/:userId', component: ProfileComponent }, // Public profile
     {path: 'create-ad', component: CreateAdComponent },
     {path: 'ads-view', component: AdsViewComponent},
     {path: 'ad-details/:id', component: AdDetailsComponent },
-    {path: 'edit-ad/:id', component: EditAdComponent}
+    {path: 'edit-ad/:id', component: EditAdComponent},
+    { path: '**', redirectTo: '/home' } // Wildcard route
 ];

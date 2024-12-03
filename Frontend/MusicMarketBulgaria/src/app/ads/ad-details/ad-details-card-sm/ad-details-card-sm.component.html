@@ -1,15 +1,15 @@
 <div class="card-detail-sm">
-    <a  [routerLink]="['/ad-details', ad._id]">
+    <a  [routerLink]="['/ad-details', ad?._id]">
       <!-- Display the first image from `images` array -->
       <img [src]="ad?.images?.[0]" [alt]="ad?.title || 'No Title'" class="product-thumbnail" />
 
-      <span class="product-title">{{ ad.title }}</span>
+      <span class="product-title">{{ ad?.title }}</span>
     </a>
-    <p class="product-price">Цена: {{ ad.price }} лв.</p>
+    <p class="product-price">Цена: {{ ad?.price }} лв.</p>
     <div class="product-details-sm">
-      <p class="product-condition">Състояние: {{ ad.condition }}</p>
-      <p class="product-description">{{ ad.description }}</p>
-      <p class="product-location">Инструмент: {{ ad.instrument }}</p>
-      <p class="product-author">Автор: {{ ad.userName }}</p>
+      <p class="product-condition">Състояние: {{ ad?.condition }}</p>
+      <p class="product-description">{{ ad?.description }}</p>
+      <p class="product-location">Инструмент: {{ ad?.instrument }}</p>
+      <p class="product-author">Автор: {{ ad?.userName }}</p>
     </div>
   </div>

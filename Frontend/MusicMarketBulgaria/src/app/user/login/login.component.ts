@@ -31,12 +31,19 @@ export class LoginComponent {
 
   onLogin(formData: UserCredentials): void {
     this.authService.login(formData).subscribe(
-      () => {
+      (response) => {
         this.errorMessage = null;
-        this.router.navigate(['/profile']);
+        
+        const userId = response.currentUser._id; // Extract userId from the response
+        if (userId) {
+          // Navigate to the profile route with the userId as a parameter
+          this.router.navigate(['/profile', userId]);
+        } else {
+          console.error('User ID is missing from the login response');
+        }
       },
       (error) => {
-        this.errorMessage = error.error?.error || 'An unexpected error occurred';;
+        this.errorMessage = error.error?.error || 'An unexpected error occurred';
       }
     );
   }
