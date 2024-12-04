@@ -29,10 +29,14 @@ export class ProfileComponent implements OnInit {
     const userId = this.route.snapshot.paramMap.get('userId');
 
     if (routeSegment === 'profile') {
+      //case when login
       this.loadCurrentUserProfile();
-    } else if (routeSegment === 'user' && userId) {
-      this.loadPublicProfile(userId);
-    } else {
+    } else if (routeSegment === 'user' && userId != this.userService.getCurrentUserId()) {
+      this.loadPublicProfile(userId ?? "");
+    }else if(routeSegment === 'user' && userId){
+      this.loadCurrentUserProfile();  
+    }
+     else {
       this.error = 'Invalid route or missing userId.';
     }
   }

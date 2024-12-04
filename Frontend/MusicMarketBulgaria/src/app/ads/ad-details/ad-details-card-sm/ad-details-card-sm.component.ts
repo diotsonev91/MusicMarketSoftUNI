@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule], 
   templateUrl: './ad-details-card-sm.component.html',
-  styleUrl: './ad-details-card-sm.component.css'
+  styleUrls: ['./ad-details-card-sm.component.css', '../shared.css']
 })
 export class AdDetailsCardSmComponent {
   @Input() ad: AdData | null = null;

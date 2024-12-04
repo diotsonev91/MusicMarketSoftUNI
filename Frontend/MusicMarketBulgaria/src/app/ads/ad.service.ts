@@ -6,6 +6,8 @@ import { AdData } from './ad-data.model';
 import { Router } from '@angular/router';
 import { UserData } from '../user/user-data.model';
 import { UserStoreService } from '../core/user-store.service';
+import { RatingSubmitModel } from './ad-details/ad-rating/rating-submit-model';
+import { RatingDisplayModel } from './ad-details/ad-rating/rating-display-model';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +46,7 @@ export class AdService {
       })
     );
   }
+
 
   getLoggedUserAds(): Observable<AdData[]> {
     return this.userStore.currentUser$.pipe(
@@ -194,7 +197,25 @@ addLikeDislike(adId: string, userVote: number): Observable<any> {
 }
 
 
+rateAdd(rate: Partial<RatingSubmitModel>) {
+  console.log('rateAdd called with payload:', rate);
+  const payload: Partial<RatingSubmitModel> = {
+    ...rate,
+    userID: this.getLoggedUserId(), // Set the userID._id dynamically
+  };
 
+  return this.http.post<RatingSubmitModel>('/ratings/ad', payload).pipe(
+    tap(() => console.log('Request successfully sent to the backend.')),
+    catchError((error) => {
+      console.error('Error rating ad:', error.message || error);
+      return throwError(() => new Error('Failed to rate the ad. Please try again later.'));
+    })
+  );
+}
+
+getAdRates(adID: string): Observable<{ ratings: RatingDisplayModel[]; averageRating: number }> {
+  return this.http.get<{ ratings: RatingDisplayModel[]; averageRating: number }>(`/ratings/ad/${adID}`);
+}
 
   // Get ads by category and subcategory
   getAdsByCategoryAndSubcategory(category: string, subCategory?: string): Observable<AdData[]> {
@@ -261,7 +282,9 @@ getAdsByCategoryAndPriceRange(
 goToUser(userId: string): void {
   this.router.navigate([`/user`, userId]);
 }
-
+getLoggedUserId(){
+  return this.userStore.getCurrentUserId()
+}
 }
 
 

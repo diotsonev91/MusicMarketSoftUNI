@@ -53,6 +53,7 @@ goToUser(userId: string): void {
 
 
   loadRelatedAds(currentAdId: string, currentAdUserId: string): void {
+    console.log("user id inside loadRelatedAds in ad-details", currentAdUserId);
     this.adService.getUserAds(currentAdUserId).subscribe({
       next: (userAds) => {
         this.relatedAds = userAds.filter((ad) => ad._id !== currentAdId);

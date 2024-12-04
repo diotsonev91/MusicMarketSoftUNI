@@ -11,25 +11,17 @@ import { LikeDislikeButtonsComponent } from '../ad-likes-dislikes/like-dislike-b
   templateUrl: './ad-details-card.component.html',
   styleUrls: ['../shared.css','./ad-details-card.component.css']
 })
-export class AdDetailsCardComponent implements OnChanges,OnInit {
+export class AdDetailsCardComponent implements OnChanges {
   @Input() ad: AdData | null = null;
-  @Input() adRating: number | null = null; // Nullable, passed from parent
+  
   @Output() userClicked = new EventEmitter<string>(); 
   isRatingFormOpen: boolean = false;
-  currentAdRating = 0; // Fallback default value
+
   adId: string = '';
-  ngOnInit():void {
-    
-    if (this.adRating !== null) {
-      this.currentAdRating = this.adRating; // Update the current rating
-    }
-    
-  }
+
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['adRating'] && this.adRating !== null) {
-      this.currentAdRating = this.adRating; // Update the current rating
-    }
+    
     if (changes['ad'] && this.ad?.['_id']) {
       this.adId = this.ad._id; // Update adId when ad changes
     }
@@ -46,6 +38,10 @@ export class AdDetailsCardComponent implements OnChanges,OnInit {
   }
 
   toggleRatingForm(state: boolean): void {
+    this.isRatingFormOpen = state;
+  }
+
+  toggleReview(state: boolean):void {
     this.isRatingFormOpen = state;
   }
 }

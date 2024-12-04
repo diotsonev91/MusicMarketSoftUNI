@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RatingSubmitModel } from './rating-submit-model';
 
 @Component({
   selector: 'app-rating-form',
@@ -72,14 +73,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class RatingFormComponent {
   @Input() adId!: string; // Ad ID for context
-  @Output() ratingSubmitted = new EventEmitter<{ rating: number; review: string }>(); // Emit rating and review
+  @Output() ratingSubmitted = new EventEmitter<Partial<RatingSubmitModel>>(); // Emit rating and review
 
   rating: number = 0;
   review: string = '';
 
   submitRating(): void {
     if (this.rating >= 0 && this.rating <= 5) {
-      this.ratingSubmitted.emit({ rating: this.rating, review: this.review }); // Emit rating and review to parent
+      this.ratingSubmitted.emit({ adID: this.adId, ratingValue: this.rating, reviewText: this.review || null,}); // Emit rating and review to parent
     } else {
       alert('Please enter a rating between 0 and 5.');
     }

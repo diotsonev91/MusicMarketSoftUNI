@@ -49,4 +49,9 @@ setCurrentUser(user: UserData | null): void {
     const storedUser = localStorage.getItem('currentUser');
     return storedUser ? JSON.parse(storedUser) : null;
   }
+
+getCurrentUserId(){
+  const currentUser = this.currentUser$$.value;
+  return currentUser?._id;
+}  
 }

@@ -151,6 +151,8 @@ export class AdFormComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.fileService.addFile(input.files[0], slotIndex - this.existingImages.length);
       this.updateDisplayImages(); // Refresh displayImages
+
+      input.value = ''; // Reset file input to allow the same file to be re-added
       this.cdr.markForCheck();
     }
   }

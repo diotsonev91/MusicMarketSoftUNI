@@ -2,10 +2,9 @@
     <h2>
       {{ ad?.title }}
       <app-rating-view 
-      [rating]="currentAdRating" 
-      [totalStars]="5"
-      [starSize]="24"
-      (formToggled)="toggleRatingForm($event)">
+      [adId]="adId"
+      (formToggled)="toggleRatingForm($event)"
+      (reviewToggled)="toggleReview($event)">
     </app-rating-view>
     </h2>
     <div class="image-and-text" [class.hidden]="isRatingFormOpen">
@@ -15,7 +14,7 @@
         <app-like-dislike-buttons
         [adId]="adId"></app-like-dislike-buttons>
       </div>
-      <div class="product-details-sm">
+      <div class="product-details">
         <p class="product-condition">Състояние: {{ ad?.condition }}</p>
         <p class="product-description">{{ ad?.description }}</p>
         <p class="product-location">Местоположение: {{ ad?.location }}</p>
