@@ -5,19 +5,16 @@ import { AdData } from '../../ad-data.model';
 @Component({
   selector: 'app-contact-form',
   standalone: true,
-  imports: [],
   templateUrl: './contact-form.component.html',
-  styleUrls: ['../shared.css','./contact-form.component.css']
+  styleUrls: ['../shared.css', './contact-form.component.css'],
 })
 export class ContactFormComponent {
-
-  constructor( private chatService: ChatService){
-    
-  }
   @Input() ad: AdData | null = null;
-  messageContent: string = '';
-  sendMessage(): void {
-    if (!this.messageContent.trim()) {
+
+  constructor(private chatService: ChatService) {}
+
+  sendMessage(messageContent: string): void {
+    if (!messageContent.trim()) {
       console.error('Message content is empty');
       return;
     }
@@ -27,10 +24,9 @@ export class ContactFormComponent {
       return;
     }
 
-    this.chatService.sendMessage(this.ad.user, this.messageContent).subscribe({
+    this.chatService.sendMessage(this.ad.user, messageContent).subscribe({
       next: (response) => {
         console.log('Message sent successfully:', response);
-        this.messageContent = '';
       },
       error: (err) => {
         console.error('Failed to send message:', err);

@@ -138,3 +138,163 @@ exports.getAdRatings = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.getTopRatedAds = async (req, res) => {
+  try {
+    // Use aggregation to calculate top-rated ads
+    const topRatedAds = await ProductRating.aggregate([
+      // Group ratings by adID and calculate the average rating and count
+      {
+        $group: {
+          _id: "$adID", // Group by adID
+          averageRating: { $avg: "$ratingValue" }, // Calculate average rating
+          ratingsCount: { $sum: 1 }, // Count the total ratings for each ad
+        },
+      },
+
+      {
+        $match: { averageRating: { $gte: 3 } },
+      },
+      // Sort by averageRating (descending) and then ratingsCount (descending)
+      {
+        $sort: { averageRating: -1, ratingsCount: -1 },
+      },
+      // Join with the Ad collection to get ad details
+      {
+        $lookup: {
+          from: "ads", // The collection name for Ads
+          localField: "_id", // adID from ProductRating
+          foreignField: "_id", // _id in Ads
+          as: "adDetails", // The resulting joined ad details
+        },
+      },
+      // Flatten the adDetails array
+      {
+        $unwind: "$adDetails",
+      },
+      // Sort by the most recent ads (createdAt descending)
+      {
+        $sort: { "adDetails.createdAt": -1 },
+      },
+      // Limit to top 5 ads
+      {
+        $limit: 5,
+      },
+      // Project the desired fields in the final response
+      {
+        $project: {
+          _id: 0, // Exclude _id
+          adID: "$_id", // Include adID
+          averageRating: 1,
+          ratingsCount: 1,
+          adDetails: {
+            _id: 1,
+            title: 1,
+            description: 1,
+            price: 1,
+            images: 1,
+            createdAt: 1,
+            category: 1,
+            user: 1,
+            userName: 1,
+          },
+        },
+      },
+    ]);
+
+    // Send the top-rated ads as the response
+    res.status(200).json(topRatedAds);
+  } catch (error) {
+    console.error("Error fetching top-rated ads:", error);
+    res.status(500).json({ error: "Failed to fetch top-rated ads." });
+  }
+};
+
+// Get Top-Rated Ads of a User
+exports.getTopRatedAdsOfUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Step 1: Get all ads of the user
+    const userAds = await Ad.find({ user: userId });
+
+    if (userAds.length === 0) {
+      return res.status(404).json({ message: "No ads found for this user." });
+    }
+
+    // Extract ad IDs
+    const userAdIds = userAds.map((ad) => ad._id);
+
+    // Step 2: Aggregate ratings for the user's ads
+    const topRatedAds = await ProductRating.aggregate([
+      // Filter ratings for the user's ads
+      {
+        $match: { adID: { $in: userAdIds } },
+      },
+      // Group ratings by adID and calculate the average rating and count
+      {
+        $group: {
+          _id: "$adID", // Group by adID
+          averageRating: { $avg: "$ratingValue" }, // Calculate average rating
+          ratingsCount: { $sum: 1 }, // Count total ratings for each ad
+        },
+      },
+  // Filter out ads with an average rating below 3
+      {
+        $match: { averageRating: { $gte: 3 } },
+      },
+      // Sort by averageRating (descending) and then ratingsCount (descending)
+      {
+        $sort: { averageRating: -1, ratingsCount: -1 },
+      },
+      // Join with the Ad collection to get ad details
+      {
+        $lookup: {
+          from: "ads", // The collection name for Ads
+          localField: "_id", // adID from ProductRating
+          foreignField: "_id", // _id in Ads
+          as: "adDetails", // The resulting joined ad details
+        },
+      },
+      // Flatten the adDetails array
+      {
+        $unwind: "$adDetails",
+      },
+      // Sort by the most recent ads (createdAt descending)
+      {
+        $sort: { "adDetails.createdAt": -1 },
+      },
+      // Limit to top 5 ads
+      {
+        $limit: 5,
+      },
+      // Project the desired fields in the final response
+      {
+        $project: {
+          _id: 0, // Exclude _id
+          adID: "$_id", // Include adID
+          averageRating: 1,
+          ratingsCount: 1,
+          adDetails: {
+            _id: 1,
+            title: 1,
+            description: 1,
+            price: 1,
+            images: 1,
+            createdAt: 1,
+            category: 1,
+            user: 1,
+            userName: 1,
+          },
+        },
+      },
+    ]);
+
+    // Step 3: Send the top-rated ads as the response
+    res.status(200).json(topRatedAds);
+  } catch (error) {
+    console.error("Error fetching top-rated ads of user:", error);
+    res.status(500).json({ error: "Failed to fetch top-rated ads of user." });
+  }
+};

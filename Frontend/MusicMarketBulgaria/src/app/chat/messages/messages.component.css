@@ -1,0 +1,74 @@
+/* Main Message Body */
+.message-body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f8f9fa; /* Light background for the entire area */
+}
+
+/* Container for Sidebar and Content */
+.message-container {
+  display: flex;
+  width: 100%;
+  border: 1px solid #ddd; /* Add subtle border for the container */
+  border-radius: 5px; /* Slightly rounded corners */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  overflow: hidden;
+}
+
+/* Sidebar Specific Styling */
+.sidebar {
+  width: 30%;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Scroll if content exceeds height */
+}
+
+/* Content Specific Styling */
+.content {
+  flex: 1;
+  background-color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto; /* Scrollable content area */
+}
+
+/* Placeholder for No Messages */
+.no-messages {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjustments for Small Screens */
+@media (max-width: 768px) {
+  .message-body {
+    flex-direction: column;
+    height: auto; /* Allow height to adjust for small screens */
+  }
+
+  .sidebar {
+    width: 100%; /* Sidebar takes full width */
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .content {
+    flex: 1;
+    width: 100%;
+    padding: 15px;
+  }
+}

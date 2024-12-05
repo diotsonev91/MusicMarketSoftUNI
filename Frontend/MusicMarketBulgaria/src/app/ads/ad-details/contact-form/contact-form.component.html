@@ -1,12 +1,17 @@
 <section class="comments">
     <h3>Контакт с продавача</h3>
     <div class="comment">
-        <p><strong><i class="fas fa-user"></i> Потребител</strong></p>
-            
+      <p><strong><i class="fas fa-user"></i> Потребител</strong></p>
     </div>
-    <form>
-        <label for="comment">Изпрати съобщение:</label>
-        <textarea id="comment" rows="4"></textarea>
-        <button type="submit">Изпрати</button>
+    <form (submit)="sendMessage(messageInput.value); $event.preventDefault()">
+      <label for="comment">Изпрати съобщение:</label>
+      <textarea
+        #messageInput 
+        id="comment"
+        rows="4"
+        placeholder="Напишете вашето съобщение">
+      </textarea>
+      <button type="submit">Изпрати</button>
     </form>
-</section>
+  </section>
+  

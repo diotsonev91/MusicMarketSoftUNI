@@ -1,0 +1,83 @@
+/* Sidebar Container */
+.sidebar {
+    width: 100%;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    padding: 10px; /* Add padding for better spacing */
+    padding-left: 20px;
+    height: 100%;
+  }
+  
+  /* Sidebar Header */
+  .sidebar h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2f5257; /* Dark shade */
+    text-align: center;
+  }
+  
+ /* Section Title */
+.section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 15px 0 10px;
+    color: #2f5257;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  
+  .section-title:hover {
+    color:  #6d7438;
+    border-color:  #eed64e;
+    background-color: #e8ebd6;
+  }
+  
+  /* Active Section Title */
+  .section-title.active {
+    color: #6d7438;
+    border-color: #eed64e;
+    font-weight: bolder;
+    background-color: #e8ebd6;
+  }
+  
+  /* Message Item */
+  .message-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  
+  .message-item:hover {
+    background-color: #f1f1f1;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Message Text */
+  .message-item strong {
+    color: #2f5257; /* Sender's name in bold dark shade */
+    font-weight: bold;
+  }
+  
+  .message-item p {
+    flex: 1;
+    margin: 0 10px; /* Add spacing between text and timestamp */
+    color: #555; /* Neutral gray for message text */
+    font-size: 0.9rem;
+  }
+  
+  .message-item span {
+    font-size: 0.85rem;
+    color: #888; /* Subtle gray for timestamps */
+  }
+  

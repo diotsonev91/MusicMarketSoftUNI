@@ -1,0 +1,80 @@
+
+/* Секция Продукти */
+/* Списък с продукти */
+/* Стилове за продуктовата секция */
+.main-container {
+    display: flex;
+    width: 80%;
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+.product-list {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-list h2 {
+    text-align: center;
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Grid стилове за две по-широки колони */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Две колони */
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.product-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(22, 1fr); /* Две колони */
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+/* Медиен заявка за по-малки екрани */
+@media (max-width: 1368px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);; /* Една колона при малък екран */
+    }
+}
+@media (max-width: 1068px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);; /* Една колона при малък екран */
+    }
+}
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: 1fr; /* Една колона при малък екран */
+    }
+}
+
+.product-grid li {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-grid-2 li {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}

@@ -28,10 +28,14 @@ exports.getMessages = async (req, res) => {
     // Retrieve messages where the user is either the sender or receiver
     const messages = await Chat.find({
       $or: [{ senderID: userId }, { receiverID: userId }],
-    }).sort({ timestamp: 1 }); // Sort by timestamp
+    })
+      .populate('senderID', 'username email') // Populate senderID with selected fields
+      .populate('receiverID', 'username email') // Populate receiverID with selected fields
+      .sort({ timestamp: 1 }); // Sort by timestamp
 
     res.json(messages);
   } catch (error) {
+    console.error('Error fetching messages:', error);
     res.status(500).json({ error: error.message });
   }
 };

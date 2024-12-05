@@ -1,0 +1,29 @@
+<section class="content">
+    @if (conversation.length > 0) {
+      <div class="message-thread">
+        @for (message of conversation; track message) {
+          <div
+            class="message"
+            [class.message-right]="message.senderID._id === currentUserID"
+            [class.message-left]="message.senderID._id !== currentUserID"
+          >
+            <p class="message-content">{{ message.content }}</p>
+            <p class="time">{{ message.timestamp | customDate }}</p>
+          </div>
+        }
+      </div>
+  
+      <!-- Message Input -->
+      <div class="input-container">
+        <textarea
+          #messageInput
+          placeholder="Напиши съобщение..."
+        ></textarea>
+        <button (click)="sendMessage(messageInput.value); messageInput.value = ''">Изпрати</button>
+      </div>
+    }
+    @else {
+      <p>Изберете съобщение, за да го прегледате.</p>
+    }
+  </section>
+  

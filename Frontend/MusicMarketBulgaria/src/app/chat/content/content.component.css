@@ -1,0 +1,44 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 15px;
+    border-left: 1px solid #ddd;
+    flex: 1;
+    height: 100%;
+  }
+  
+  .message-thread {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 10px;
+  }
+  
+  .message {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+  }
+  
+  .message-right {
+    align-items: flex-end;
+    text-align: right;
+  }
+  
+  .message-left {
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .message-content {
+    background-color: #e1f5fe;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+  }
+  
+  .message-right .message-content {
+    background-color: #c8e6c9;
+  }
+  

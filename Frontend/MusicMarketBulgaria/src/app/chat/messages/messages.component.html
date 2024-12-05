@@ -1,0 +1,17 @@
+<div class="message-body">
+  <div class="message-container">
+    <!-- Sidebar Component -->
+    <app-sidebar
+    [messages]="messages"
+    [currentUserID]="currentUserID"
+    (conversationSelected)="onConversationSelected($event)">
+  </app-sidebar>
+    
+    <!-- Content Component -->
+    <app-content
+      [conversation]="selectedConversation"
+      [currentUserID]="currentUserID"
+      (messageSent)="onMessageSent($event)">
+    </app-content>
+  </div>
+</div>
