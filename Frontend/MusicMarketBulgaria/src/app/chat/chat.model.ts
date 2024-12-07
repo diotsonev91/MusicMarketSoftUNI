@@ -2,8 +2,8 @@ import { UserData } from "../user/user-data.model";
 
 export interface ChatMessage {
     _id?: string;
-    senderID: UserData;
-    receiverID: UserData
+    senderID: string;
+    receiverID: string
     content: string;
     timestamp: Date;
     viewed?: boolean;

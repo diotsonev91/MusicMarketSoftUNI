@@ -4,10 +4,11 @@
       @for (message of conversation; track message) {
         <div
           class="message"
-          [class.message-right]="message.senderID._id === currentUserID"
-          [class.message-left]="message.senderID._id !== currentUserID">
+          [class.message-right]="message.senderID !== currentUserID"
+          [class.message-left]="message.senderID === currentUserID">
           <p class="message-content">{{ message.content }}</p>
           <p class="time">{{ message.timestamp | customDate }}</p>
+    
         </div>
       }
     </div>

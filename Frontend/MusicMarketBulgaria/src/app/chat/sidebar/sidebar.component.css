@@ -31,6 +31,13 @@
     transition: color 0.3s, border-color 0.3s;
   }
   
+  .brick {
+    background-color: rgb(193, 216, 187);
+    padding: 3px;
+    border-color: #eed64e;
+    border-width: 2px;
+    border: solid;
+  }
   .section-title:hover {
     color:  #6d7438;
     border-color:  #eed64e;

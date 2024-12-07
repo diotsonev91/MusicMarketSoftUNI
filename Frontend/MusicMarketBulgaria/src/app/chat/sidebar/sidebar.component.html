@@ -16,12 +16,18 @@
   </div>
 
   <div class="messages-section">
-    @for (conversation of filteredConversations; track conversation.participant._id) {
+    @if(filteredConversations != []){
+    @for (conversation of filteredConversations; track conversation.participants[0]._id) {
       <div
         class="message-item"
-        [class.active]="selectedConversationUser === conversation.participant._id"
+        [class.active]="selectedConversationUser === conversation.participants[0]._id"
         (click)="selectConversation(conversation)">
-        <strong>{{ conversation.participant.username }}</strong>
+        @if(conversation.participants[1]._id != currentUserID){
+        <strong class="brick">{{ conversation.participants[1].username }}</strong>
+        }
+        @else{
+        <strong class="brick">{{ conversation.participants[0].username }}</strong>      
+        }
         <p>{{ conversation.lastMessage?.content }}</p>
         @if (conversation.unreadCount && conversation.unreadCount > 0) {
           <span class="unread-count">
@@ -33,5 +39,6 @@
         </span>
       </div>
     }
+  }
   </div>
 </aside>

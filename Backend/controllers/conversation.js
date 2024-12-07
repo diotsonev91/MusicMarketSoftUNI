@@ -1,24 +1,23 @@
 const Conversation = require('../models/Conversation');
 const Chat = require('../models/Chat');
-
+const mongoose = require('mongoose');
 exports.getConversations = async (req, res) => {
-    try {
-      const userId = req.user.id;
-  
-      // Find conversations where the user is a participant
-      const conversations = await Conversation.find({
-        participant: { $elemMatch: { _id: userId } },
-      })
-        .populate('messages') // Populate messages in the conversation
-        .populate('lastMessage') // Populate the last message
-        .sort({ 'lastMessage.timestamp': -1 });
-  
-      res.status(200).json(conversations);
-    } catch (error) {
-      console.error('Error fetching conversations:', error);
-      res.status(500).json({ error: error.message });
-    }
-  };
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user.id); // Use 'new' for ObjectId
+
+    const conversations = await Conversation.find({
+      'participants._id': userId, // Adjust path to match participants array
+    })
+      .populate('messages') // Populate messages
+      .populate('lastMessage') // Populate lastMessage
+      .sort({ 'lastMessage.timestamp': -1 });
+
+    res.status(200).json(conversations);
+  } catch (error) {
+    console.error('Error fetching conversations:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
   
   exports.deleteConversation = async (req, res) => {
     try {
@@ -46,6 +45,33 @@ exports.getConversations = async (req, res) => {
       res.status(200).json({ message: 'Conversation deleted successfully' });
     } catch (error) {
       console.error('Error deleting conversation:', error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+  exports.markAsRead = async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const userId = req.user.id;
+  
+      const conversation = await Conversation.findById(conversationId);
+  
+      if (!conversation) {
+        return res.status(404).json({ message: 'Conversation not found' });
+      }
+  
+      const readState = conversation.readStates.find(
+        (state) => state.participantId.toString() === userId
+      );
+  
+      if (readState) {
+        readState.unreadCount = 0; // Reset unreadCount for this user
+        await conversation.save();
+      }
+  
+      res.status(200).json({ message: 'Marked as read' });
+    } catch (error) {
+      console.error('Error marking as read:', error);
       res.status(500).json({ error: error.message });
     }
   };

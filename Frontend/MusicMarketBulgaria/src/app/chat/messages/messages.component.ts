@@ -58,7 +58,7 @@ export class MessagesComponent implements OnInit {
       return;
     }
 
-    const receiverID = this.selectedConversation.participant._id;
+    const receiverID = this.selectedConversation.participants[0]._id;
 
     this.chatService.sendMessage(receiverID, content).subscribe({
       next: (newMessage) => {
