@@ -1,26 +1,37 @@
 <aside class="sidebar">
-    <h2>Съобщения</h2>
-  
-    <div class="messages-section">
-      @for (conversation of conversations; track conversation.user) {
-        <div
-          class="message-item"
-          [class.active]="selectedConversationUser === conversation.user"
-          (click)="selectConversation(conversation)"
-        >
-          <!-- Display the other participant's username -->
-          <strong>
-            {{
-              conversation.messages[0].senderID._id === currentUserID
-                ? conversation.messages[0].receiverID.username
-                : conversation.messages[0].senderID.username
-            }}
-          </strong>
-          <!-- Display the last message content -->
-          <p>{{ conversation.lastMessage.content }}</p>
-          <span>{{ conversation.lastMessage.timestamp | customDate }}</span>
-        </div>
-      }
-    </div>
-  </aside>
-  
+  <h2>Съобщения</h2>
+
+  <!-- Filter Buttons -->
+  <div class="filter-buttons">
+    <button 
+      [class.active]="!showUnreadOnly" 
+      (click)="toggleFilter(false)">
+      Всички
+    </button>
+    <button 
+      [class.active]="showUnreadOnly" 
+      (click)="toggleFilter(true)">
+      Непрочетени
+    </button>
+  </div>
+
+  <div class="messages-section">
+    @for (conversation of filteredConversations; track conversation.participant._id) {
+      <div
+        class="message-item"
+        [class.active]="selectedConversationUser === conversation.participant._id"
+        (click)="selectConversation(conversation)">
+        <strong>{{ conversation.participant.username }}</strong>
+        <p>{{ conversation.lastMessage?.content }}</p>
+        @if (conversation.unreadCount && conversation.unreadCount > 0) {
+          <span class="unread-count">
+            {{ conversation.unreadCount }}
+          </span>
+        }
+        <span>
+          {{ conversation.lastMessage?.timestamp | customDate }}
+        </span>
+      </div>
+    }
+  </div>
+</aside>

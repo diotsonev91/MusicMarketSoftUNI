@@ -2,14 +2,14 @@
   <div class="message-container">
     <!-- Sidebar Component -->
     <app-sidebar
-    [messages]="messages"
-    [currentUserID]="currentUserID"
-    (conversationSelected)="onConversationSelected($event)">
-  </app-sidebar>
-    
+      [conversations]="conversations"
+      [currentUserID]="currentUserID"
+      (conversationSelected)="onConversationSelected($event)">
+    </app-sidebar>
+
     <!-- Content Component -->
     <app-content
-      [conversation]="selectedConversation"
+      [conversation]="selectedConversation?.messages || []"
       [currentUserID]="currentUserID"
       (messageSent)="onMessageSent($event)">
     </app-content>

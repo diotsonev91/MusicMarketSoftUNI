@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../chat.service';
-import { ChatMessage } from '../chat.model';
+import { Conversation } from '../conversation.model';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ContentComponent } from '../content/content.component';
 import { UserService } from '../../user/user.service';
@@ -13,9 +13,9 @@ import { UserService } from '../../user/user.service';
   styleUrls: ['./messages.component.css'],
 })
 export class MessagesComponent implements OnInit {
-  messages: ChatMessage[] = [];
+  conversations: Conversation[] = []; // All conversations
+  selectedConversation: Conversation | null = null; // Selected conversation
   currentUserID: string = ''; // Current user's ID
-  selectedConversation: ChatMessage[] = []; // Selected conversation
 
   constructor(
     private chatService: ChatService,
@@ -24,48 +24,46 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserID = this.userService.getCurrentUserId() || '';
-    this.fetchMessages();
+    this.fetchConversations();
   }
 
-  
-
   /**
-   * Fetch all messages for the logged-in user
+   * Fetch conversations from the backend
    */
-  fetchMessages(): void {
-    this.chatService.getMessages().subscribe({
-      next: (messages) => {
-        this.messages = messages;
-        console.log('Fetched messages:', this.messages); // Debugging line
+  fetchConversations(): void {
+    this.chatService.getConversations().subscribe({
+      next: (conversations) => {
+        this.conversations = conversations;
+        console.log('Fetched conversations:', this.conversations);
       },
-      error: (err) => console.error('Error fetching messages:', err),
+      error: (err) => console.error('Error fetching conversations:', err),
     });
   }
 
   /**
    * Handles conversation selection from the sidebar
    */
-  onConversationSelected(conversationMessages: ChatMessage[]): void {
-    this.selectedConversation = conversationMessages;
+  onConversationSelected(conversation: Conversation): void {
+    this.selectedConversation = conversation;
+
+    // Optionally, you can mark unread messages as viewed here if required
   }
 
   /**
-   * Handles message sending
+   * Handles sending a new message
    */
   onMessageSent(content: string): void {
-    if (this.selectedConversation.length === 0) {
+    if (!this.selectedConversation) {
       console.error('No conversation selected.');
       return;
     }
 
-    const receiverID =
-      this.selectedConversation[0].senderID._id === this.currentUserID
-        ? this.selectedConversation[0].receiverID._id
-        : this.selectedConversation[0].senderID._id;
+    const receiverID = this.selectedConversation.participant._id;
 
     this.chatService.sendMessage(receiverID, content).subscribe({
       next: (newMessage) => {
-        this.selectedConversation.push(newMessage);
+        this.selectedConversation?.messages.push(newMessage);
+        this.selectedConversation!.lastMessage = newMessage;
       },
       error: (err) => console.error('Error sending message:', err),
     });

@@ -1,5 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { ChatMessage } from '../chat.model';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+} from '@angular/core';
+import { Conversation } from '../conversation.model';
 import { CustomDatePipe } from '../../ads/ad-details/custom.date.pipe';
 
 @Component({
@@ -9,71 +15,47 @@ import { CustomDatePipe } from '../../ads/ad-details/custom.date.pipe';
   imports: [CustomDatePipe],
   styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent implements OnChanges {
-  @Input() messages: ChatMessage[] = []; // All messages
+export class SidebarComponent {
+  @Input() conversations: Conversation[] = [];
   @Input() currentUserID: string = ''; // Current user's ID
-  @Output() conversationSelected = new EventEmitter<ChatMessage[]>(); // Emit the selected conversation
+  @Output() conversationSelected = new EventEmitter<Conversation>(); // Emit the selected conversation
 
-  conversations: { user: string; lastMessage: ChatMessage; messages: ChatMessage[] }[] = []; // Grouped conversations
   selectedConversationUser: string | null = null;
+  showUnreadOnly: boolean = false; // State for filtering unread conversations
+  filteredConversations: Conversation[] = []; // Conversations to display
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['messages']) {
-      this.groupMessagesByConversation();
+    if (changes['conversations']) {
+      this.updateFilteredConversations();
     }
   }
 
   /**
-   * Group messages into conversations and pick the last message for each conversation.
+   * Update the filtered conversations based on the filter state.
    */
-  groupMessagesByConversation(): void {
-    const conversationMap: Map<string, ChatMessage[]> = new Map();
-
-    this.messages.forEach((message) => {
-      const otherUser =
-        message.senderID._id === this.currentUserID
-          ? message.receiverID._id
-          : message.senderID._id;
-
-      if (!conversationMap.has(otherUser)) {
-        conversationMap.set(otherUser, []);
-      }
-
-      conversationMap.get(otherUser)?.push(message);
-    });
-
-    this.conversations = Array.from(conversationMap.entries()).map(([user, messages]) => {
-      // Sort messages by timestamp in descending order
-      const sortedMessages = messages.sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  updateFilteredConversations(): void {
+    if (this.showUnreadOnly) {
+      this.filteredConversations = this.conversations.filter(
+        (conversation) => conversation.unreadCount && conversation.unreadCount > 0
       );
-      return {
-        user,
-        lastMessage: sortedMessages[0], // Pick the last message for preview
-        messages: sortedMessages,
-      };
-    });
+    } else {
+      this.filteredConversations = this.conversations;
+    }
   }
 
   /**
-   * Handle conversation selection.
+   * Toggle between showing all conversations and unread-only.
    */
-  selectConversation(conversation: { user: string; messages: ChatMessage[] }): void {
-    this.selectedConversationUser = conversation.user;
-    this.conversationSelected.emit(conversation.messages);
-
-    // Mark all messages in the conversation as viewed
-    this.markMessagesAsViewed(conversation.messages);
+  toggleFilter(showUnread: boolean): void {
+    this.showUnreadOnly = showUnread;
+    this.updateFilteredConversations();
   }
 
   /**
-   * Mark messages in a conversation as viewed.
+   * Handle selection of a conversation.
    */
-  markMessagesAsViewed(conversationMessages: ChatMessage[]): void {
-    conversationMessages.forEach((message) => {
-      if (!message.viewed && message.receiverID._id === this.currentUserID) {
-        message.viewed = true;
-      }
-    });
+  selectConversation(conversation: Conversation): void {
+    this.selectedConversationUser = conversation.participant._id;
+    this.conversationSelected.emit(conversation);
   }
 }
