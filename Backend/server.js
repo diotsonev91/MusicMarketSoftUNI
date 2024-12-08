@@ -55,6 +55,8 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+
+
 // Import routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
@@ -63,6 +65,7 @@ const ratingRoutes = require("./routes/ratings");
 const chatRoutes = require("./routes/chats"); // Assuming this is created for chat functionalities
 const likeDislike = require("./routes/like-dislike")
 const conversation = require("./routes/conversation")
+console.log("Conversation module:", conversation);
 // Use routes
 app.use("/auth", authRoutes);       // For authentication (register, login, logout)
 app.use("/users", userRoutes);       // For user info retrieval and other user-related routes
@@ -71,8 +74,32 @@ app.use("/ratings", ratingRoutes);   // For user and ad ratings
 app.use("/chats", chatRoutes);       // For chat-related operations
 app.use("/like-dislike",likeDislike)
 app.use("/conversations",conversation)
+
+const listEndpoints = () => {
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      const { path } = middleware.route;
+      const method = Object.keys(middleware.route.methods)[0].toUpperCase();
+      console.log(`${method} ${path}`);
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((nestedMiddleware) => {
+        if (nestedMiddleware.route) {
+          const { path } = nestedMiddleware.route;
+          const method = Object.keys(nestedMiddleware.route.methods)[0].toUpperCase();
+          console.log(`${method} ${path}`);
+        }
+      });
+    }
+  });
+};
+
+listEndpoints();
+
 // Define the PORT and start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+

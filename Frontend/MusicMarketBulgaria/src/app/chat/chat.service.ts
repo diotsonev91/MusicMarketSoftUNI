@@ -68,8 +68,10 @@ export class ChatService {
     );
   }
 
-  markAsRead(conversationId: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${conversationId}/markAsRead`, {});
+  markAsRead(id: string): Observable<any> {
+    console.log('Requesting URL:', `${this.apiUrl}/conversations/${id}/markAsRead`);
+
+    return this.http.patch(`${this.apiUrl}/conversations/${id}/markAsRead`, {});
   }
   /**
    * Delete a conversation by its ID

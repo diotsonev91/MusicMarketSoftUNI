@@ -39,6 +39,10 @@ export class AuthService {
     localStorage.removeItem('accessToken');
   }
 
+  isLoggedIn(): boolean {
+    const token = this.getAccessToken(); // Use the existing getAccessToken method
+    return !!token; // Returns true if the token exists, false otherwise
+  }
 
   refreshAccessToken(): Observable<string> {
     return this.http.post<{ accessToken: string }>(`/auth/refresh-token`, {}).pipe(

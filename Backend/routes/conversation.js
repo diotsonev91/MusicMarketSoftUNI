@@ -4,7 +4,12 @@ const { getConversations, deleteConversation, markAsRead } = require('../control
 const auth = require("../middleware/auth");
 const router = express.Router();
 
-router.get('/', auth(), getConversations); // Get all conversations for the logged-in user
-router.delete('/:id', auth(), deleteConversation); // Delete a specific conversation
-router.patch('/:id/markAsRead', markAsRead )
+//router.get('/', auth(), getConversations); // Get all conversations for the logged-in user
+//router.delete('/:id', auth(), deleteConversation); // Delete a specific conversation
+//router.patch('/:id/markAsRead', auth(), markAsRead )
+console.log("Conversation routes initialized");
+
+router.get('/conversations/', auth(), getConversations);
+router.delete('/conversations/:id', auth(), deleteConversation);
+router.patch('/conversations/:id/markAsRead', auth(), markAsRead);
 module.exports = router;
