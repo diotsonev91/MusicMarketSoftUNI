@@ -48,21 +48,27 @@ exports.getConversations = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
-
   exports.markAsRead = async (req, res) => {
     try {
-      const { conversationId } = req.params;
+      const { id: conversationId } = req.params; // Use `id` if that's the parameter name in the route
       const userId = req.user.id;
+  
+      console.log('Conversation ID:', conversationId);
+      console.log('Is conversationId valid ObjectId:', mongoose.Types.ObjectId.isValid(conversationId));
+      console.log('User ID:', userId);
   
       const conversation = await Conversation.findById(conversationId);
   
       if (!conversation) {
+        console.log('Conversation not found');
         return res.status(404).json({ message: 'Conversation not found' });
       }
   
       const readState = conversation.readStates.find(
         (state) => state.participantId.toString() === userId
       );
+  
+      console.log('Read state:', readState);
   
       if (readState) {
         readState.unreadCount = 0; // Reset unreadCount for this user

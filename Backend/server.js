@@ -67,6 +67,11 @@ const likeDislike = require("./routes/like-dislike")
 const conversation = require("./routes/conversation")
 console.log("Conversation module:", conversation);
 // Use routes
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 app.use("/auth", authRoutes);       // For authentication (register, login, logout)
 app.use("/users", userRoutes);       // For user info retrieval and other user-related routes
 app.use("/ads", adRoutes);           // For ad-related operations (create, delete, edit, etc.)
@@ -74,26 +79,22 @@ app.use("/ratings", ratingRoutes);   // For user and ad ratings
 app.use("/chats", chatRoutes);       // For chat-related operations
 app.use("/like-dislike",likeDislike)
 app.use("/conversations",conversation)
+// Catch-all 404 route
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
 
-const listEndpoints = () => {
-  app._router.stack.forEach((middleware) => {
-    if (middleware.route) {
-      const { path } = middleware.route;
-      const method = Object.keys(middleware.route.methods)[0].toUpperCase();
-      console.log(`${method} ${path}`);
-    } else if (middleware.name === 'router') {
-      middleware.handle.stack.forEach((nestedMiddleware) => {
-        if (nestedMiddleware.route) {
-          const { path } = nestedMiddleware.route;
-          const method = Object.keys(nestedMiddleware.route.methods)[0].toUpperCase();
-          console.log(`${method} ${path}`);
-        }
-      });
-    }
-  });
-};
-
-listEndpoints();
+app._router.stack.forEach((middleware) => {
+  if (middleware.route) {
+    console.log(`${Object.keys(middleware.route.methods)[0].toUpperCase()} ${middleware.route.path}`);
+  } else if (middleware.name === 'router') {
+    middleware.handle.stack.forEach((nestedMiddleware) => {
+      if (nestedMiddleware.route) {
+        console.log(`${Object.keys(nestedMiddleware.route.methods)[0].toUpperCase()} ${nestedMiddleware.route.path}`);
+      }
+    });
+  }
+});
 
 // Define the PORT and start the server
 const PORT = process.env.PORT || 5000;

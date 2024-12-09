@@ -2,9 +2,14 @@ const jwt = require("jsonwebtoken");
 
 
 const auth = (roles = []) => (req, res, next) => {
+
+  console.log('Auth middleware triggered for:', req.originalUrl);
   // Extract token from authorization header
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Access denied. No token provided." });
+  if (!token){
+    console.log('Authorization header missing for:', req.originalUrl);
+     return res.status(401).json({ error: "Access denied. No token provided." })
+    };
 
   try {
     // Verify token with secret key from environment variables
@@ -17,6 +22,7 @@ const auth = (roles = []) => (req, res, next) => {
 
     // Attach user info to request for downstream use
     req.user = decoded;
+    console.log("here next will be called")
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

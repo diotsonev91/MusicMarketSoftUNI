@@ -9,7 +9,7 @@ import { AdDetailsComponent } from './ads/ad-details/ad-details.component';
 import { EditUserComponent } from './user/edit-user/edit-user.component';
 import { EditAdComponent } from './ads/edit-ad/edit-ad.component';
 import { MessagesComponent } from './chat/messages/messages.component';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
     {path: '', redirectTo: "/home",pathMatch: 'full'},

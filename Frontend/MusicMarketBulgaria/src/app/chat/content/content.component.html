@@ -1,14 +1,15 @@
 <section class="content">
   @if (conversation.length > 0) {
+    <!-- Message Thread -->
     <div class="message-thread">
       @for (message of conversation; track message) {
         <div
           class="message"
           [class.message-right]="message.senderID !== currentUserID"
-          [class.message-left]="message.senderID === currentUserID">
+          [class.message-left]="message.senderID === currentUserID"
+        >
           <p class="message-content">{{ message.content }}</p>
           <p class="time">{{ message.timestamp | customDate }}</p>
-    
         </div>
       }
     </div>
@@ -17,9 +18,13 @@
     <div class="input-container">
       <textarea
         #messageInput
-        placeholder="Напиши съобщение...">
-      </textarea>
-      <button (click)="sendMessage(messageInput.value); messageInput.value = ''">Изпрати</button>
+        placeholder="Напиши съобщение..."
+      ></textarea>
+      <button 
+        (click)="sendMessage(messageInput.value); messageInput.value = ''"
+      >
+        Изпрати
+      </button>
     </div>
   }
   @else {

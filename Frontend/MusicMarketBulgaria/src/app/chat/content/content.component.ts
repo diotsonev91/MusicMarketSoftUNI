@@ -14,9 +14,15 @@ export class ContentComponent {
   @Input() currentUserID: string = '';
   @Output() messageSent = new EventEmitter<string>();
 
+  /**
+   * Handles sending the message content.
+   * @param messageContent - The message content to send.
+   * Clears the input field after sending.
+   */
   sendMessage(messageContent: string): void {
-    if (messageContent.trim()) {
-      this.messageSent.emit(messageContent.trim());
+    const trimmedMessage = messageContent.trim();
+    if (trimmedMessage) {
+      this.messageSent.emit(trimmedMessage);
     }
   }
 }

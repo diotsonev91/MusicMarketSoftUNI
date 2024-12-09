@@ -4,14 +4,14 @@
     <app-sidebar
       [conversations]="conversations"
       [currentUserID]="currentUserID"
-      (conversationSelected)="onConversationSelected($event)">
-    </app-sidebar>
+      (conversationSelected)="onConversationSelected($event)"
+    ></app-sidebar>
 
     <!-- Content Component -->
     <app-content
       [conversation]="selectedConversation?.messages || []"
       [currentUserID]="currentUserID"
-      (messageSent)="onMessageSent($event)">
-    </app-content>
+      (messageSent)="onMessageSent($event)"
+    ></app-content>
   </div>
 </div>

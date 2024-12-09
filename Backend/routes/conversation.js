@@ -9,7 +9,7 @@ const router = express.Router();
 //router.patch('/:id/markAsRead', auth(), markAsRead )
 console.log("Conversation routes initialized");
 
-router.get('/conversations/', auth(), getConversations);
-router.delete('/conversations/:id', auth(), deleteConversation);
-router.patch('/conversations/:id/markAsRead', auth(), markAsRead);
+router.get('/', auth(), getConversations);
+router.delete('/:id', auth(), deleteConversation);
+router.patch('/:id/markAsRead',auth(),  markAsRead);
 module.exports = router;

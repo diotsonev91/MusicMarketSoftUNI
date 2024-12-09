@@ -13,9 +13,9 @@ import { UserService } from '../../user/user.service';
   styleUrls: ['./messages.component.css'],
 })
 export class MessagesComponent implements OnInit {
-  conversations: Conversation[] = []; // All conversations
-  selectedConversation: Conversation | null = null; // Selected conversation
-  currentUserID: string = ''; // Current user's ID
+  conversations: Conversation[] = [];
+  selectedConversation: Conversation | null = null;
+  currentUserID: string = '';
 
   constructor(
     private chatService: ChatService,
@@ -27,9 +27,6 @@ export class MessagesComponent implements OnInit {
     this.fetchConversations();
   }
 
-  /**
-   * Fetch conversations from the backend
-   */
   fetchConversations(): void {
     this.chatService.getConversations().subscribe({
       next: (conversations) => {
@@ -40,25 +37,32 @@ export class MessagesComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles conversation selection from the sidebar
-   */
   onConversationSelected(conversation: Conversation): void {
     this.selectedConversation = conversation;
 
-    // Optionally, you can mark unread messages as viewed here if required
+    const conversationIndex = this.conversations.findIndex(
+      (c) => c._id === conversation._id
+    );
+
+    if (conversationIndex !== -1) {
+      this.conversations[conversationIndex] = { ...conversation };
+    }
   }
 
-  /**
-   * Handles sending a new message
-   */
   onMessageSent(content: string): void {
     if (!this.selectedConversation) {
       console.error('No conversation selected.');
       return;
     }
 
-    const receiverID = this.selectedConversation.participants[0]._id;
+    const receiverID = this.selectedConversation.participants.find(
+      (p) => p._id !== this.currentUserID
+    )?._id;
+
+    if (!receiverID) {
+      console.error('Invalid conversation participants.');
+      return;
+    }
 
     this.chatService.sendMessage(receiverID, content).subscribe({
       next: (newMessage) => {

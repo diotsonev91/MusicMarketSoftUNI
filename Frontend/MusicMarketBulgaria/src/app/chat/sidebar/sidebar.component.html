@@ -1,44 +1,51 @@
 <aside class="sidebar">
-  <h2>Съобщения</h2>
+  <h2>Messages</h2>
 
   <!-- Filter Buttons -->
   <div class="filter-buttons">
-    <button 
-      [class.active]="!showUnreadOnly" 
-      (click)="toggleFilter(false)">
-      Всички
+    <button
+      [class.active]="!showUnreadOnly"
+      (click)="toggleFilter(false)"
+    >
+      All
     </button>
-    <button 
-      [class.active]="showUnreadOnly" 
-      (click)="toggleFilter(true)">
-      Непрочетени
+    <button
+      [class.active]="showUnreadOnly"
+      (click)="toggleFilter(true)"
+    >
+      Unread
     </button>
   </div>
 
+  <!-- Conversations Section -->
   <div class="messages-section">
-    @if(filteredConversations != []){
-    @for (conversation of filteredConversations; track conversation.participants[0]._id) {
-      <div
-        class="message-item"
-        [class.active]="selectedConversationUser === conversation.participants[0]._id"
-        (click)="selectConversation(conversation)">
-        @if(conversation.participants[1]._id != currentUserID){
-        <strong class="brick">{{ conversation.participants[1].username }}</strong>
-        }
-        @else{
-        <strong class="brick">{{ conversation.participants[0].username }}</strong>      
-        }
-        <p>{{ conversation.lastMessage?.content }}</p>
-        @if (conversation.readStates[0].unreadCount  && conversation.readStates[0].unreadCount > 0) {
-          <span class="unread-count">
-            {{ conversation.readStates[0].unreadCount}}
-          </span>
-        }
-        <span>
-          {{ conversation.lastMessage?.timestamp | customDate }}
-        </span>
-      </div>
+    @if(filteredConversations.length > 0) {
+      @for(conversation of filteredConversations; track conversation) {
+        <div
+          class="message-item"
+          [class.active]="selectedConversationUser === conversation.participants[0]._id"
+          (click)="selectConversation(conversation)"
+        >
+          <!-- Display participant username -->
+          @if(conversation.participants[1]._id !== currentUserID) {
+            <strong>{{ conversation.participants[1].username }}</strong>
+          } @else {
+            <strong>{{ conversation.participants[0].username }}</strong>
+          }
+
+          <!-- Last message -->
+          <p>{{ conversation.lastMessage?.content }}</p>
+
+          <!-- Unread count -->
+          @if(getUnreadCount(conversation) > 0) {
+            <span class="unread-count">
+              {{ getUnreadCount(conversation) }}
+            </span>
+          }
+        </div>
+      }
+    } @else {
+      <p>No conversations to display.</p>
     }
-  }
   </div>
 </aside>

@@ -88,3 +88,38 @@
     color: #888; /* Subtle gray for timestamps */
   }
   
+
+  
+  /* Filter Buttons Container */
+.filter-buttons {
+  display: flex;
+  justify-content: space-around; /* Evenly distribute buttons */
+  margin: 10px 0; /* Add some spacing around the buttons */
+}
+
+/* Default Button Style */
+.filter-buttons button {
+  background-color: #f0f0f0; /* Light gray background */
+  color: #333; /* Dark text color */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 20px; /* Rounded edges */
+  padding: 8px 20px; /* Padding for comfortable size */
+  font-size: 14px; /* Adjust font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover Effect */
+.filter-buttons button:hover {
+  background-color: #007bff; /* Blue background on hover */
+  color: #fff; /* White text on hover */
+  border-color: #007bff; /* Match border with background */
+}
+
+/* Active Button Style */
+.filter-buttons button.active {
+  background-color: #28a745; /* Green background for active state */
+  color: #fff; /* White text for active button */
+  border-color: #218838; /* Slightly darker green border */
+  font-weight: bold; /* Emphasize active button */
+}
