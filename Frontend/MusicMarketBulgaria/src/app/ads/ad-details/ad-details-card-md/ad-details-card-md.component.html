@@ -4,7 +4,7 @@
             <img [src]="ad?.images?.[0]" [alt]="ad?.title || 'No Title'" class="product-thumbnail" />
 
         }
-        <div class="product-title">
+        <div class="product-title-md">
         <span>{{ ad?.title }}
         </span>
         <app-star-rating
@@ -13,7 +13,7 @@
         [size]="24"
         [activeColor]="'#ffc107'"
       ></app-star-rating>
-          <p class="product-price">Цена: {{ ad?.price }} лв.</p>
+          <p class="product-price-md">Цена: {{ ad?.price }} лв.</p>
           <p class="product-condition">{{ ad?.condition }}</p>
         </div>
       </a>

@@ -285,6 +285,11 @@ goToUser(userId: string): void {
 getLoggedUserId(){
   return this.userStore.getCurrentUserId()
 }
+
+getTopRatedAds(): Observable<AdData[]> {
+  return this.http.get<AdData[]>(`/ratings/top`);
+}
+
 }
 
 

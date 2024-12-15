@@ -84,17 +84,17 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-app._router.stack.forEach((middleware) => {
-  if (middleware.route) {
-    console.log(`${Object.keys(middleware.route.methods)[0].toUpperCase()} ${middleware.route.path}`);
-  } else if (middleware.name === 'router') {
-    middleware.handle.stack.forEach((nestedMiddleware) => {
-      if (nestedMiddleware.route) {
-        console.log(`${Object.keys(nestedMiddleware.route.methods)[0].toUpperCase()} ${nestedMiddleware.route.path}`);
-      }
-    });
-  }
-});
+// app._router.stack.forEach((middleware) => {
+//   if (middleware.route) {
+//     console.log(`${Object.keys(middleware.route.methods)[0].toUpperCase()} ${middleware.route.path}`);
+//   } else if (middleware.name === 'router') {
+//     middleware.handle.stack.forEach((nestedMiddleware) => {
+//       if (nestedMiddleware.route) {
+//         console.log(`${Object.keys(nestedMiddleware.route.methods)[0].toUpperCase()} ${nestedMiddleware.route.path}`);
+//       }
+//     });
+//   }
+// });
 
 // Define the PORT and start the server
 const PORT = process.env.PORT || 5000;

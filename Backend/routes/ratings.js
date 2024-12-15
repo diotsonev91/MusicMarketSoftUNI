@@ -12,6 +12,5 @@ router.post("/ad",auth(),  postAdRating);      // Post ad rating
 router.get("/user/:userId", getUserRatings);   // Get all ratings and average for a user
 router.get("/ad/:adId", getAdRatings);         // Get all ratings and average for an ad
 router.get("/top", getTopRatedAds) //get top rated ads at all currently 5 
-router.get("/top/:userId", getTopRatedAds) //get top rated ads at all currently 5 
-
+router.get("/top/:userId", getTopRatedAdsOfUser) //get top rated ads at all currently 5 
 module.exports = router;

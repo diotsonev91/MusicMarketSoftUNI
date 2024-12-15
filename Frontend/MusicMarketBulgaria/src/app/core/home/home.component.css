@@ -28,7 +28,7 @@
 .cta-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color:#9B7EBD;
+    background-color:#76549c;
     color:  #EEEEEE;
     text-decoration: none;
     font-weight: bold;
@@ -106,4 +106,5 @@
 
 .cta-container {
     margin-top: 20px;
+    margin-bottom: 25px;
 }

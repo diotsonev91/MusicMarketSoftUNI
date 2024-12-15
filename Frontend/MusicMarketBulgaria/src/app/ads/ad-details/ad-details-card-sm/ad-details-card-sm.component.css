@@ -1,16 +1,8 @@
-.product-details-sm {
-    display:block;
-    max-width: 800px;
 
-    padding: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
 
 .product-thumbnail-sm {
     max-width: 120px; /* Set maximum width */
-    max-height: 460px; /* Set maximum height */
+    max-height: 120px; /* Set maximum height */
     object-fit: cover; /* Ensures the image fits within the bounds without distortion */
     display: block; /* Ensures proper rendering as a block element */
     margin: 0 auto; /* Optional: Centers the image horizontally if needed */
@@ -20,10 +12,18 @@
 
   .product-title-sm {
     background-color: #f1f1f1;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: rgba(43, 7, 73, 0.849);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
+
+  .product-price-sm {
+    
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 1px;
+}

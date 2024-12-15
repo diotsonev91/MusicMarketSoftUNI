@@ -1,10 +1,29 @@
 <div class="main-container">
     <section class="product-list">
         
-        <ul class="product-grid-2">
-            <li>
+        <h3 class="top-rated-header">
+            <i class="fa-solid fa-crown"></i>
+            Top-Rated Ads</h3>
+  
+      <!-- Loading State -->
+      @if (loading) {
+        <p>Loading top-rated ads...</p>
+      } @else {
+        <!-- Check if there are ads -->
+        @if (topRatedAds.length > 0) {
+          <ul class="product-grid-2">
+            <!-- Loop through the ads -->
+            @for (ad of topRatedAds; track ad) {
+              <li>
                 <app-ad-details-card-sm [ad]="ad"></app-ad-details-card-sm>
-            </li>
-        </ul>
+              </li>
+            }
+          </ul>
+        } @else {
+          <!-- No Ads Found -->
+          <p>No top-rated ads found.</p>
+        }
+      }
     </section>
-</div>
+  </div>
+  

@@ -17,6 +17,46 @@ import { Router } from '@angular/router';
       [errorMessage]="errorMessage"
       (formSubmit)="onLogin($event)"
     ></app-shared-form>
+    <div class="login-image-container">
+  <img
+    src="images/login-image.webp"
+    alt="Login illustration"
+    class="login-image"
+  />
+</div>
+  `,
+  styles: `
+ .login-image-container {
+  display: flex;
+  justify-content: center; /* Centers the image horizontally */
+  animation: fall-down 2s ease-in-out forwards; /* Add animation */
+}
+
+.login-image {
+  width: 500px;
+  height: 300px;
+  margin-top: -300px;
+  object-fit: cover; /* Ensures the image maintains its aspect ratio */
+  border-radius: 8px; /* Optional: Adds rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
+}
+
+/* Keyframes for the falling and disappearing animation */
+@keyframes fall-down {
+  0% {
+    transform: translateY(0); /* Start at the original position */
+   
+  }
+  50% {
+    transform: translateY(290px); /* End 500px lower */
+  
+  }
+  100% {
+    transform: translateY(300px); /* Stay at the final position */
+   
+   
+  }
+}
   `
 })
 export class LoginComponent {

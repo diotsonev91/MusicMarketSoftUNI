@@ -61,6 +61,14 @@
     font-style: italic;
 }
 
+.product-price {
+    
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 
 /* Стилове за бутоните за харесване */
 .rating-buttons {
@@ -108,16 +116,6 @@
     
 }
 
-.product-details-sm {
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0.4, 0.4);
-    text-align: left;
-    margin-top: 10px;
-    max-width: 65%;
-    
-}
 
 .createdAt {
     margin: 20px auto;

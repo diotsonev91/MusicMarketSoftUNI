@@ -26,22 +26,3 @@
     padding-top: 4%;
     padding-left: 6%;
 }
-
-/*those below will be separate component I hope */
-.product-price {
-    
-    font-size: 1.1rem;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.product-title {
-    background-color: #f1f1f1;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: rgba(43, 7, 73, 0.849);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: block;
-    margin-bottom: 8px;
-  }

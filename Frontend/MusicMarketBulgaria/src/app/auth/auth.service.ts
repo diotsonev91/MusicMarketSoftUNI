@@ -28,8 +28,9 @@ export class AuthService {
     return this.http.post<void>('/auth/logout', {}).pipe(
       tap(() => {
         // Clear the token and user state upon successful API response
+        console.log("Now will clear axcess token")
         this.clearAccessToken();
-
+        this.clearCurrentUser();
       })
     );
   }
@@ -39,6 +40,9 @@ export class AuthService {
     localStorage.removeItem('accessToken');
   }
 
+  private clearCurrentUser(){
+    localStorage.removeItem('currentUser');
+  }
   isLoggedIn(): boolean {
     const token = this.getAccessToken(); // Use the existing getAccessToken method
     return !!token; // Returns true if the token exists, false otherwise

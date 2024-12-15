@@ -10,6 +10,7 @@ import { EditUserComponent } from './user/edit-user/edit-user.component';
 import { EditAdComponent } from './ads/edit-ad/edit-ad.component';
 import { MessagesComponent } from './chat/messages/messages.component';
 import { authGuard } from './auth/guards/auth.guard';
+import { LogoutComponent } from './user/logout/logout.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: "/home",pathMatch: 'full'},
@@ -24,5 +25,6 @@ export const routes: Routes = [
     {path: 'ad-details/:id', component: AdDetailsContainerComponent },
     {path: 'edit-ad/:id', component: EditAdComponent, canActivate: [authGuard]},
     {path: 'chat', component: MessagesComponent, canActivate: [authGuard]},
+    {path: 'logout', component: LogoutComponent, canActivate: [authGuard]},
     { path: '**', redirectTo: '/home' } // Wildcard route
 ];
