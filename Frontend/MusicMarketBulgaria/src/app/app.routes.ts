@@ -5,7 +5,7 @@ import { RegisterComponent } from './user/register/register.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { CreateAdComponent } from './ads/create-ad/create-ad.component';
 import { AdsViewComponent } from './ads/ads-view/ads-view.component';
-import { AdDetailsComponent } from './ads/ad-details/ad-details.component';
+import { AdDetailsContainerComponent } from './ads/ad-details/ad-details-container/ad-details-container.component';
 import { EditUserComponent } from './user/edit-user/edit-user.component';
 import { EditAdComponent } from './ads/edit-ad/edit-ad.component';
 import { MessagesComponent } from './chat/messages/messages.component';
@@ -21,7 +21,7 @@ export const routes: Routes = [
     { path: 'user/:userId', component: ProfileComponent }, // Public profile
     {path: 'create-ad', component: CreateAdComponent, canActivate: [authGuard] },
     {path: 'ads-view', component: AdsViewComponent},
-    {path: 'ad-details/:id', component: AdDetailsComponent },
+    {path: 'ad-details/:id', component: AdDetailsContainerComponent },
     {path: 'edit-ad/:id', component: EditAdComponent, canActivate: [authGuard]},
     {path: 'chat', component: MessagesComponent, canActivate: [authGuard]},
     { path: '**', redirectTo: '/home' } // Wildcard route

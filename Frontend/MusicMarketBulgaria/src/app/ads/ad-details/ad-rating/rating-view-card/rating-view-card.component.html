@@ -1,0 +1,19 @@
+<div class="review-card">
+    <div class="review-header">
+     <h4 class="review-username">{{ review.userID.username }}</h4>
+     @if(review.ratingValue >= 4){
+     <h6 class="review-stars-high"> {{review.ratingValue}}</h6>
+     }
+     @if(review.ratingValue == 3){
+     <h6 class="review-stars-mid-high"> {{review.ratingValue}}</h6>
+     }
+     @if(review.ratingValue == 2){
+     <h6 class="review-stars-mid"> {{review.ratingValue}}</h6>
+     }
+      @if(review.ratingValue == 1){
+     <h6 class="review-stars-low"> {{review.ratingValue}}</h6>
+     }
+      <p class="review-date">{{ review.createdAt | customDate}}</p>
+   </div>
+   <p class="review-text">{{ review.reviewText }}</p>
+ </div>

@@ -84,9 +84,23 @@
   }
   
   .message-item span {
-    font-size: 0.85rem;
-    color: #888; /* Subtle gray for timestamps */
+    display: inline-block; /* Allows proper spacing and styling */
+    font-size: 0.85rem; /* Standard font size */
+    color: rgb(218, 35, 35); /* Text color */
+    background-color: #fbfd68; /* Red background for unread count */
+    border: 2px solid #cef00f; /* Slightly darker red border */
+    border-radius: 50%; /* Makes it a perfect circle */
+    font-style: normal; /* Avoid italic for better readability */
+    font-weight: bold; /* Bold text for emphasis */
+    width: 25px; /* Fixed width */
+    height: 25px;
+    text-align: center; /* Centers the text horizontally */
+    line-height: 20px; /* Aligns text vertically */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    transition: transform 0.2s ease; /* Smooth scaling on hover */
+    padding: 0; /* Removes extra space */
   }
+  
   
 
   
@@ -95,6 +109,7 @@
   display: flex;
   justify-content: space-around; /* Evenly distribute buttons */
   margin: 10px 0; /* Add some spacing around the buttons */
+  font-size: medium;
 }
 
 /* Default Button Style */

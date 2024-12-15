@@ -1,4 +1,4 @@
-import { UserData } from "../../../user/user-data.model";
+import { UserData } from "../../../../user/user-data.model";
 
 
 export interface RatingDisplayModel {

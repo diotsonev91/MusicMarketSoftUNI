@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RatingSubmitModel } from './rating-submit-model';
+import { RatingSubmitModel } from './rating-models/rating-submit-model';
 
 @Component({
   selector: 'app-rating-form',

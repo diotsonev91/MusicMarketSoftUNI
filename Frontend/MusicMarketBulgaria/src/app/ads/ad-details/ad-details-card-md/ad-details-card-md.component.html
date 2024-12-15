@@ -7,13 +7,12 @@
         <div class="product-title">
         <span>{{ ad?.title }}
         </span>
-        <span class="stars" id="rating-stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-          </span>
+        <app-star-rating
+        [rating]="rating"
+        [totalStars]="totalStars"
+        [size]="24"
+        [activeColor]="'#ffc107'"
+      ></app-star-rating>
           <p class="product-price">Цена: {{ ad?.price }} лв.</p>
           <p class="product-condition">{{ ad?.condition }}</p>
         </div>

@@ -6,8 +6,8 @@ import { AdData } from './ad-data.model';
 import { Router } from '@angular/router';
 import { UserData } from '../user/user-data.model';
 import { UserStoreService } from '../core/user-store.service';
-import { RatingSubmitModel } from './ad-details/ad-rating/rating-submit-model';
-import { RatingDisplayModel } from './ad-details/ad-rating/rating-display-model';
+import { RatingSubmitModel } from './ad-details/ad-rating/rating-models/rating-submit-model';
+import { RatingDisplayModel } from './ad-details/ad-rating/rating-models/rating-display-model';
 
 @Injectable({
   providedIn: 'root',

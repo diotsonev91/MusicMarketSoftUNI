@@ -2,6 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { AdService } from '../ad.service'; 
 import { AdData } from '../ad-data.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'; 
+import { AdStateService } from './ad-state.service';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class UserAdsComponent implements OnInit {
   adsOwner: String = "Моите обяви"
   ownedByLoggedUser: boolean = false;
 
-  constructor(private adService: AdService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private adService: AdService,private adStateService:AdStateService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
       // Extract userId from the route manually
@@ -32,51 +33,63 @@ export class UserAdsComponent implements OnInit {
       } else {
         this.error = 'Invalid route: User ID is missing.';
       }
-    }
+  }
   
-    private extractUserIdFromUrl(url: string): string | null {
-      const parts = url.split('/'); // Split the URL by slashes
-      const userIdIndex = parts.indexOf('user') + 1 || parts.indexOf('profile') + 1 ; // Get the index after "user"
-      return parts[userIdIndex] || null; // Return the ID or null if not found
-    }
+  private extractUserIdFromUrl(url: string): string | null {
+    const parts = url.split('/'); // Split the URL by slashes
+    const userIdIndex = parts.indexOf('user') + 1 || parts.indexOf('profile') + 1 ; // Get the index after "user"
+    return parts[userIdIndex] || null; // Return the ID or null if not found
+  }
   
-    loadUserAds(): void {
-      console.log('User ID inside user-ads:', this.userId);
+  loadUserAds(): void {
+    console.log('User ID inside user-ads:', this.userId);
   
-      if (this.userId && this.userId !== this.adService.getLoggedUserId()) {
+    if (this.userId && this.userId !== this.adService.getLoggedUserId()) {
         // Load ads for the provided user ID
-        console.log('Loading ads for user ID:', this.userId);
-        this.ownedByLoggedUser = false;
-        this.adsOwner = 'Обяви на потребителя'; // "Ads of the user" in Bulgarian
-        this.adService.getUserAds(this.userId).subscribe({
-          next: (data: AdData[]) => {
-            this.ads = data;
-            this.loadingAds = false;
-          },
-          error: (err) => {
-            this.error = 'Failed to load user ads.';
-            console.error(err);
-            this.loadingAds = false;
-          },
-        });
-      } else {
-        // Load ads for the logged-in user
-        console.log('Loading ads for the logged-in user.');
-        this.ownedByLoggedUser = true;
-        this.adsOwner = 'Моите обяви'; // "My Ads" in Bulgarian
-        this.adService.getLoggedUserAds().subscribe({
-          next: (data: AdData[]) => {
-            this.ads = data;
-            this.loadingAds = false;
-          },
-          error: (err) => {
-            this.error = 'Failed to load user ads.';
-            console.error(err);
-            this.loadingAds = false;
-          },
-        });
-      }
+      console.log('Loading ads for user ID:', this.userId);
+      this.ownedByLoggedUser = false;
+      this.adsOwner = 'Обяви на потребителя'; // "Ads of the user" in Bulgarian
+      this.adService.getUserAds(this.userId).subscribe({
+        next: (data: AdData[]) => {
+          this.ads = data;
+          this.loadingAds = false;
+        },
+        error: (err) => {
+          this.error = 'Failed to load user ads.';
+          console.error(err);
+          this.loadingAds = false;
+        },
+      });
+    } else {
+
+      this.adsOwner = 'Моите обяви'; 
+      this.ownedByLoggedUser = true;
+       // Check if ads are cached for the logged-in user
+      this.adStateService.ads$.subscribe((cachedAds) => {
+        if (cachedAds) {
+           // Use cached ads
+          console.log('Using cached ads for the logged-in user.');
+          this.ads = cachedAds;
+          this.loadingAds = false;
+        } else {
+            // Fetch ads from the backend
+            console.log('Loading ads for the logged-in user from the backend.');
+            this.adService.getLoggedUserAds().subscribe({
+              next: (data: AdData[]) => {
+                this.ads = data;
+                this.adStateService.setAds(data); // Cache the fetched ads
+                this.loadingAds = false;
+              },
+              error: (err) => {
+                this.error = 'Failed to load user ads.';
+                console.error(err);
+                this.loadingAds = false;
+              },
+          });
+        }
+      });
     }
+  }
   
   createAd(): void {
     this.router.navigate(['/create-ad']);

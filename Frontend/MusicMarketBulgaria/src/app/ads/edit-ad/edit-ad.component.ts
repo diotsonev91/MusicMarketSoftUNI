@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AdService } from '../ad.service';
 import { AdData } from '../ad-data.model';
@@ -9,53 +9,84 @@ import { AdFormComponent } from '../ad-form/ad-form.component';
   standalone: true,
   imports: [AdFormComponent],
   template: `
-    <app-ad-form
-      [initialData]="adData"
-      [submitButtonText]="'Редактирай обява'" 
-      (formSubmit)="onEditAd($event)">
-    </app-ad-form>
+    @if (isLoading) {
+      <div>
+        <p>Loading ad data...</p>
+      </div>
+    } @else {
+      <app-ad-form
+        [initialData]="adData"
+        [submitButtonText]="'Редактирай обява'"
+        (formSubmit)="onEditAd($event)">
+      </app-ad-form>
+    }
   `,
 })
-
 export class EditAdComponent implements OnInit {
-  adData: Partial<AdData> = {};
+  adData: Partial<AdData> = {}; // Ad data to populate the form
+  adId: string | null = null; // ID of the ad from the route
+  isLoading: boolean = true; // Controls loading state
+  stateProcessed: boolean = false; // Tracks whether extras.state has been processed
+  triggerFetch: boolean = false; // Flag for delayed fetch logic
 
   constructor(
     private adService: AdService,
     private route: ActivatedRoute,
-    
     private router: Router
   ) {
-    const navigation = this.router.getCurrentNavigation();
-    const stateAdData = navigation?.extras.state?.['adData'] as AdData;
+    // Attempt to retrieve adData from router state
+    const stateAdData = this.router.getCurrentNavigation()?.extras.state?.['adData'] as AdData;
+
     if (stateAdData) {
+      // Use state if available
       this.adData = stateAdData;
+      this.stateProcessed = true;
+      this.isLoading = false;
       console.log('Ad data passed via state:', stateAdData);
+    } else {
+      // State not available, set timeout to trigger fallback
+      console.log('No state data found. Waiting 0.1 seconds for fallback...');
+      setTimeout(() => {
+        if (!this.stateProcessed) {
+          console.log('Still no state data after 0.1 seconds. Triggering fallback...');
+          if(this.adId)
+          this.fetchAdData(this.adId);
+        }
+      }, 100); // 2-second delay
     }
   }
 
   ngOnInit(): void {
-    
-    const stateAdData = this.adData;
-    if (stateAdData) {
-      this.adData = stateAdData; // Use the passed adData
-      console.log('Ad data passed via state:', stateAdData);
-    } else {
-      console.log('State is undefined, fetching ad from backend.');
-      const adId = this.route.snapshot.paramMap.get('id');
-      if (adId) {
-        this.adService.getAdById(adId).subscribe({
-          next: (ad) => {
-            this.adData = ad;
-            console.log('Ad data fetched from backend:', ad);
-          },
-          error: (err) => console.error('Failed to fetch ad:', err),
-        });
-      }
-    }
+    // Get adId from route as a fallback identifier
+    this.adId = this.route.snapshot.paramMap.get('id');
   }
+
+
+  private fetchAdData(adId: string): void {
+    this.isLoading = true; // Set loading state while fetching data
+    console.log('Fetching ad data from backend for adId:', adId);
+
+    this.adService.getAdById(adId).subscribe({
+      next: (ad) => {
+        this.adData = ad;
+        this.isLoading = false;
+        this.stateProcessed = true; // Mark state as processed
+        console.log('Ad data fetched successfully:', ad);
+      },
+      error: (err) => {
+        console.error('Error fetching ad data:', err);
+        this.isLoading = false; // Stop loading on error
+      },
+    });
+  }
+
   onEditAd({ adData, images }: { adData: Partial<AdData>; images: File[] }): void {
-    this.adService.editAd(this.adData._id!, adData, images, adData.remainingImages || []).subscribe({
+    if (!this.adId) {
+      console.error('Ad ID is missing. Cannot proceed with edit.');
+      return;
+    }
+
+    this.adService.editAd(this.adId, adData, images, adData.remainingImages || []).subscribe({
       next: () => this.router.navigate(['/ads-view']),
       error: (err) => console.error('Failed to update ad:', err),
     });

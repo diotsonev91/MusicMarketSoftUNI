@@ -6,7 +6,8 @@
     padding: 15px;
     border-left: 1px solid #ddd;
     flex: 1;
-    height: 100%;
+    height: auto;
+
   }
   
   .message-thread {
@@ -41,4 +42,29 @@
   .message-right .message-content {
     background-color: #c8e6c9;
   }
+  .send {
+    background-color: rgb(3, 169, 244); /* Sets a modern blue background */
+    color: white; /* Makes the text white */
+    border: none; /* Removes the border */
+    border-radius: 25px; /* Makes the button rounded */
+    padding: 10px 20px; /* Adds padding to the button */
+    font-size: 16px; /* Increases the font size */
+    cursor: pointer; /* Changes the cursor to a pointer on hover */
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; /* Adds shadow */
+    transition: all 0.3s ease; /* Adds a smooth hover transition */
+    display: inline-block; /* Ensures button does not stretch */
+  }
   
+  .send:hover {
+    background-color: rgb(2, 136, 209); /* Darker blue on hover */
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 30px, rgba(0, 0, 0, 0.23) 0px 6px 10px; /* Enhances shadow on hover */
+    transform: scale(1.05); /* Slightly enlarges button */
+  }
+  
+
+
+.input-container {
+  display: flex; /* Use Flexbox for better control */
+  gap: 10px; /* Space between textarea and button */
+  align-items: flex-start; /* Align textarea and button at the top */
+}

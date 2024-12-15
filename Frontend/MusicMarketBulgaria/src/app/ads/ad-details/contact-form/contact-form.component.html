@@ -1,17 +1,24 @@
 <section class="comments">
-    <h3>Контакт с продавача</h3>
-    <div class="comment">
-      <p><strong><i class="fas fa-user"></i> Потребител</strong></p>
-    </div>
+  @if (showForm) {
+  <h3>Контакт с продавача</h3>
+  <div class="comment">
+    <p><strong><i class="fas fa-user"></i> {{ ad?.userName }}</strong></p>
+  </div>
     <form (submit)="sendMessage(messageInput.value); $event.preventDefault()">
       <label for="comment">Изпрати съобщение:</label>
       <textarea
-        #messageInput 
+        #messageInput
         id="comment"
         rows="4"
         placeholder="Напишете вашето съобщение">
       </textarea>
       <button type="submit">Изпрати</button>
     </form>
-  </section>
-  
+  } @else {
+    <div class="comments-else">
+    <p>Тази обява е ваша.</p>
+    <button class="edit-ad-button" (click)="navigateToEditAd()">Редактирай обявата</button>
+    </div>
+
+  }
+</section>

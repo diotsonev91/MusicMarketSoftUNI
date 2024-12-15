@@ -16,11 +16,14 @@
 
     <!-- Message Input -->
     <div class="input-container">
-      <textarea
+      <textarea 
+      class="textarea is-link"
+      rows="10"
+      cols="250"
         #messageInput
         placeholder="Напиши съобщение..."
       ></textarea>
-      <button 
+      <button class="send"
         (click)="sendMessage(messageInput.value); messageInput.value = ''"
       >
         Изпрати

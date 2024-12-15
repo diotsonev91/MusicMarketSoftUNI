@@ -1,0 +1,61 @@
+/* Individual review card styling */
+.review-card {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header for the review: username and date */
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  
+  /* Username styling */
+  .review-username {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  /* Review date styling */
+  .review-date {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+  }
+  
+  /* Review text styling */
+  .review-text {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+    .review-stars-high{
+    background-color: rgb(255, 193, 7);
+    width:20px;
+    text-align: center;
+    }
+  
+      .review-stars-low{
+    background-color: #ff0000;
+    width:20px;
+    text-align: center;
+    }
+        .review-stars-mid{
+    background-color: #fd5c63;
+    width:20px;
+    text-align: center;
+    }
+          .review-stars-mid-high{
+    background-color: #87A96B;
+    width:20px;
+    text-align: center;
+    }

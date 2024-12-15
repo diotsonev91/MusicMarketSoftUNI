@@ -1,0 +1,36 @@
+<div>
+    <app-star-rating
+   [rating]="rating"
+   [totalStars]="totalStars"
+   [size]="24"
+   [activeColor]="'#ffc107'"
+ ></app-star-rating>
+
+   <!-- Button to toggle reviews -->
+   @if(!showRatingForm){
+   <button (click)="toggleReviews()" class="reviews-button">
+     {{ showReviews ? 'Hide Reviews' : 'Show Reviews' }}
+   </button>
+   }
+
+   <!-- Conditionally render reviews -->
+   @if (showReviews && !showRatingForm) {
+     <div class="reviews">
+       @for (review of reviews; track review.adID) {
+         <app-rating-view-card [review]="review"></app-rating-view-card>
+       }
+     </div>
+   }
+   @if(!showReviews){
+   <!-- Button to toggle rating form -->
+   <button (click)="toggleRatingForm()" class="add-rating-button">
+     {{ showRatingForm ? 'Cancel' : 'Add Rating' }}
+   </button>
+   }
+   @if (showRatingForm && ! showReviews) {
+     <app-rating-form 
+       [adId]="adId" 
+       (ratingSubmitted)="handleRatingSubmitted($event)">
+     </app-rating-form>
+   }
+ </div>

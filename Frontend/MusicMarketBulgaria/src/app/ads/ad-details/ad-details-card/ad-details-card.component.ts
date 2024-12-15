@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AdData } from '../../ad-data.model';
-import { RatingViewComponent } from '../ad-rating/rating-view.component';
+import { RatingViewComponent } from '../ad-rating/rating-view/rating-view.component';
 import { CustomDatePipe } from '../custom.date.pipe';
 import { LikeDislikeButtonsComponent } from '../ad-likes-dislikes/like-dislike-buttons.component';
 
