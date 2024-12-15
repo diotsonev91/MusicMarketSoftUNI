@@ -13,9 +13,11 @@ export class NavigationBarComponent {
   // Define navigation links with their respective routes and authentication requirements
   navLinks = [
     { label: 'About', route: '/', requiresAuth: false  },
+    { label: 'Ads', route: '/ads-view', requiresAuth: false },
     { label: 'Login', route: '/login', requiresAuth: false },
     { label: 'Register', route: '/register', requiresAuth: false },
-    { label: 'Logout', route: '/logout', requiresAuth: true }
+    { label: 'Logout', route: '/logout', requiresAuth: true },
+    
   ];
 
   constructor(private authService: AuthService) {}
