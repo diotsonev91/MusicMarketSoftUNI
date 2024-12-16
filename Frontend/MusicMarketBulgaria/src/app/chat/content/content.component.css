@@ -1,35 +1,69 @@
 .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #fff;
-    padding: 15px;
-    border-left: 1px solid #ddd;
-    flex: 1;
-    height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
+  padding: 15px;
+  border-left: 1px solid #ddd;
+  flex: 1; /* Allow the container to grow */
+  height: 777px;
+  max-height: 100vh; /* Prevent content from exceeding the viewport height */
+  overflow-y: auto; /* Enable scrolling when necessary */
+
+  background-image: url('../../../../public/images/musical-chat.webp'); /* Replace with your image path */
+  background-size: cover; /* Ensures the image covers the container */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents tiling */
+  
+  }
+ 
+  .time {
+    font-size: 15px; /* Small and subtle text */
+    font-weight: 400; /* Regular weight */
+    color: #888888; /* Soft gray color */
+    border-style: double;
+    
+    opacity: 1.8; /* Slight transparency for elegance */
+    margin-top: 5px; /* Space between the message and time */
+    text-align: right; /* Align to the right */
+    display: block; /* Makes it appear on its own line */
+    font-family: 'Roboto', sans-serif; /* Modern font for a sleek look */
+    background-color: white;
+    padding: 5px;
+    /* Optional: Add a cool hover effect */
+    transition: color 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0px 10px;
   }
   
+  .time:hover {
+    color: #4FC3F7; /* Light blue on hover */
+    opacity: 1; /* Full opacity */
+    cursor: pointer; /* Show a pointer cursor */
+  }
   .message-thread {
     flex: 1;
     overflow-y: auto;
     padding-bottom: 10px;
+    
   }
   
   .message {
     display: flex;
     flex-direction: column;
     margin: 5px 0;
+  
   }
   
   .message-right {
     align-items: flex-end;
     text-align: right;
+    
   }
   
   .message-left {
     align-items: flex-start;
     text-align: left;
+    
   }
   
   .message-content {
@@ -37,6 +71,7 @@
     padding: 10px;
     border-radius: 10px;
     max-width: 60%;
+    box-shadow: 2px 2px;
   }
   
   .message-right .message-content {
@@ -67,4 +102,57 @@
   display: flex; /* Use Flexbox for better control */
   gap: 10px; /* Space between textarea and button */
   align-items: flex-start; /* Align textarea and button at the top */
+  
 }
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 5px solid #a05a5a;
+  border-radius: 15px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+.animate-charcter {
+  text-transform: uppercase;
+  background-image: linear-gradient(
+    90deg,
+    #cc4d4d,
+    #777777 30%,
+    #888888 70%,
+    #aaaaaa
+  ); /* Subtle gray gradient for text */
+  background-size: 300% auto; /* Smooth horizontal gradient movement */
+  color: #8a1b1b; /* Base color for browsers without gradient support */
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-size: 50px; /* Readable font size */
+  font-family: Arial, sans-serif; /* Clean font */
+  margin: 20px;
+  text-shadow: 2px 2px; /* Subtle shadow effect */
+
+  /* Animation */
+  position: relative; /* Required for animation to work */
+  animation: fall 2s ease-out forwards;
+}
+
+/* Keyframes for falling animation */
+@keyframes fall {
+  0% {
+    transform: translateY(100%); /* Start above the container */
+    opacity: 0; /* Start fully transparent */
+  }
+  50% {
+    opacity: 1; /* Fade in while falling */
+  }
+  100% {
+    transform: translateY(350%); /* End at the original position */
+    opacity: 1; /* Fully visible */
+  }
+}
+

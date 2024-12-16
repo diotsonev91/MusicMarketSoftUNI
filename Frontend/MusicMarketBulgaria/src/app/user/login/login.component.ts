@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
     <app-shared-form
       [title]="title"
       [fields]="fields"
+      [isLogin]=true
       [errorMessage]="errorMessage"
       (formSubmit)="onLogin($event)"
     ></app-shared-form>

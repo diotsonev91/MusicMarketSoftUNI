@@ -51,6 +51,7 @@ exports.postAdRating = async (req, res) => {
   try {
     const { adID, userID, ratingValue, reviewText } = req.body;
     console.log(req.body);
+
     // Validate input
     if (!adID || !userID || !ratingValue || ratingValue < 1 || ratingValue > 5) {
       return res.status(400).json({ error: "Invalid input data" });
@@ -70,32 +71,26 @@ exports.postAdRating = async (req, res) => {
       existingRating.ratingValue = ratingValue;
       existingRating.reviewText = reviewText || null; // Update or clear review text
       await existingRating.save();
-
-      // Optionally recalculate average rating
-      const averageRating = await calculateAdAverageRating(adID);
-
-      return res.status(200).json({
-        message: "Rating updated successfully",
-        rating: existingRating,
-        averageRating, // Include the updated average rating
+    } else {
+      // Create a new rating if none exists
+      const rating = new ProductRating({
+        adID,
+        userID,
+        ratingValue,
+        reviewText,
       });
+      await rating.save();
     }
-
-    // Create a new rating if none exists
-    const rating = new ProductRating({
-      adID,
-      userID,
-      ratingValue,
-      reviewText,
-    });
-    await rating.save();
 
     // Optionally recalculate average rating
     const averageRating = await calculateAdAverageRating(adID);
 
-    res.status(201).json({
-      message: "Rating created successfully",
-      rating,
+    // Update the ad.adRate field with the new average rating
+    ad.adRate = averageRating;
+    await ad.save();
+
+    res.status(200).json({
+      message: existingRating ? "Rating updated successfully" : "Rating created successfully",
       averageRating, // Include the updated average rating
     });
   } catch (error) {

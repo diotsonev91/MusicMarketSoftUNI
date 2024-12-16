@@ -47,16 +47,25 @@ export class AuthService {
     const token = this.getAccessToken(); // Use the existing getAccessToken method
     return !!token; // Returns true if the token exists, false otherwise
   }
-
   refreshAccessToken(): Observable<string> {
+    console.log('Calling refreshAccessToken...'); // Log entry point
+  
     return this.http.post<{ accessToken: string }>(`/auth/refresh-token`, {}).pipe(
-      map((response) => response.accessToken), // Extract accessToken from the response
+      map((response) => {
+        if (!response.accessToken) {
+          console.error('No accessToken in response:', response); // Log missing token
+          throw new Error('Invalid refresh token response');
+        }
+        console.log('New access token received:', response.accessToken); // Log success
+        return response.accessToken;
+      }),
       catchError((error) => {
+        console.error('Error refreshing access token:', error); // Log the error
         const errorMessage =
           error.status === 403
             ? 'Invalid or expired refresh token'
             : 'Error refreshing token';
-        return throwError(() => errorMessage);
+        return throwError(() => new Error(errorMessage));
       })
     );
   }

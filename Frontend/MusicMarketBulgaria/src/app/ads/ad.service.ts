@@ -282,7 +282,8 @@ getAdsByCategoryAndPriceRange(
 goToUser(userId: string): void {
   this.router.navigate([`/user`, userId]);
 }
-getLoggedUserId(){
+
+private getLoggedUserId(){
   return this.userStore.getCurrentUserId()
 }
 

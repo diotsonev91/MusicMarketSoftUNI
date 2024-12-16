@@ -74,3 +74,13 @@
 .form-section a:hover {
     text-decoration: underline;
 }
+
+.valid-input {
+    background-color: #cce7ff; /* Light sky blue */
+    border: 2px solid #007bff; /* Optional: Highlight valid border */
+  }
+  
+  .invalid-input {
+    background-color: #f0d5d5; /* Light red for invalid fields */
+    border: 2px solid #ff4d4d; /* Optional: Highlight invalid border */
+  }

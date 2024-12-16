@@ -58,11 +58,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 15px;
-    border-radius: 5px;
-    border-bottom: 1px solid #ddd;
+    border: 2px solid #ccc;
+    border-radius: 4px;
     background-color: #fff;
     transition: background-color 0.2s, box-shadow 0.2s;
     cursor: pointer;
+   
   }
   
   .message-item:hover {

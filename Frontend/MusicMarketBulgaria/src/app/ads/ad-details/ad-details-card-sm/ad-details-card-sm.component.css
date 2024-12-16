@@ -7,19 +7,25 @@
     display: block; /* Ensures proper rendering as a block element */
     margin: 0 auto; /* Optional: Centers the image horizontally if needed */
     border-radius: 5px; /* Optional: Adds rounded corners */
+    
   }
 
 
   .product-title-sm {
-    background-color: #f1f1f1;
+    background-color:rgb(47, 82, 87);
     font-size: 1.1rem;
     font-weight: bold;
-    color: rgba(43, 7, 73, 0.849);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.849);
+    box-shadow: 0 4px 8px rgba(202, 89, 81, 0.1);
     display: block;
     margin-bottom: 2px;
+ 
   }
 
+  a{
+    text-decoration:none;
+  }
+  
   .product-price-sm {
     
     font-size: 1.1rem;

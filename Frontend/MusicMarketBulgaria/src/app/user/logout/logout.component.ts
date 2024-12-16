@@ -20,10 +20,7 @@ export class LogoutComponent implements OnInit {
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
-        // Delay navigation by 5 seconds after successful logout
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 5000);
+        
       },
       error: (err) => {
         // Handle any errors that occur during logout

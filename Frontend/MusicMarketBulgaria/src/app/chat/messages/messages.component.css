@@ -14,13 +14,17 @@
   border-radius: 5px; /* Slightly rounded corners */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
   overflow: hidden;
+
 }
 
 .sidebar{
   width: 400px;
 }
 .content{
-  width: 400px;
+  width: 800px;
+  height: 800px;
+  overflow: auto;
+  
 }
 /* Adjustments for Small Screens */
 @media (max-width: 768px) {

@@ -7,6 +7,9 @@ import { CustomDatePipe } from '../../custom.date.pipe';
 import { RatingViewCardComponent } from '../rating-view-card/rating-view-card';
 import { RatingSubmitModel } from '../rating-models/rating-submit-model';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
+import { AuthService } from '../../../../auth/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-rating-view',
@@ -29,12 +32,15 @@ export class RatingViewComponent implements OnChanges {
   @Output() formToggled = new EventEmitter<boolean>(); // Emits when the form is toggled
   @Output() reviewToggled = new EventEmitter<boolean>();
   
-  constructor(private adService: AdService) {}
+  constructor(private adService: AdService, private authService: AuthService, private router: Router) {}
+  isLoggedIn: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['adId'] && changes['adId'].currentValue) {
-      console.log('AD ID in Rating View:', this.adId);
+      
       this.fetchRatings(); // Fetch ratings whenever adId changes
+      this.isLoggedIn = this.authService.isLoggedIn();
+     
     }
   }
 
@@ -50,13 +56,16 @@ export class RatingViewComponent implements OnChanges {
         next: (response: { ratings: RatingDisplayModel[]; averageRating: number }) => {
           this.rating = response.averageRating || 0; // Update rating
           this.reviews = response.ratings; 
-          console.log('Fetched ratings:', response);
-          console.log('Updated rating for stars:', this.rating);
+          //console.log('Fetched ratings:', response);
+          //console.log('Updated rating for stars:', this.rating);
         },
         error: (err) => console.error('Error fetching ad ratings:', err.message),
       });
   }
 
+  goToLoggin(){
+    this.router.navigate(['/login']); 
+  }
   // Toggle visibility of the rating form
   toggleRatingForm(): void {
     this.showRatingForm = !this.showRatingForm;
@@ -71,6 +80,7 @@ export class RatingViewComponent implements OnChanges {
       next: (response) => {
         console.log('Rating submitted successfully:', response);
         // Re-fetch ratings to update the stars
+        this.fetchRatings(); 
       },
       error: (err) => console.error('Error submitting rating:', err.message),
     });

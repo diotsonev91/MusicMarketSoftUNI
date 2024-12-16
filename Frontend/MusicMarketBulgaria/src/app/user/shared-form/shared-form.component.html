@@ -16,11 +16,48 @@
           [formControlName]="field.name"
           [required]="field.required"
           [attr.placeholder]="field.label"
+          [appEmailDomain]="field.type"
+          [appPasswordValidator]="field.type"
+          [ngClass]="{
+            'valid-input': !isLogin && form.get(field.name)?.valid && form.get(field.name)?.touched,
+            'invalid-input': !isLogin && form.get(field.name)?.invalid && form.get(field.name)?.touched
+          }"
+        
+          
         />
         @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
           <small class="error-user-form">
             @if (form.get(field.name)?.hasError('required')) {
               {{ field.label }} е задължително.
+            }
+            @if (field.name == 'email' && form.get(field.name)?.hasError('invalidEmailDomain')) {
+              {{ field.label }} трябва да има валиден домейн.
+            }
+            @if (field.name == 'email' && form.get(field.name)?.hasError('invalidEmailFormat')) {
+              {{ field.label }} трябва да има валиден email формат.
+            }
+            @if (field.name === 'password') {
+              @for (level of passwordValidationLevels;track level) {
+                @if (form.get(field.name)?.hasError(level)) {
+                  @switch (level) {
+                    @case ('minLength'){
+                      Паролата трябва да бъде поне 5 символа.
+                    }
+                    @case ('hasUpperCase'){
+                      Паролата трябва да съдържа поне една главна буква.
+                    }
+                    @case ('hasNumericChar'){
+                      Паролата трябва да съдържа поне една цифра.
+                    }
+                    @case ('hasSpecialChar'){
+                      Паролата трябва да съдържа поне един специален символ.
+                    }
+                  }
+                }
+              }
+              @if(form.get(field.name)?.hasError('mismatch')){
+                Паролата трябва да se повтори правилно.
+              }
             }
           </small>
         }

@@ -3,6 +3,7 @@ import { AdService } from '../ad.service';
 import { AdData } from '../ad-data.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'; 
 import { AdStateService } from './ad-state.service';
+import { UserStoreService } from '../../core/user-store.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class UserAdsComponent implements OnInit {
   adsOwner: String = "Моите обяви"
   ownedByLoggedUser: boolean = false;
 
-  constructor(private adService: AdService,private adStateService:AdStateService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private adService: AdService,private adStateService:AdStateService, private userStore: UserStoreService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
       // Extract userId from the route manually
@@ -32,6 +33,7 @@ export class UserAdsComponent implements OnInit {
         this.loadUserAds();
       } else {
         this.error = 'Invalid route: User ID is missing.';
+     
       }
   }
   
@@ -44,7 +46,7 @@ export class UserAdsComponent implements OnInit {
   loadUserAds(): void {
     console.log('User ID inside user-ads:', this.userId);
   
-    if (this.userId && this.userId !== this.adService.getLoggedUserId()) {
+    if (this.userId && this.userId !== this.userStore.getCurrentUserId()) {
         // Load ads for the provided user ID
       console.log('Loading ads for user ID:', this.userId);
       this.ownedByLoggedUser = false;

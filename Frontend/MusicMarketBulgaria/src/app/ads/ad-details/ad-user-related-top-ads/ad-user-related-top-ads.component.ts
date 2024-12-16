@@ -21,8 +21,13 @@ export class AdUserRelatedTopAdsComponent implements OnChanges {
   }
 
   processRelatedAds(ads: AdData[]): void {
-    // Filter ads with an average rating > 3
-    this.filteredAds = ads.filter(ad => ad.rating > 3);
+    // Filter ads with a valid adRate > 3
+    this.filteredAds = ads.filter(ad => {
+      const isValidAdRate = ad.adRate !== null && ad.adRate !== undefined && ad.adRate > 3;
+      console.log("Ad title:", ad.title, "Ad rate:", ad.adRate, "Valid:", isValidAdRate); // Debugging
+      return isValidAdRate;
+    });
+  
     console.log('Filtered related ads with rating > 3:', this.filteredAds);
   }
 }

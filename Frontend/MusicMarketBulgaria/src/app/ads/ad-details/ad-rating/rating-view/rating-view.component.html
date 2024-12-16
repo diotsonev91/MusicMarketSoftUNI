@@ -14,6 +14,7 @@
    }
 
    <!-- Conditionally render reviews -->
+   
    @if (showReviews && !showRatingForm) {
      <div class="reviews">
        @for (review of reviews; track review.adID) {
@@ -21,12 +22,18 @@
        }
      </div>
    }
+  
+  @if (isLoggedIn){
    @if(!showReviews){
    <!-- Button to toggle rating form -->
    <button (click)="toggleRatingForm()" class="add-rating-button">
      {{ showRatingForm ? 'Cancel' : 'Add Rating' }}
    </button>
    }
+  }
+  @else{
+    <button class="add-rating-button" (click)="goToLoggin()"> login to add a rating</button>
+  }
    @if (showRatingForm && ! showReviews) {
      <app-rating-form 
        [adId]="adId" 

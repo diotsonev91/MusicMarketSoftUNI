@@ -1,14 +1,20 @@
 import { Component, EventEmitter, Input, Output, OnInit, QueryList, ElementRef, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { EmailDirective } from '../../shared/directives/email.directive';
+import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
+import { PasswordValidatorDirective } from '../../shared/directives/password-validator.directive';
 
 @Component({
   selector: 'app-shared-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,CommonModule,  EmailDirective, PasswordValidatorDirective ],
   styleUrls: ['./shared-form.component.css'],
   templateUrl: './shared-form.component.html',
 })
 export class SharedFormComponent implements OnInit {
+  passwordValidationLevels = environment.passwordValidationLevels;
+  @Input() isLogin: boolean = false;
   @Input() title!: string;
   @Input() fields: { name: string; label: string; type: string; required: boolean }[] = [];
   @Input() errorMessage: string | null = null; // New Input for error message
@@ -61,5 +67,9 @@ export class SharedFormComponent implements OnInit {
         this.form.controls[key].setValue(values[key]); // Update the form control value
       }
     });
+  }
+
+  shouldApplyEmailDomain(type: string): string | null {
+    return type === 'email' ? '' : null;
   }
 }
