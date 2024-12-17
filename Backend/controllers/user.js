@@ -117,6 +117,9 @@ exports.getLoggedUserProfile = async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      location: user.location
       // Add any additional fields you want to return
     });
   } catch (error) {

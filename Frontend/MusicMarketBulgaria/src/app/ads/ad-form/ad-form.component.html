@@ -132,6 +132,10 @@
           [placeholder]="formConfig.location.placeholder"
           required
         />
+        @if (adForm.get('location')?.invalid &&
+        adForm.get('location')?.touched) {
+        <p class="error">{{ formConfig.location.validationMessage }}</p>
+        }
       </div>
 
       <!-- Condition -->
@@ -165,7 +169,7 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="submit-btn" [disabled]="adForm.invalid">
+    <button type="submit" class="submit-btn" >
       {{ submitButtonText }}
     </button>
   </form>

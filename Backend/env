@@ -1,0 +1,6 @@
+MONGODB_URI=mongodb+srv://diotsonev:nUmcQGdcYLoq2dQw@musicmarketbulgaria.ffl2d.mongodb.net/MusicMarketDB?retryWrites=true&w=majority
+JWT_SECRET=w!tFyJ5@1Ms*Uz3$4QzJ&dP7^tBnL9p%8Yl@zR5M$eN3Z0u^6Pw*
+REFRESH_TOKEN_SECRET=Z2YxZGZiZDRjZGNiZjM0ZTdkMWY1ZGQ4NDlhMjQ3NzM=
+DEFAULT_USER_ROLE=user
+PORT=5000
+NODE_ENV=development

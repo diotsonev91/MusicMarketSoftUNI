@@ -55,6 +55,8 @@
                   }
                 }
               }
+            }
+            @if (field.name === 'confirmPassword') {
               @if(form.get(field.name)?.hasError('mismatch')){
                 Паролата трябва да se повтори правилно.
               }

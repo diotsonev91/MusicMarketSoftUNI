@@ -100,7 +100,7 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
   
 
   const formData = new FormData();
-
+  console.log("FORM DATA INSIDE EDIT AD ", updates)
   // Add text fields if provided
   if (updates.title) formData.append('title', updates.title);
   if (updates.description) formData.append('description', updates.description);
@@ -109,13 +109,14 @@ editAd(adId: string, updates: Partial<AdData>, images: File[], remainingImages: 
   if (updates.condition) formData.append('condition', updates.condition);
   if (updates.category) formData.append('category', updates.category);
   if (updates.subCategory) formData.append('subCategory', updates.subCategory);
+  if (updates.location) formData.append('location', updates.location)
 
   // Add new images to the FormData
   images.forEach((image) => formData.append('images', image, image.name));
 
   // Add remaining images (JSON string)
   formData.append('remainingImages', JSON.stringify(remainingImages));
-
+  
   console.log('FormData contents:', {
     updates,
     images,

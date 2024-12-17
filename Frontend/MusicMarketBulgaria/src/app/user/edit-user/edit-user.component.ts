@@ -53,10 +53,15 @@ export class EditUserComponent implements OnInit {
     this.loadUserProfile();
   }
 
+  ngAfterViewInit(): void {
+    this.loadUserProfile();
+  }
+
  /**
    * Fetch the logged-in user's profile using `user$` observable.
    */
  loadUserProfile(): void {
+  
   this.userService.getCurrentUser$().subscribe(
     (user) => {
       if (user) {
@@ -66,6 +71,7 @@ export class EditUserComponent implements OnInit {
         }, {} as { [key: string]: any });
 
         if (this.sharedForm) {
+          console.log("have shared form see values", formValues)
           this.sharedForm.updateFormValues(formValues); // Populate the form with user data
         }
       }
@@ -78,11 +84,7 @@ export class EditUserComponent implements OnInit {
 }
 
   onEditUser(updatedData: Partial<UserData & { password?: string; confirmPassword?: string }>): void {
-    if (updatedData.password !== updatedData.confirmPassword) {
-      this.errorMessage = 'Passwords do not match!';
-      return;
-    }
-
+    console.log("EDIT USER COMPONENT WORKS")
     delete updatedData.confirmPassword; // Remove confirmPassword before sending to the server
 
     this.userService.updateLoggedUserProfile(updatedData).subscribe(

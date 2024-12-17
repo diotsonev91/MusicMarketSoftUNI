@@ -7,22 +7,25 @@
     <ul>
       @for (category of categories; track category) {
         <li>
+          <!-- Main Category Checkbox -->
           <input
             type="checkbox"
             [id]="category.id"
             [(ngModel)]="category.selected"
-            (click)="toggleSubcategories(category.id)"
+            (change)="toggleSubcategories(category.id)"
           />
           <label [for]="category.id">{{ category.name }}</label>
 
           <!-- Subcategories -->
           @if (activeCategory === category.id) {
             <ul class="subcategories">
-              @for (subcategory of subcategories[category.name];track subcategory) {
+              @for (subcategory of subcategories[category.name]; track subcategory) {
                 <li>
                   <input
                     type="checkbox"
                     [id]="subcategory"
+                    [checked]="selectedSubcategories.includes(subcategory)"
+                    (change)="selectSubcategory(subcategory)"
                   />
                   <label [for]="subcategory">{{ subcategory }}</label>
                 </li>

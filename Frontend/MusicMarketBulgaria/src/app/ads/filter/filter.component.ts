@@ -27,17 +27,12 @@ export class FilterComponent {
       SubCategories.BRASS,
       SubCategories.KEYBOARD,
     ],
-    [Categories.MUSIC_TECHNIQUE]: [
-      SubCategories.STUDIO,
-      SubCategories.PA,
-    ],
-    [Categories.ACCESSORIES]: [
-      SubCategories.OTHERS,
-    ],
+    [Categories.MUSIC_TECHNIQUE]: [SubCategories.STUDIO, SubCategories.PA],
+    [Categories.ACCESSORIES]: [SubCategories.OTHERS],
   };
 
-  activeCategory: string | null = null; // Tracks the clicked category for subcategories
-  selectedSubcategory: string | null = null; // Tracks the selected subcategory
+  activeCategory: string | null = null; // Tracks the active category
+  selectedSubcategories: string[] = []; // Tracks selected subcategories
   sortOption: string | null = null;
   minPrice: number | null = null;
   maxPrice: number | null = null;
@@ -49,10 +44,17 @@ export class FilterComponent {
       .filter((category) => category.selected)
       .map((category) => category.name);
 
-    console.log()
     this.filtersChanged.emit({
       categories: selectedCategories,
-      subcategories: this.selectedSubcategory, // Include the selected subcategory
+      subcategories: this.selectedSubcategories, // Include selected subcategories
+      sortOption: this.sortOption,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+    });
+
+    console.log('Applied Filters:', {
+      categories: selectedCategories,
+      subcategories: this.selectedSubcategories,
       sortOption: this.sortOption,
       minPrice: this.minPrice,
       maxPrice: this.maxPrice,
@@ -61,10 +63,15 @@ export class FilterComponent {
 
   toggleSubcategories(categoryId: string): void {
     this.activeCategory = this.activeCategory === categoryId ? null : categoryId;
-    this.selectedSubcategory = null; // Reset subcategory selection when toggling categories
+    this.selectedSubcategories = []; // Reset subcategories when toggling categories
   }
 
   selectSubcategory(subCategory: string): void {
-    this.selectedSubcategory = this.selectedSubcategory === subCategory ? null : subCategory;
+    const index = this.selectedSubcategories.indexOf(subCategory);
+    if (index > -1) {
+      this.selectedSubcategories.splice(index, 1); // Deselect subcategory
+    } else {
+      this.selectedSubcategories.push(subCategory); // Select subcategory
+    }
   }
 }

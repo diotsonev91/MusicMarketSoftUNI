@@ -34,8 +34,10 @@ export class UserStoreService {
 
 // Set the current user in the BehaviorSubject without storing in localStorage
 setCurrentUser(user: UserData | null): void {
-  this.currentUser$$.next(user);
-  console.log("USER stored in subject: ", user)
+  const clonedUser = user ? { ...user } : null;
+
+  this.currentUser$$.next(clonedUser);
+  console.log("USER stored in subject: ", clonedUser);
 }
 
   // Clear the user state (e.g., on logout)

@@ -12,7 +12,7 @@ export class UserService {
   constructor(private http: HttpClient,private userStore: UserStoreService) {}
 
   /**
-   * Load the current user from the API and update the userStore.
+   * update the userStore.
    */
   setCurrentUserInUserStore(): void {
     const token = localStorage.getItem('accessToken');
@@ -83,13 +83,21 @@ export class UserService {
     if (!userId) {
       throw new Error('No logged-in user to update.');
     }
-
+    console.log("updated user data:", updates)
     return this.http
       .put<UserData>(`/users/edit-user/${userId}`, updates)
       .pipe(
         catchError(this.handleError),
         // Update this.userStore after a successful update
-        tap((updatedUser) => this.userStore.setCurrentUser(updatedUser))
+      
+        tap(() => {
+          this.getUserProfile(userId).subscribe(
+            (updatedUser) =>{
+              console.log("UPDATED USER INSIDE GETUSER PORFILE,",updatedUser)
+              this.userStore.setCurrentUser(updatedUser)},
+            (error) => console.error('Failed to fetch updated user profile', error)
+          );
+        })
       );
   }
 

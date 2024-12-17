@@ -43,6 +43,6 @@
 
 # Ignore environment configuration files
 Frontend/MusicMarketBulgaria/src/environments/
-Backend/.env
+#Backend/.env
 Backend/node_modules
 Backend/serviceAccountKey.json

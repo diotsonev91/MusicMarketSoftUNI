@@ -67,10 +67,10 @@ const likeDislike = require("./routes/like-dislike")
 const conversation = require("./routes/conversation")
 console.log("Conversation module:", conversation);
 // Use routes
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.originalUrl}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`Incoming request: ${req.method} ${req.originalUrl}`);
+//   next();
+// });
 
 app.use("/auth", authRoutes);       // For authentication (register, login, logout)
 app.use("/users", userRoutes);       // For user info retrieval and other user-related routes

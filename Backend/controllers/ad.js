@@ -31,6 +31,7 @@ exports.createAd = [
         subCategory,
         instrument,
         technique,
+        location,
       } = req.body;
 
       // Get the logged-in user's name from the User model
@@ -51,6 +52,7 @@ exports.createAd = [
         deliveryType,
         condition,
         category,
+        location,
         subCategory: subCategory || "други", // Default to "други"
         images: imagePaths, // Store file paths
         instrument: category === "инструмент" ? instrument : undefined,
@@ -122,6 +124,7 @@ exports.editAd = [
         category,
         subCategory,
         instrument,
+        location,
         technique,
         remainingImages, // Sent as a JSON array from the frontend
       } = req.body;
@@ -141,6 +144,7 @@ exports.editAd = [
 
       // Update ad fields if provided
       ad.title = title || ad.title;
+      ad.location = location || ad.location;
       ad.description = description || ad.description;
       ad.price = price || ad.price;
       ad.deliveryType = deliveryType || ad.deliveryType;

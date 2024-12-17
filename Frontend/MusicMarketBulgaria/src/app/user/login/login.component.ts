@@ -4,6 +4,7 @@ import { SharedFormComponent } from '../shared-form/shared-form.component';
 import { AuthService } from '../../auth/auth.service';
 import { UserCredentials } from '../user-credentials.model';
 import { Router } from '@angular/router';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -68,7 +69,7 @@ export class LoginComponent {
   ];
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) {}
 
   onLogin(formData: UserCredentials): void {
     this.authService.login(formData).subscribe(
@@ -76,6 +77,7 @@ export class LoginComponent {
         this.errorMessage = null;
         
         const userId = response.currentUser._id; // Extract userId from the response
+        this.userService.setCurrentUserInUserStore();
         if (userId) {
           // Navigate to the profile route with the userId as a parameter
           this.router.navigate(['/profile', userId]);

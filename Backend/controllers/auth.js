@@ -8,7 +8,7 @@ const admin = require('firebase-admin');
 const DEFAULT_USER_ROLE = process.env.DEFAULT_USER_ROLE // switch if wants to create admin inside .env
 
 exports.register = async (req, res) => {
-  const { username, email, password, location, firstName, lastName } = req.body;
+  const { username, email, password, location, firstname, lastname } = req.body;
 
   try {
     // Check if the username or email already exists
@@ -31,8 +31,8 @@ exports.register = async (req, res) => {
       password, // Hash the password before saving
       role: DEFAULT_USER_ROLE,
       ...(location && { location }),       
-      ...(firstName && { firstName }),    
-      ...(lastName && { lastName }),       
+      ...(firstname && { firstname }),    
+      ...(lastname && { lastname }),       
     });
 
     // Save the new user to the database

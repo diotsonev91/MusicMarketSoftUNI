@@ -53,6 +53,7 @@ export class AdFormComponent implements OnInit {
     location: {
       label: 'локация на артикула',
       placeholder: 'Въведете локация',
+      validationMessage: 'Локацията е задължителна и трябва да има поне 2 символа.',
     },
     category: {
       label: 'Категория',
@@ -90,7 +91,7 @@ export class AdFormComponent implements OnInit {
       condition: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
       price: [null, [Validators.required, Validators.min(0)]],
-      location: ['']
+      location: ['',[Validators.required, Validators.min(2)]]
     });
     console.log(this.initialData)
   }
@@ -128,11 +129,11 @@ export class AdFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("Call to submit")
+    this.adForm.markAllAsTouched(); 
     if (this.adForm.valid) {
       const adData: Partial<AdData> = this.adForm.value;
       const newImages: File[] = this.fileService.getFiles();
-  
+      console.log("AD DATA ON SUBMIT ON AD FORM", this.adForm.value)
       this.formSubmit.emit({
         adData: {
           ...adData,
