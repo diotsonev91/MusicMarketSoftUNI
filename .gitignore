@@ -42,7 +42,7 @@
 /Frontend/MusicMarketBulgaria/Thumbs.db
 
 # Ignore environment configuration files
-Frontend/MusicMarketBulgaria/src/environments/
+#Frontend/MusicMarketBulgaria/src/environments/
 #Backend/.env
 Backend/node_modules
 Backend/serviceAccountKey.json
