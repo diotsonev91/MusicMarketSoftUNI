@@ -1,25 +1,33 @@
 <section class="product-details">
-    <h2>
-      {{ ad?.title }}
-      <app-rating-view 
+  <h2>
+    {{ ad?.title }}
+    <app-rating-view
       [adId]="adId"
       (formToggled)="toggleRatingForm($event)"
-      (reviewToggled)="toggleReview($event)">
+      (reviewToggled)="toggleReview($event)"
+    >
     </app-rating-view>
-    </h2>
-    <div class="image-and-text" [class.hidden]="isRatingFormOpen">
-      <div class="price-image">
-        <img [src]="ad?.images?.[0]" alt="{{ ad?.title }}" class="product-image" />
-        <p class="product-price">Цена: {{ ad?.price }} лв.</p>
-        <app-like-dislike-buttons
-        [adId]="adId"></app-like-dislike-buttons>
-      </div>
-      <div class="product-details">
-        <p class="product-condition">Състояние: {{ ad?.condition }}</p>
-        <p class="product-description">{{ ad?.description }}</p>
-        <p class="product-location">Местоположение: {{ ad?.location }}</p>
-        <p (click)="onAuthorClick()">Автор: <span class="product-author">{{ ad?.userName }}</span></p>
-        <p class="created-time">от: {{ ad?.createdAt | customDate }}</p>
-      </div>
+  </h2>
+  <div class="image-and-text" [class.hidden]="isRatingFormOpen">
+    <div class="price-image">
+      <img
+        [src]="ad?.images?.[0]"
+        alt="{{ ad?.title }}"
+        class="product-image"
+      />
+      <p class="product-price">Цена: {{ ad?.price }} лв.</p>
+      @if(! hideButtons){
+      <app-like-dislike-buttons [adId]="adId"></app-like-dislike-buttons>
+      }
     </div>
-  </section>
+    <div class="product-details">
+      <p class="product-condition">Състояние: {{ ad?.condition }}</p>
+      <p class="product-description">{{ ad?.description }}</p>
+      <p class="product-location">Местоположение: {{ ad?.location }}</p>
+      <p (click)="onAuthorClick()">
+        Автор: <span class="product-author">{{ ad?.userName }}</span>
+      </p>
+      <p class="created-time">от: {{ ad?.createdAt | customDate }}</p>
+    </div>
+  </div>
+</section>

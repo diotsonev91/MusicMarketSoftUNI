@@ -10,31 +10,41 @@ import { UserService } from '../user.service';
   standalone: true,
   imports: [SharedFormComponent],
   template: `
-   <app-shared-form 
-      [title]="title" 
-      [fields]="fields" 
+    <app-shared-form
+      [title]="title"
+      [fields]="fields"
       [errorMessage]="errorMessage"
-      (formSubmit)="onRegister($event)">
+      (formSubmit)="onRegister($event)"
+    >
     </app-shared-form>
-    
-  `  
+  `,
 })
 export class RegisterComponent {
   title = 'Регистрация';
-  
+
   // Define fields dynamically based on RegisterUserData properties
   // Define fields dynamically based on RegisterUserData properties, adding * to required fields
   fields = [
-    { name: 'username', label: 'Потребителско име', type: 'text', required: true },
+    {
+      name: 'username',
+      label: 'Потребителско име',
+      type: 'text',
+      required: true,
+    },
     { name: 'email', label: 'Имейл', type: 'email', required: true },
     { name: 'password', label: 'Парола', type: 'password', required: true },
-    { name: 'confirmPassword', label: 'Потвърдете паролата', type: 'password', required: true },
-    { name: 'firstName', label: 'Име', type: 'text', required: false },
-    { name: 'lastName', label: 'Фамилия', type: 'text', required: false },
+    {
+      name: 'confirmPassword',
+      label: 'Потвърдете паролата',
+      type: 'password',
+      required: true,
+    },
+    { name: 'firstname', label: 'Име', type: 'text', required: false },
+    { name: 'lastname', label: 'Фамилия', type: 'text', required: false },
     { name: 'location', label: 'Локация', type: 'text', required: false },
-  ].map(field => ({ 
-    ...field, 
-    label: field.required ? `${field.label} *` : field.label 
+  ].map((field) => ({
+    ...field,
+    label: field.required ? `${field.label} *` : field.label,
   }));
 
   errorMessage: string | null = null;
@@ -58,7 +68,8 @@ export class RegisterComponent {
       (error: HttpErrorResponse) => {
         console.log('Full error response:', error);
         console.log('Backend error message:', error.error?.error);
-        this.errorMessage = error.error?.error || 'An unexpected error occurred';
+        this.errorMessage =
+          error.error?.error || 'An unexpected error occurred';
       }
     );
   }

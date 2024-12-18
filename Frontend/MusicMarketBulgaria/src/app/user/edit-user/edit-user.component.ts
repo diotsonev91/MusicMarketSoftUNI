@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { UserData } from '../user-data.model';
 import { SharedFormComponent } from '../shared-form/shared-form.component';
-
+import { AdService } from '../../ads/ad.service';
+import { catchError, finalize, of, switchMap, throwError } from 'rxjs';
+import { UserStoreService } from '../../core/user-store.service';
 @Component({
   selector: 'app-edit-user',
   standalone: true,
@@ -14,12 +16,15 @@ import { SharedFormComponent } from '../shared-form/shared-form.component';
       [title]="title"
       [fields]="fields"
       [errorMessage]="errorMessage"
-      (formSubmit)="onEditUser($event)">
+      (formSubmit)="onEditUser($event)"
+    >
     </app-shared-form>
     <div class="dangerous-zone-container">
       <h2 class="dangerous-zone-heading">Danger zone</h2>
       <h2 class="dangerous-zone-heading">-------------------</h2>
-      <button class="delete-button" (click)="deleteProfile()">Delete Profile</button>
+      <button class="delete-button" (click)="deleteProfile()">
+        Delete Profile
+      </button>
     </div>
   `,
   styleUrls: ['./edit-user.component.css'], // Optional for styling
@@ -34,9 +39,18 @@ export class EditUserComponent implements OnInit {
     { name: 'lastname', label: 'Last Name', type: 'text', required: false },
     { name: 'location', label: 'Location', type: 'text', required: false },
     { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'password', label: 'New Password', type: 'password', required: false },
-    { name: 'confirmPassword', label: 'Confirm New Password', type: 'password', required: false },
-
+    {
+      name: 'password',
+      label: 'New Password',
+      type: 'password',
+      required: false,
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm New Password',
+      type: 'password',
+      required: false,
+    },
   ].map((field) => ({
     ...field,
     label: field.required ? `${field.label} *` : field.label,
@@ -46,7 +60,9 @@ export class EditUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private adService: AdService,
+    private userStore: UserStoreService
   ) {}
 
   ngOnInit(): void {
@@ -57,34 +73,37 @@ export class EditUserComponent implements OnInit {
     this.loadUserProfile();
   }
 
- /**
+  /**
    * Fetch the logged-in user's profile using `user$` observable.
    */
- loadUserProfile(): void {
-  
-  this.userService.getCurrentUser$().subscribe(
-    (user) => {
-      if (user) {
-        const formValues = Object.keys(user).reduce((values, key) => {
-          values[key] = user[key as keyof UserData] || '';
-          return values;
-        }, {} as { [key: string]: any });
+  loadUserProfile(): void {
+    this.userService.getCurrentUser$().subscribe(
+      (user) => {
+        if (user) {
+          const formValues = Object.keys(user).reduce((values, key) => {
+            values[key] = user[key as keyof UserData] || '';
+            return values;
+          }, {} as { [key: string]: any });
 
-        if (this.sharedForm) {
-          console.log("have shared form see values", formValues)
-          this.sharedForm.updateFormValues(formValues); // Populate the form with user data
+          if (this.sharedForm) {
+            console.log('have shared form see values', formValues);
+            this.sharedForm.updateFormValues(formValues); // Populate the form with user data
+          }
         }
+      },
+      (error) => {
+        this.errorMessage = 'Failed to load user data.';
+        console.error(error);
       }
-    },
-    (error) => {
-      this.errorMessage = 'Failed to load user data.';
-      console.error(error);
-    }
-  );
-}
+    );
+  }
 
-  onEditUser(updatedData: Partial<UserData & { password?: string; confirmPassword?: string }>): void {
-    console.log("EDIT USER COMPONENT WORKS")
+  onEditUser(
+    updatedData: Partial<
+      UserData & { password?: string; confirmPassword?: string }
+    >
+  ): void {
+    console.log('EDIT USER COMPONENT WORKS');
     delete updatedData.confirmPassword; // Remove confirmPassword before sending to the server
 
     this.userService.updateLoggedUserProfile(updatedData).subscribe(
@@ -100,17 +119,27 @@ export class EditUserComponent implements OnInit {
   }
 
   deleteProfile(): void {
-    if (confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-      this.userService.deleteLoggedUser().subscribe(
-        () => {
-          alert('Profile deleted successfully.');
-          this.router.navigate(['/']); // Redirect to home or login after deletion
-        },
-        (error) => {
-          this.errorMessage = error.error?.error || 'Failed to delete profile.';
-          console.error(error);
-        }
-      );
+    if (
+      confirm(
+        'Are you sure you want to delete your profile? This action cannot be undone.'
+      )
+    ) {
+      console.log('Starting profile deletion process...');
+
+      this.userService
+        .deleteLoggedUser(this.userService.getCurrentUserId() || '')
+        .subscribe({
+          next: () => {
+            console.log('Profile deletion process completed.');
+            alert('Profile deleted successfully.');
+            this.router.navigate(['/logout']); // Redirect to home or login after deletion
+          },
+          error: (error) => {
+            console.error('Error during profile deletion process:', error);
+            this.errorMessage =
+              error.error?.error || 'Failed to delete profile or user ads.';
+          },
+        });
     }
   }
 }

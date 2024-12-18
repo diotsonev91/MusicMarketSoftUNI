@@ -15,7 +15,7 @@ import { UserService } from '../../user/user.service';
 export class MessagesComponent implements OnInit {
   conversations: Conversation[] = [];
   selectedConversation: Conversation | null = null;
-  currentUserID: string = '';
+  currentUserID: string = 'N/A';
 
   constructor(
     private chatService: ChatService,
@@ -23,7 +23,7 @@ export class MessagesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentUserID = this.userService.getCurrentUserId() || '';
+    this.currentUserID = this.userService.getCurrentUserId() || 'N/A';
     this.fetchConversations();
   }
 

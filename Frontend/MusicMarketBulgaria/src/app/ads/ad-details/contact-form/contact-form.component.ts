@@ -13,26 +13,36 @@ import { Router } from '@angular/router';
 export class ContactFormComponent implements OnChanges {
   @Input() ad: AdData | null = null;
   showForm: boolean = true; // Controls the visibility of the form
-
+  currentUserId: string | null = null; // Stores the current user ID
+  isNotLoggedUser: boolean = false;
   constructor(
     private chatService: ChatService,
     private userStoreService: UserStoreService,
-    private router: Router 
+    private router: Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ad'] && this.ad) {
-      const currentUserId = this.userStoreService.getCurrentUserId(); // Directly retrieve the user ID
-      
-      if (currentUserId === this.ad.userId) {
-        this.showForm = false; // Hide the form if the user is the same
-        console.log("SHOWD BE HIDDEN THE CONTACTY FORM")
-      } else {
-        this.showForm = true; // Show the form otherwise
-      }
+      // Fetch the current user ID asynchronously
+      this.userStoreService.getCurrentUserIdAsync().subscribe((id) => {
+        this.currentUserId = id;
+        if (this.currentUserId == null) {
+          this.isNotLoggedUser = true;
+        }
+        if (this.currentUserId === this.ad?.userId) {
+          // Compare current user ID with the ad owner ID
+          this.showForm = false; // Hide the form if the user is the ad owner
+          //console.log(
+          //'Contact form should be hidden for the ad owner '
+          //);
+        } else {
+          this.showForm = true; // Show the form otherwise
+        }
+      });
     }
   }
 
+  ngOnSubmit() {}
   navigateToEditAd(): void {
     if (this.ad?._id) {
       this.router.navigate(['/edit-ad', this.ad._id]); // Navigate to the edit-ad route

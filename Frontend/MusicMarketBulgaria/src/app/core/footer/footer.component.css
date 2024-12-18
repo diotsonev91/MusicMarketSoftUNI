@@ -1,19 +1,22 @@
 /* Footer */
 footer {
-    
-    display: flex;
-    justify-content: center;
-background: linear-gradient(#686e86,#2f323f); /* Shades in the same color range */
-color: #fff;
-padding: 10px 0;
-position: fixed;
-left: 0;
-bottom: 0;
-width: 100%;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(
+    #686e86,
+    #2f323f
+  ); /* Shades in the same color range */
+  color: #fff;
+  padding: 10px 0;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin-top: 44px;
 }
 
 footer p {
-    text-shadow: #2E163E;
-    
-    color: #fff;
+  text-shadow: #2e163e;
+
+  color: #fff;
 }

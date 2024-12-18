@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserData } from './user-data.model';
 import { UserStoreService } from '../core/user-store.service';
+import { AdService } from '../ads/ad.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient,private userStore: UserStoreService) {}
+  constructor(
+    private http: HttpClient,
+    private userStore: UserStoreService,
+    private adService: AdService
+  ) {}
 
   /**
    * update the userStore.
@@ -17,8 +22,8 @@ export class UserService {
   setCurrentUserInUserStore(): void {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      const storedUser = localStorage.getItem("currentUser");
-      console.log("STored user in local store: ", storedUser)
+      const storedUser = localStorage.getItem('currentUser');
+      console.log('STored user in local store: ', storedUser);
       if (storedUser) {
         try {
           // Parse the JSON string into an object
@@ -26,7 +31,10 @@ export class UserService {
           // Optionally validate the object here
           this.userStore.setCurrentUser(currentUser);
         } catch (error) {
-          console.error("Failed to parse currentUser from localStorage:", error);
+          console.error(
+            'Failed to parse currentUser from localStorage:',
+            error
+          );
           this.userStore.setCurrentUser(null); // Fallback to null in case of error
         }
       } else {
@@ -52,11 +60,12 @@ export class UserService {
   /**
    * Get the current user's ID.
    */
-  getCurrentUserId(): string | null {
-    const currentUser = this.userStore.getCurrentUser();
-    return currentUser ? currentUser._id : null;
+  getCurrentUserIdAsync(): Observable<string | null> {
+    return this.userStore.currentUser$.pipe(map((user) => user?._id || null));
   }
-
+  getCurrentUserId(): string | null {
+    return this.userStore.getCurrentUserId();
+  }
   /**
    * Fetch a user profile by user ID.
    */
@@ -70,52 +79,53 @@ export class UserService {
    * Register a new user.
    */
   register(userData: UserData): Observable<any> {
-    return this.http.post(`/auth/register`, userData).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post(`/auth/register`, userData)
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Update the profile of the logged-in user.
    */
   updateLoggedUserProfile(updates: Partial<UserData>): Observable<UserData> {
-    const userId = this.getCurrentUserId();
+    const userId = this.userStore.getCurrentUserId(); // Use the non-async method to get the user ID synchronously.
+
     if (!userId) {
       throw new Error('No logged-in user to update.');
     }
-    console.log("updated user data:", updates)
-    return this.http
-      .put<UserData>(`/users/edit-user/${userId}`, updates)
-      .pipe(
-        catchError(this.handleError),
-        // Update this.userStore after a successful update
-      
-        tap(() => {
-          this.getUserProfile(userId).subscribe(
-            (updatedUser) =>{
-              console.log("UPDATED USER INSIDE GETUSER PORFILE,",updatedUser)
-              this.userStore.setCurrentUser(updatedUser)},
-            (error) => console.error('Failed to fetch updated user profile', error)
-          );
-        })
-      );
+
+    console.log('updated user data:', updates);
+
+    // Proceed with the HTTP request to update the user
+    return this.http.put<UserData>(`/users/edit-user/${userId}`, updates).pipe(
+      catchError(this.handleError), // Handle errors gracefully
+      switchMap(() =>
+        // Fetch the updated profile after updating the user
+        this.getUserProfile(userId).pipe(
+          tap((updatedUser) => {
+            console.log('UPDATED USER:', updatedUser);
+            this.userStore.setCurrentUser(updatedUser); // Update the user in the store
+          })
+        )
+      )
+    );
   }
 
   /**
    * Delete the logged-in user.
    */
-  deleteLoggedUser(): Observable<{ message: string }> {
-    const userId = this.getCurrentUserId();
-    if (!userId) {
-      throw new Error('No logged-in user to delete.');
-    }
-
+  deleteLoggedUser(userId: string): Observable<{ message: string }> {
     return this.http
       .delete<{ message: string }>(`/users/delete-user/${userId}`)
       .pipe(
-        catchError(this.handleError),
-        // Clear this.userStore after deletion
-        tap(() => this.userStore.clearCurrentUser())
+        tap(() => {
+          console.log('User deleted successfully.');
+          // No need to clear state explicitly here; logout will handle it
+        }),
+        catchError((error) => {
+          console.error('Failed to delete user:', error);
+          return throwError(() => error); // Propagate the error for further handling
+        })
       );
   }
 
@@ -127,7 +137,7 @@ export class UserService {
     return throwError(() => error.error?.message || 'An error occurred');
   }
 
-  public clearUser(){
+  public clearUser() {
     this.userStore.clearCurrentUser();
   }
 }

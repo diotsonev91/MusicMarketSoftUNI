@@ -10,15 +10,16 @@ import { AdFormComponent } from '../ad-form/ad-form.component';
   imports: [AdFormComponent],
   template: `
     @if (isLoading) {
-      <div>
-        <p>Loading ad data...</p>
-      </div>
+    <div>
+      <p>Loading ad data...</p>
+    </div>
     } @else {
-      <app-ad-form
-        [initialData]="adData"
-        [submitButtonText]="'Редактирай обява'"
-        (formSubmit)="onEditAd($event)">
-      </app-ad-form>
+    <app-ad-form
+      [initialData]="adData"
+      [submitButtonText]="'Редактирай обява'"
+      (formSubmit)="onEditAd($event)"
+    >
+    </app-ad-form>
     }
   `,
 })
@@ -35,7 +36,9 @@ export class EditAdComponent implements OnInit {
     private router: Router
   ) {
     // Attempt to retrieve adData from router state
-    const stateAdData = this.router.getCurrentNavigation()?.extras.state?.['adData'] as AdData;
+    const stateAdData = this.router.getCurrentNavigation()?.extras.state?.[
+      'adData'
+    ] as AdData;
 
     if (stateAdData) {
       // Use state if available
@@ -48,9 +51,10 @@ export class EditAdComponent implements OnInit {
       console.log('No state data found. Waiting 0.1 seconds for fallback...');
       setTimeout(() => {
         if (!this.stateProcessed) {
-          console.log('Still no state data after 0.1 seconds. Triggering fallback...');
-          if(this.adId)
-          this.fetchAdData(this.adId);
+          console.log(
+            'Still no state data after 0.1 seconds. Triggering fallback...'
+          );
+          if (this.adId) this.fetchAdData(this.adId);
         }
       }, 100); // 2-second delay
     }
@@ -60,7 +64,6 @@ export class EditAdComponent implements OnInit {
     // Get adId from route as a fallback identifier
     this.adId = this.route.snapshot.paramMap.get('id');
   }
-
 
   private fetchAdData(adId: string): void {
     this.isLoading = true; // Set loading state while fetching data
@@ -80,15 +83,31 @@ export class EditAdComponent implements OnInit {
     });
   }
 
-  onEditAd({ adData, images }: { adData: Partial<AdData>; images: File[] }): void {
+  onEditAd({
+    adData,
+    images,
+  }: {
+    adData: Partial<AdData>;
+    images: File[];
+  }): void {
     if (!this.adId) {
       console.error('Ad ID is missing. Cannot proceed with edit.');
       return;
     }
 
-    this.adService.editAd(this.adId, adData, images, adData.remainingImages || []).subscribe({
-      next: () => this.router.navigate(['/ads-view']),
-      error: (err) => console.error('Failed to update ad:', err),
-    });
+    this.adService
+      .editAd(this.adId, adData, images, adData.remainingImages || [])
+      .subscribe({
+        next: (response) => {
+          console.log('Ad edited successfully:', response);
+          const adId = response._id; // Extract the ad ID from the response
+          if (adId) {
+            this.router.navigate([`/ad-details/${adId}`]); // Redirect to ad details page
+          } else {
+            console.error('Ad ID not found in response.');
+          }
+        },
+        error: (err) => console.error('Failed to update ad:', err),
+      });
   }
 }
