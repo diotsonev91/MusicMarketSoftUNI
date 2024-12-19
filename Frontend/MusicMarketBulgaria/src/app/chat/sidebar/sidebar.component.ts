@@ -70,4 +70,22 @@ export class SidebarComponent {
   trackByConversationId(index: number, conversation: Conversation): string {
     return conversation._id;
   }
+  deleteConversation(conversation: Conversation): void {
+    if (confirm('Are you sure you want to delete this conversation?')) {
+      this.chatService.deleteConversation(conversation._id).subscribe({
+        next: () => {
+          // Remove the deleted conversation from the local list
+          this.conversations = this.conversations.filter(
+            (c) => c._id !== conversation._id
+          );
+          this.updateFilteredConversations();
+          console.log('Conversation deleted successfully');
+        },
+        error: (err) => {
+          console.error('Failed to delete conversation:', err);
+        },
+      });
+    }
+    window.location.reload();
+  }
 }

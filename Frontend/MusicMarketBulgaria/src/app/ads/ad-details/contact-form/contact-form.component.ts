@@ -15,6 +15,7 @@ export class ContactFormComponent implements OnChanges {
   showForm: boolean = true; // Controls the visibility of the form
   currentUserId: string | null = null; // Stores the current user ID
   isNotLoggedUser: boolean = false;
+  isSubmited: boolean = false;
   constructor(
     private chatService: ChatService,
     private userStoreService: UserStoreService,
@@ -65,6 +66,7 @@ export class ContactFormComponent implements OnChanges {
     this.chatService.sendMessage(this.ad.user, messageContent).subscribe({
       next: (response) => {
         console.log('Message sent successfully:', response);
+        this.isSubmited = true;
       },
       error: (err) => {
         console.error('Failed to send message:', err);
