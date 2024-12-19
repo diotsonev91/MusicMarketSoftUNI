@@ -27,7 +27,7 @@ export class AdsViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAds(this.currentPage, this.pageSize);
-    console.log("ads inside view ads",this.ads)
+    //console.log("ads inside view ads",this.ads)
   }
 
   onNextPage(): void {
@@ -47,8 +47,8 @@ export class AdsViewComponent implements OnInit {
       next: (response) => {
         this.ads = response.data; // The ads for the current page
         this.filteredAds = response.data; // Initially, no filters applied
-        console.log('Current Page:', response.currentPage);
-        console.log('Total Pages:', response.totalPages);
+        //console.log('Current Page:', response.currentPage);
+        //console.log('Total Pages:', response.totalPages);
       },
       error: (err) => console.error('Error fetching ads:', err),
     });
@@ -120,7 +120,5 @@ export class AdsViewComponent implements OnInit {
   }
   
 }
-function getAdsByCategoryAndPriceRange(categories: any, subcategories: any, minPrice: any, maxPrice: any) {
-  throw new Error('Function not implemented.');
-}
+
 

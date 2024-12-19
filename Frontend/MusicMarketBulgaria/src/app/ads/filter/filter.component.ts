@@ -52,13 +52,13 @@ export class FilterComponent {
       maxPrice: this.maxPrice,
     });
 
-    console.log('Applied Filters:', {
-      categories: selectedCategories,
-      subcategories: this.selectedSubcategories,
-      sortOption: this.sortOption,
-      minPrice: this.minPrice,
-      maxPrice: this.maxPrice,
-    });
+    // console.log('Applied Filters:', {
+    //   categories: selectedCategories,
+    //   subcategories: this.selectedSubcategories,
+    //   sortOption: this.sortOption,
+    //   minPrice: this.minPrice,
+    //   maxPrice: this.maxPrice,
+    // });
   }
 
   toggleSubcategories(categoryId: string): void {

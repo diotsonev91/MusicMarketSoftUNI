@@ -32,14 +32,14 @@ export class AdDetailsCardMdComponent {
       .getAdRates(this.ad?._id || "")
       .pipe(
         tap((response: any) => {
-          console.log('Raw response from backend:', response);
+          //console.log('Raw response from backend:', response);
         })
       )
       .subscribe({
         next: (response: { averageRating: number }) => {
           this.rating = response.averageRating || 0; // Update rating
-          console.log('inside ad-details-card : Fetched ratings:', response);
-          console.log('inside ad-details-card : Updated rating for stars:', this.rating);
+          //console.log('inside ad-details-card : Fetched ratings:', response);
+          //console.log('inside ad-details-card : Updated rating for stars:', this.rating);
         },
         error: (err) => console.error('Error fetching ad ratings:', err.message),
       });

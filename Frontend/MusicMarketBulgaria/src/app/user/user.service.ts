@@ -23,7 +23,7 @@ export class UserService {
     const token = localStorage.getItem('accessToken');
     if (token) {
       const storedUser = localStorage.getItem('currentUser');
-      console.log('STored user in local store: ', storedUser);
+    
       if (storedUser) {
         try {
           // Parse the JSON string into an object
@@ -94,8 +94,6 @@ export class UserService {
       throw new Error('No logged-in user to update.');
     }
 
-    console.log('updated user data:', updates);
-
     // Proceed with the HTTP request to update the user
     return this.http.put<UserData>(`/users/edit-user/${userId}`, updates).pipe(
       catchError(this.handleError), // Handle errors gracefully
@@ -103,7 +101,7 @@ export class UserService {
         // Fetch the updated profile after updating the user
         this.getUserProfile(userId).pipe(
           tap((updatedUser) => {
-            console.log('UPDATED USER:', updatedUser);
+            
             this.userStore.setCurrentUser(updatedUser); // Update the user in the store
           })
         )

@@ -16,11 +16,16 @@
    <!-- Conditionally render reviews -->
    
    @if (showReviews && !showRatingForm) {
+    @if(reviews.length != 0){
      <div class="reviews">
        @for (review of reviews; track review.adID) {
          <app-rating-view-card [review]="review"></app-rating-view-card>
        }
      </div>
+    }
+    @else{
+      <h5>Няма ревюта</h5>
+    }
    }
   
   @if (isLoggedIn){

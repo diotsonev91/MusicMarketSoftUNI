@@ -79,7 +79,7 @@ export class SidebarComponent {
             (c) => c._id !== conversation._id
           );
           this.updateFilteredConversations();
-          console.log('Conversation deleted successfully');
+         // console.log('Conversation deleted successfully');
         },
         error: (err) => {
           console.error('Failed to delete conversation:', err);

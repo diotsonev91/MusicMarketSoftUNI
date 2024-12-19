@@ -28,32 +28,6 @@ export class ChatService {
     );
   }
 
-  /**
-   * Get all messages related to the logged-in user
-   * @returns Observable of an array of ChatMessages
-   */
-  getMessages(): Observable<ChatMessage[]> {
-    return this.http.get<ChatMessage[]>(`${this.apiUrl}/chats`).pipe(
-      tap({
-        next: (messages) => console.log('Fetched messages:', messages),
-        error: (err: any) => console.error('Error fetching messages:', err),
-      })
-    );
-  }
-
-  /**
-   * Delete a message by its ID
-   * @param messageId The ID of the message to delete
-   * @returns Observable of the deletion result
-   */
-  deleteMessage(messageId: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.apiUrl}/chats/delete/${messageId}`).pipe(
-      tap({
-        next: (response: any) => console.log('Message deleted successfully:', response),
-        error: (err: any) => console.error('Error deleting message:', err),
-      })
-    );
-  }
 
   /**
    * Get all conversations for the logged-in user
@@ -69,7 +43,7 @@ export class ChatService {
   }
 
   markAsRead(id: string): Observable<any> {
-    console.log('Requesting URL:', `${this.apiUrl}/conversations/${id}/markAsRead`);
+   // console.log('Requesting URL:', `${this.apiUrl}/conversations/${id}/markAsRead`);
 
     return this.http.patch(`${this.apiUrl}/conversations/${id}/markAsRead`, {});
   }

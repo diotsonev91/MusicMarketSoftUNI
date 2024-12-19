@@ -15,7 +15,7 @@ export class AdUserRelatedTopAdsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['relatedAds'] && changes['relatedAds'].currentValue) {
-      console.log('relatedAds input has changed:', changes['relatedAds'].currentValue);
+      //console.log('relatedAds input has changed:', changes['relatedAds'].currentValue);
       this.processRelatedAds(changes['relatedAds'].currentValue);
     }
   }
@@ -28,6 +28,6 @@ export class AdUserRelatedTopAdsComponent implements OnChanges {
       return isValidAdRate;
     });
   
-    console.log('Filtered related ads with rating > 3:', this.filteredAds);
+   // console.log('Filtered related ads with rating > 3:', this.filteredAds);
   }
 }

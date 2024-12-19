@@ -67,14 +67,14 @@ export class EditAdComponent implements OnInit {
 
   private fetchAdData(adId: string): void {
     this.isLoading = true; // Set loading state while fetching data
-    console.log('Fetching ad data from backend for adId:', adId);
+   // console.log('Fetching ad data from backend for adId:', adId);
 
     this.adService.getAdById(adId).subscribe({
       next: (ad) => {
         this.adData = ad;
         this.isLoading = false;
         this.stateProcessed = true; // Mark state as processed
-        console.log('Ad data fetched successfully:', ad);
+       // console.log('Ad data fetched successfully:', ad);
       },
       error: (err) => {
         console.error('Error fetching ad data:', err);
@@ -99,7 +99,7 @@ export class EditAdComponent implements OnInit {
       .editAd(this.adId, adData, images, adData.remainingImages || [])
       .subscribe({
         next: (response) => {
-          console.log('Ad edited successfully:', response);
+         // console.log('Ad edited successfully:', response);
           const adId = response._id; // Extract the ad ID from the response
           if (adId) {
             this.router.navigate([`/ad-details/${adId}`]); // Redirect to ad details page

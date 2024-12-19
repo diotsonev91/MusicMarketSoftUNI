@@ -66,8 +66,8 @@ export class RegisterComponent {
         this.router.navigate(['/login']); // Redirect on successful registration
       },
       (error: HttpErrorResponse) => {
-        console.log('Full error response:', error);
-        console.log('Backend error message:', error.error?.error);
+        // console.log('Full error response:', error);
+        // console.log('Backend error message:', error.error?.error);
         this.errorMessage =
           error.error?.error || 'An unexpected error occurred';
       }

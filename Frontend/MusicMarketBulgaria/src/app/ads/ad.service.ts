@@ -59,7 +59,7 @@ export class AdService {
         }
 
         const userId = user._id;
-        console.log('User ID for fetching ads:', userId);
+       // console.log('User ID for fetching ads:', userId);
 
         return this.http
           .get<AdData[]>(`/ads/user/${userId}/ads`)
@@ -73,7 +73,7 @@ export class AdService {
   }
   // Create a new ad for the logged-in user
   createAd(adData: Partial<AdData>, images: File[]): Observable<AdData> {
-    console.log(this.userId);
+   // console.log(this.userId);
     const formData = new FormData();
     formData.append('title', adData.title || '');
     formData.append('description', adData.description || '');
@@ -88,7 +88,7 @@ export class AdService {
 
     return this.http.post<AdData>(`/ads/`, formData).pipe(
       tap((newAd) => {
-        console.log('Ad created successfully:', newAd);
+       // console.log('Ad created successfully:', newAd);
         this.adStateService.updateAd(newAd); // Update the ad state with the new ad
       }),
       catchError((error) => {
@@ -106,7 +106,7 @@ export class AdService {
     remainingImages: string[]
   ): Observable<AdData> {
     const formData = new FormData();
-    console.log('FORM DATA INSIDE EDIT AD ', updates);
+   // console.log('FORM DATA INSIDE EDIT AD ', updates);
     // Add text fields if provided
     if (updates.title) formData.append('title', updates.title);
     if (updates.description)
@@ -136,7 +136,7 @@ export class AdService {
       tap((updatedAd) => {
         // Update the ad in the AdStateService
         this.adStateService.updateAd(updatedAd);
-        console.log(`Ad with ID ${adId} successfully updated in memory.`);
+       // console.log(`Ad with ID ${adId} successfully updated in memory.`);
       }),
       catchError((error) => {
         console.error(`Error updating ad with ID ${adId}:`, error);
@@ -151,7 +151,7 @@ export class AdService {
       tap(() => {
         // Only clear the ad from memory after a successful response
         this.adStateService.clearAd(adId);
-        console.log(`Ad with ID ${adId} successfully deleted from memory.`);
+       // console.log(`Ad with ID ${adId} successfully deleted from memory.`);
       }),
       catchError((error) => {
         console.error(`Error deleting ad with ID ${adId}:`, error);
@@ -202,7 +202,7 @@ export class AdService {
       }>(`/ads`, { params })
       .pipe(
         tap((response) => {
-          console.log('Received response from backend:', response); // Log the full response
+         // console.log('Received response from backend:', response); // Log the full response
         }),
         catchError((error) => {
           console.error('Error fetching all ads with pagination:', error);
@@ -231,13 +231,13 @@ export class AdService {
   addLikeDislike(adId: string, userVote: number): Observable<any> {
     const action =
       userVote === 1 ? 'like' : userVote === -1 ? 'dislike' : 'neutral';
-    console.log('action in ad.service', action);
+   // console.log('action in ad.service', action);
     const payload = { userId: this.getUserId(), adId, action };
     return this.http.post(`/like-dislike`, payload);
   }
 
   rateAdd(rate: Partial<RatingSubmitModel>) {
-    console.log('rateAdd called with payload:', rate);
+    //console.log('rateAdd called with payload:', rate);
     const payload: Partial<RatingSubmitModel> = {
       ...rate,
       userID: this.getLoggedUserId(), // Set the userID._id dynamically

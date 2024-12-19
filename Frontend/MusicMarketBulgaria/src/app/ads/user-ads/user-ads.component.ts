@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AdService } from '../ad.service';
 import { AdData } from '../ad-data.model';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {  Router, RouterModule } from '@angular/router';
 import { AdStateService } from './ad-state.service';
 import { UserStoreService } from '../../core/user-store.service';
 
@@ -24,7 +24,6 @@ export class UserAdsComponent implements OnInit {
     private adService: AdService,
     private adStateService: AdStateService,
     private userStore: UserStoreService,
-    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -32,7 +31,7 @@ export class UserAdsComponent implements OnInit {
     // Extract userId from the route manually
     const fullUrl = this.router.url; // Get the current URL
     this.userId = this.extractUserIdFromUrl(fullUrl);
-    console.log('Extracted User ID:', this.userId);
+    //console.log('Extracted User ID:', this.userId);
 
     if (this.userId) {
       this.loadUserAds();
@@ -49,11 +48,11 @@ export class UserAdsComponent implements OnInit {
   }
 
   loadUserAds(): void {
-    console.log('User ID inside user-ads:', this.userId);
+    //console.log('User ID inside user-ads:', this.userId);
 
     if (this.userId && this.userId !== this.userStore.getCurrentUserId()) {
       // Load ads for the provided user ID
-      console.log('Loading ads for user ID:', this.userId);
+      //console.log('Loading ads for user ID:', this.userId);
       this.ownedByLoggedUser = false;
       this.adsOwner = 'Обяви на потребителя'; // "Ads of the user" in Bulgarian
       this.adService.getUserAds(this.userId).subscribe({
@@ -74,12 +73,12 @@ export class UserAdsComponent implements OnInit {
       this.adStateService.ads$.subscribe((cachedAds) => {
         if (cachedAds) {
           // Use cached ads
-          console.log('Using cached ads for the logged-in user.');
+         // console.log('Using cached ads for the logged-in user.');
           this.ads = cachedAds;
           this.loadingAds = false;
         } else {
           // Fetch ads from the backend
-          console.log('Loading ads for the logged-in user from the backend.');
+         // console.log('Loading ads for the logged-in user from the backend.');
           this.adService.getLoggedUserAds().subscribe({
             next: (data: AdData[]) => {
               this.ads = data;
@@ -104,7 +103,7 @@ export class UserAdsComponent implements OnInit {
   editAd(adId: string): void {
     const selectedAd = this.ads.find((ad) => ad._id === adId); // Find the ad by ID
     if (selectedAd) {
-      console.log({ adId, selectedAd });
+      //console.log({ adId, selectedAd });
       this.router.navigate(['/edit-ad', adId], {
         state: { adData: selectedAd },
       }); // Pass the ad data in state
@@ -116,7 +115,7 @@ export class UserAdsComponent implements OnInit {
   deleteAd(adId: string): void {
     this.adService.deleteAd(adId).subscribe({
       next: () => {
-        console.log(`Ad with ID ${adId} deleted.`);
+        //console.log(`Ad with ID ${adId} deleted.`);
         this.ads = this.ads.filter((ad) => ad._id !== adId);
       },
       error: (err) => {

@@ -25,12 +25,12 @@ export class AdsViewHomeComponent implements OnInit {
    * Fetch the top-rated ads from the backend.
    */
   private fetchTopRatedAds(): void {
-    console.log("called fetchTopRatedAds")
+    //console.log("called fetchTopRatedAds")
     this.adService.getTopRatedAds().subscribe({
       next: (ads) => {
         this.topRatedAds = ads;
         this.loading = false;
-        console.log('Fetched top-rated ads:', ads);
+        //console.log('Fetched top-rated ads:', ads);
       },
       error: (err) => {
         this.error = 'Failed to load top-rated ads.';

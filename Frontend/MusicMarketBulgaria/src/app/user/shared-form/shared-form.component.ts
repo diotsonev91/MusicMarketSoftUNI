@@ -39,10 +39,9 @@ export class SharedFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.errorMessage)
     
     if (this.form.valid) {
-      console.log("EMMITINT VALUE FORM SUBMIT", this.form.value)
+    
       this.formSubmit.emit(this.form.value);
     } else {
       // Mark all fields as touched to trigger validation messages
@@ -62,7 +61,7 @@ export class SharedFormComponent implements OnInit {
 
   updateFormValues(values: { [key: string]: any }): void {
     if (!this.form) return; // Ensure the form is initialized
-    console.log("PREFILLED VALUES",values)
+   
     Object.keys(values).forEach((key) => {
       if (this.form.controls[key]) {
         this.form.controls[key].setValue(values[key]); // Update the form control value

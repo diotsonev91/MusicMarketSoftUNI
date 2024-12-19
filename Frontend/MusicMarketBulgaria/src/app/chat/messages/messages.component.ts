@@ -31,7 +31,7 @@ export class MessagesComponent implements OnInit {
     this.chatService.getConversations().subscribe({
       next: (conversations) => {
         this.conversations = conversations;
-        console.log('Fetched conversations:', this.conversations);
+       // console.log('Fetched conversations:', this.conversations);
       },
       error: (err) => console.error('Error fetching conversations:', err),
     });

@@ -25,7 +25,7 @@ export class AppInterceptor implements HttpInterceptor {
   
     // Exclude blob URLs
     if (request.url.startsWith('blob:')) {
-      console.log('Skipping interceptor for blob URL:', request.url);
+     // console.log('Skipping interceptor for blob URL:', request.url);
       return next.handle(request); // Skip modification for blob URLs
     }
   

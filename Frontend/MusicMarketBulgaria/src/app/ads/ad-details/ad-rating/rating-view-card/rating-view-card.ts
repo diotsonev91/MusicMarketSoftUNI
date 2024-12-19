@@ -10,15 +10,9 @@ import { UserData } from '../../../../user/user-data.model';
   templateUrl: './rating-view-card.component.html',
   styleUrls: ['./rating-view-card.component.css'],
 })
-export class RatingViewCardComponent implements OnChanges {
+export class RatingViewCardComponent  {
   @Input() review!: RatingDisplayModel; // Expect a single review as input
 
   user: UserData | null = null; // User data to be displayed
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['review'] && this.review?.userID) {
-      // Fetch user data based on the userID
-      console.log("review object in reatingview card on changes",this.review.userID._id)
-    }
-  }
 }

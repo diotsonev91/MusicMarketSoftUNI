@@ -28,7 +28,7 @@ export class CreateAdComponent {
   }): void {
     this.adService.createAd(adData, images).subscribe({
       next: (response) => {
-        console.log('Ad created successfully:', response);
+        //console.log('Ad created successfully:', response);
         const adId = response._id; // Extract the ad ID from the response
         if (adId) {
           this.router.navigate([`/ad-details/${adId}`]); // Redirect to ad details page

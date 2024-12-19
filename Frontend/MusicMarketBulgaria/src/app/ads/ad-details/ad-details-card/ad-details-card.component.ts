@@ -42,7 +42,7 @@ export class AdDetailsCardComponent implements OnChanges {
   // Emit userId when the author's name is clicked
   onAuthorClick(): void {
     if (this.ad?.userId) {
-      console.log('user id in onAuthorclick', this.ad?.userId);
+      //console.log('user id in onAuthorclick', this.ad?.userId);
       this.userClicked.emit(this.ad.userId);
     } else {
       console.error('User ID is not defined');

@@ -121,9 +121,9 @@ export class AdFormComponent implements OnInit {
     // Merge existing and new images while avoiding duplicates
     this.displayImages = Array.from(new Set([...this.existingImages, ...newPreviews]));
   
-    console.log('Updated displayImages:', this.displayImages);
-    console.log('Existing images:', this.existingImages);
-    console.log('FileService files:', this.fileService.getFiles());
+    //console.log('Updated displayImages:', this.displayImages);
+    //console.log('Existing images:', this.existingImages);
+    //console.log('FileService files:', this.fileService.getFiles());
   
     this.cdr.markForCheck(); // Trigger UI update
   }
@@ -133,7 +133,7 @@ export class AdFormComponent implements OnInit {
     if (this.adForm.valid) {
       const adData: Partial<AdData> = this.adForm.value;
       const newImages: File[] = this.fileService.getFiles();
-      console.log("AD DATA ON SUBMIT ON AD FORM", this.adForm.value)
+     
       this.formSubmit.emit({
         adData: {
           ...adData,
@@ -159,17 +159,16 @@ export class AdFormComponent implements OnInit {
   }
   
   removeImage(index: number,  event: MouseEvent): void {
-    console.log('removeImage triggered by:', event.target);
-    console.log('removeImage event classList:', (event.target as HTMLElement).classList);
+   
     event.stopPropagation(); 
 
     // Ensure the click is only from the button
   if (!(event.target as HTMLElement).classList.contains('remove-image-btn')) {
-    console.log("Click ignored as it wasn't on the remove button");
+  
     return;
   }
 
-    console.log("remove image triggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    
     const isExistingImage = index < this.existingImages.length;
     if (isExistingImage) {
       this.removeExistingImage(index);
@@ -189,7 +188,7 @@ export class AdFormComponent implements OnInit {
 
   removeExistingImage(index: number): void {
     const removedImage = this.existingImages.splice(index, 1)[0]; // Remove the image
-    console.log(`Removed image: ${removedImage}`);
+ 
     this.cdr.markForCheck(); // Trigger change detection to update the UI
   }
   

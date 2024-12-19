@@ -87,14 +87,14 @@ export class LikeDislikeButtonsComponent implements  OnChanges {
     this.adService.getAdLikeDislikeCounts(this.adId).subscribe(({ likes, dislikes }) => {
       this.likes = likes;
       this.dislikes = dislikes;
-      console.log('Updated Likes:', this.likes, 'Updated Dislikes:', this.dislikes);
+      //console.log('Updated Likes:', this.likes, 'Updated Dislikes:', this.dislikes);
     }, error => {
       console.error('Failed to fetch like/dislike counts:', error);
     });
   
     this.adService.getUserAdState(this.adId).subscribe(({ status }) => {
       this.userVote = status === 'like' ? 1 : status === 'dislike' ? -1 : 0;
-      console.log('Updated User Vote:', this.userVote);
+     // console.log('Updated User Vote:', this.userVote);
     }, error => {
       console.error('Failed to fetch user vote state:', error);
     });

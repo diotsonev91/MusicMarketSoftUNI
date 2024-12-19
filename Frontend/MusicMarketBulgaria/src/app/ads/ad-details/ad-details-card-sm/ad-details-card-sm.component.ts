@@ -9,15 +9,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ad-details-card-sm.component.html',
   styleUrls: ['./ad-details-card-sm.component.css']
 })
-export class AdDetailsCardSmComponent implements OnChanges {
+export class AdDetailsCardSmComponent {
   @Input() ad: AdData | null = null;
-
-  ngOnChanges(changes: SimpleChanges): void {
-  
-    if (changes['ad'] && changes['ad'].currentValue) {
-      console.log('Received ad data in ad-details-card-sm:', changes['ad'].currentValue);
-    } else if (changes['ad'] && changes['ad'].currentValue === null) {
-      console.log('Ad data cleared in ad-details-card-sm');
-    }
-  }
 }

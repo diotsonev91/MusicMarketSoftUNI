@@ -65,7 +65,7 @@ export class ContactFormComponent implements OnChanges {
 
     this.chatService.sendMessage(this.ad.user, messageContent).subscribe({
       next: (response) => {
-        console.log('Message sent successfully:', response);
+       // console.log('Message sent successfully:', response);
         this.isSubmited = true;
       },
       error: (err) => {

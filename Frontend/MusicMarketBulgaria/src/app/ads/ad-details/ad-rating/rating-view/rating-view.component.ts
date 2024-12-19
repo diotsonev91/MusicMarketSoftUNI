@@ -49,7 +49,7 @@ export class RatingViewComponent implements OnChanges {
       .getAdRates(this.adId)
       .pipe(
         tap((response: any) => {
-          console.log('Raw response from backend:', response);
+         // console.log('Raw response from backend:', response);
         })
       )
       .subscribe({
